@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User, LogOut } from "lucide-react";
+import { Menu, X, Search, User, LogOut, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { FadeIn } from "@/components/animations/FadeIn";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +36,10 @@ const Navbar = () => {
             <Link to="/flights" className="text-foreground hover:text-accent transition-smooth">
               Flights
             </Link>
+            <Link to="/itinerary" className="text-foreground hover:text-accent transition-smooth flex items-center gap-1">
+              <Sparkles className="h-4 w-4" />
+              AI Planner
+            </Link>
             <Link to="/about" className="text-foreground hover:text-accent transition-smooth">
               About
             </Link>
@@ -43,23 +50,23 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             {user ? (
               <>
-                <Link to="/dashboard">
+                <Link to="/user-dashboard">
                   <Button variant="ghost" size="sm">
-                    <User className="h-4 w-4" />
+                    <User className="h-4 w-4 mr-2" />
                     Dashboard
                   </Button>
                 </Link>
-                <Button variant="ocean" size="sm" onClick={signOut}>
-                  <LogOut className="h-4 w-4" />
+                <Button variant="ghost" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>
               </>
             ) : (
               <Link to="/auth">
-                <Button variant="ocean" size="sm">
-                  <User className="h-4 w-4" />
+                <Button variant="default" size="sm">
                   Sign In
                 </Button>
               </Link>
@@ -67,13 +74,20 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              <motion.div
+                animate={{ rotate: isOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </motion.div>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -106,6 +120,14 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
             >
               Flights
+            </Link>
+            <Link
+              to="/itinerary"
+              className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1"
+              onClick={() => setIsOpen(false)}
+            >
+              <Sparkles className="h-4 w-4" />
+              AI Planner
             </Link>
             <Link
               to="/about"

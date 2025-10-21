@@ -7,17 +7,28 @@ import PackageCard from "@/components/PackageCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
 import { useState, useMemo } from "react";
+import { travelAPI, HotelSearchParams, HotelOffer } from "@/lib/api/travel";
+import { format, addDays } from "date-fns";
 
 const Hotels = () => {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("destination") || "");
   const [priceFilter, setPriceFilter] = useState<string>("all");
   const [starFilter, setStarFilter] = useState<string>("all");
+  const [checkInDate, setCheckInDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const [checkOutDate, setCheckOutDate] = useState<string>(format(addDays(new Date(), 1), "yyyy-MM-dd"));
+  const [adults, setAdults] = useState<number>(2);
+  const [rooms, setRooms] = useState<number>(1);
+  const [useRealAPI, setUseRealAPI] = useState<boolean>(false);
 
-  const { data: hotels, isLoading } = useQuery({
-    queryKey: ["hotels"],
+  // Local Supabase data query
+  const { data: localHotels, isLoading: isLoadingLocal } = useQuery({
+    queryKey: ["hotels-local"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("hotels")
@@ -29,26 +40,56 @@ const Hotels = () => {
     },
   });
 
+  // Real API data query
+  const { data: apiHotels, isLoading: isLoadingAPI, error: apiError, refetch: refetchAPI } = useQuery({
+    queryKey: ["hotels-api", searchQuery, checkInDate, checkOutDate, adults, rooms],
+    queryFn: async () => {
+      if (!searchQuery.trim()) return [];
+      
+      const searchParams: HotelSearchParams = {
+        cityCode: searchQuery.toUpperCase(),
+        checkInDate,
+        checkOutDate,
+        adults,
+        rooms,
+        currency: "INR",
+      };
+
+      return await travelAPI.searchHotels(searchParams);
+    },
+    enabled: useRealAPI && searchQuery.trim().length > 0,
+    retry: 2,
+    retryDelay: 1000,
+  });
+
+  const hotels = useRealAPI ? apiHotels : localHotels;
+  const isLoading = useRealAPI ? isLoadingAPI : isLoadingLocal;
+
   const filteredHotels = useMemo(() => {
     if (!hotels) return [];
     
     return hotels.filter((hotel) => {
+      // Handle both local Supabase data and API data structures
+      const hotelName = useRealAPI ? hotel.name : hotel.name;
+      const hotelPrice = useRealAPI ? hotel.price : hotel.price_per_night;
+      const hotelRating = useRealAPI ? hotel.starRating : hotel.star_rating;
+      const hotelLocation = useRealAPI ? hotel.location.city : hotel.location_city;
+      
       const matchesSearch = searchQuery === "" || 
-        hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hotel.location_city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hotel.location_state.toLowerCase().includes(searchQuery.toLowerCase());
+        hotelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        hotelLocation.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesPrice = priceFilter === "all" || 
-        (priceFilter === "low" && Number(hotel.price_per_night) < 3000) ||
-        (priceFilter === "medium" && Number(hotel.price_per_night) >= 3000 && Number(hotel.price_per_night) < 7000) ||
-        (priceFilter === "high" && Number(hotel.price_per_night) >= 7000);
+        (priceFilter === "low" && Number(hotelPrice) < 3000) ||
+        (priceFilter === "medium" && Number(hotelPrice) >= 3000 && Number(hotelPrice) < 7000) ||
+        (priceFilter === "high" && Number(hotelPrice) >= 7000);
       
       const matchesStar = starFilter === "all" || 
-        String(hotel.star_rating) === starFilter;
+        String(hotelRating) === starFilter;
       
       return matchesSearch && matchesPrice && matchesStar;
     });
-  }, [hotels, searchQuery, priceFilter, starFilter]);
+  }, [hotels, searchQuery, priceFilter, starFilter, useRealAPI]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -67,41 +108,119 @@ const Hotels = () => {
           </div>
         </section>
 
-        {/* Search & Filters */}
+        {/* Enhanced Search & Filters */}
         <section className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name or location..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={priceFilter} onValueChange={setPriceFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Price Range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Prices</SelectItem>
-                <SelectItem value="low">Under ₹3,000</SelectItem>
-                <SelectItem value="medium">₹3,000 - ₹7,000</SelectItem>
-                <SelectItem value="high">Above ₹7,000</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={starFilter} onValueChange={setStarFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Star Rating" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Ratings</SelectItem>
-                <SelectItem value="3">3 Stars</SelectItem>
-                <SelectItem value="4">4 Stars</SelectItem>
-                <SelectItem value="5">5 Stars</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                Search Hotels
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="City or Airport Code (e.g., DEL, BOM)"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="date"
+                    value={checkInDate}
+                    onChange={(e) => setCheckInDate(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="date"
+                    value={checkOutDate}
+                    onChange={(e) => setCheckOutDate(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="relative">
+                  <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Select value={adults.toString()} onValueChange={(value) => setAdults(parseInt(value))}>
+                    <SelectTrigger className="pl-10">
+                      <SelectValue placeholder="Adults" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[1, 2, 3, 4, 5, 6].map((num) => (
+                        <SelectItem key={num} value={num.toString()}>
+                          {num} Adult{num > 1 ? 's' : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div className="flex gap-4">
+                  <Select value={priceFilter} onValueChange={setPriceFilter}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Price Range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Prices</SelectItem>
+                      <SelectItem value="low">Under ₹3,000</SelectItem>
+                      <SelectItem value="medium">₹3,000 - ₹7,000</SelectItem>
+                      <SelectItem value="high">Above ₹7,000</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={starFilter} onValueChange={setStarFilter}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Star Rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Ratings</SelectItem>
+                      <SelectItem value="3">3 Stars</SelectItem>
+                      <SelectItem value="4">4 Stars</SelectItem>
+                      <SelectItem value="5">5 Stars</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant={useRealAPI ? "default" : "outline"}
+                    onClick={() => setUseRealAPI(!useRealAPI)}
+                    className="flex items-center gap-2"
+                  >
+                    {useRealAPI ? "Live Search" : "Sample Data"}
+                  </Button>
+                  {useRealAPI && (
+                    <Button
+                      variant="outline"
+                      onClick={() => refetchAPI()}
+                      disabled={isLoadingAPI}
+                      className="flex items-center gap-2"
+                    >
+                      <RefreshCw className={`h-4 w-4 ${isLoadingAPI ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {apiError && (
+                <Alert className="mt-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Failed to fetch live hotel data. Showing sample data instead.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
         </section>
 
         {/* Hotels Grid */}
@@ -118,23 +237,37 @@ const Hotels = () => {
             </div>
           ) : filteredHotels.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredHotels.map((hotel) => (
-                <Link key={hotel.id} to={`/hotels/${hotel.slug}`}>
-                  <PackageCard
-                    image={
-                      (hotel.images as string[])?.[0] ||
-                      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
-                    }
-                    title={hotel.name}
-                    location={`${hotel.location_city}, ${hotel.location_state}`}
-                    duration={`${hotel.star_rating}⭐ Hotel`}
-                    rating={hotel.star_rating || 4.5}
-                    reviews={Math.floor(Math.random() * 300) + 50}
-                    price={Number(hotel.price_per_night)}
-                    badge={hotel.is_featured ? "Featured" : undefined}
-                  />
-                </Link>
-              ))}
+              {filteredHotels.map((hotel) => {
+                // Handle both API and local data structures
+                const hotelId = useRealAPI ? hotel.id : hotel.id;
+                const hotelSlug = useRealAPI ? hotel.id : hotel.slug;
+                const hotelImages = useRealAPI ? hotel.images : hotel.images;
+                const hotelName = useRealAPI ? hotel.name : hotel.name;
+                const hotelLocation = useRealAPI 
+                  ? `${hotel.location.city}, ${hotel.location.country}`
+                  : `${hotel.location_city}, ${hotel.location_state}`;
+                const hotelRating = useRealAPI ? hotel.starRating : hotel.star_rating;
+                const hotelPrice = useRealAPI ? hotel.price : hotel.price_per_night;
+                const hotelFeatured = useRealAPI ? false : hotel.is_featured;
+                
+                return (
+                  <Link key={hotelId} to={`/hotels/${hotelSlug}`}>
+                    <PackageCard
+                      image={
+                        (hotelImages as string[])?.[0] ||
+                        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
+                      }
+                      title={hotelName}
+                      location={hotelLocation}
+                      duration={`${hotelRating}⭐ Hotel`}
+                      rating={hotelRating || 4.5}
+                      reviews={Math.floor(Math.random() * 300) + 50}
+                      price={Number(hotelPrice)}
+                      badge={hotelFeatured ? "Featured" : useRealAPI ? "Live" : undefined}
+                    />
+                  </Link>
+                );
+              })}
             </div>
           ) : hotels && hotels.length > 0 ? (
             <div className="text-center py-20">
