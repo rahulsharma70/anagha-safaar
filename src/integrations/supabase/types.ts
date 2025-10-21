@@ -14,7 +14,297 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_reference: string
+          created_at: string
+          currency: string | null
+          end_date: string | null
+          guest_details: Json | null
+          guests_count: number
+          id: string
+          item_id: string
+          item_type: string
+          payment_status: string | null
+          start_date: string
+          status: string | null
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_reference: string
+          created_at?: string
+          currency?: string | null
+          end_date?: string | null
+          guest_details?: Json | null
+          guests_count?: number
+          id?: string
+          item_id: string
+          item_type: string
+          payment_status?: string | null
+          start_date: string
+          status?: string | null
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_reference?: string
+          created_at?: string
+          currency?: string | null
+          end_date?: string | null
+          guest_details?: Json | null
+          guests_count?: number
+          id?: string
+          item_id?: string
+          item_type?: string
+          payment_status?: string | null
+          start_date?: string
+          status?: string | null
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      flights: {
+        Row: {
+          airline: string
+          arrival_city: string
+          arrival_time: string
+          available_seats: number | null
+          created_at: string
+          departure_city: string
+          departure_time: string
+          flight_number: string
+          id: string
+          is_featured: boolean | null
+          price_business: number | null
+          price_economy: number | null
+          updated_at: string
+        }
+        Insert: {
+          airline: string
+          arrival_city: string
+          arrival_time: string
+          available_seats?: number | null
+          created_at?: string
+          departure_city: string
+          departure_time: string
+          flight_number: string
+          id?: string
+          is_featured?: boolean | null
+          price_business?: number | null
+          price_economy?: number | null
+          updated_at?: string
+        }
+        Update: {
+          airline?: string
+          arrival_city?: string
+          arrival_time?: string
+          available_seats?: number | null
+          created_at?: string
+          departure_city?: string
+          departure_time?: string
+          flight_number?: string
+          id?: string
+          is_featured?: boolean | null
+          price_business?: number | null
+          price_economy?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      hotels: {
+        Row: {
+          amenities: Json | null
+          available_rooms: number | null
+          created_at: string
+          description: string | null
+          id: string
+          images: Json | null
+          is_featured: boolean | null
+          latitude: number | null
+          location_city: string
+          location_country: string | null
+          location_state: string
+          longitude: number | null
+          name: string
+          price_per_night: number
+          slug: string
+          star_rating: number | null
+          updated_at: string
+        }
+        Insert: {
+          amenities?: Json | null
+          available_rooms?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: Json | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location_city: string
+          location_country?: string | null
+          location_state: string
+          longitude?: number | null
+          name: string
+          price_per_night: number
+          slug: string
+          star_rating?: number | null
+          updated_at?: string
+        }
+        Update: {
+          amenities?: Json | null
+          available_rooms?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: Json | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          location_city?: string
+          location_country?: string | null
+          location_state?: string
+          longitude?: number | null
+          name?: string
+          price_per_night?: number
+          slug?: string
+          star_rating?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          rating: number
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          rating: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          rating?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tours: {
+        Row: {
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          duration_days: number
+          exclusions: Json | null
+          id: string
+          images: Json | null
+          inclusions: Json | null
+          is_featured: boolean | null
+          itinerary: Json | null
+          location_city: string
+          location_state: string
+          max_group_size: number | null
+          name: string
+          price_per_person: number
+          slug: string
+          tour_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration_days: number
+          exclusions?: Json | null
+          id?: string
+          images?: Json | null
+          inclusions?: Json | null
+          is_featured?: boolean | null
+          itinerary?: Json | null
+          location_city: string
+          location_state: string
+          max_group_size?: number | null
+          name: string
+          price_per_person: number
+          slug: string
+          tour_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          duration_days?: number
+          exclusions?: Json | null
+          id?: string
+          images?: Json | null
+          inclusions?: Json | null
+          is_featured?: boolean | null
+          itinerary?: Json | null
+          location_city?: string
+          location_state?: string
+          max_group_size?: number | null
+          name?: string
+          price_per_person?: number
+          slug?: string
+          tour_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
