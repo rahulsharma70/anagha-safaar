@@ -29,7 +29,7 @@ const FlightDetail = () => {
         .from("flights")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
       return data;
