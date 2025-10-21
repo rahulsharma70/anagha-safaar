@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [searchType, setSearchType] = useState<"hotels" | "tours" | "flights">("hotels");
+  const [destination, setDestination] = useState("");
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    navigate(`/${searchType}`);
+    const params = new URLSearchParams();
+    if (destination) params.set("destination", destination);
+    navigate(`/${searchType}?${params.toString()}`);
   };
 
   return (
@@ -63,6 +66,8 @@ const SearchBar = () => {
                 id="destination"
                 placeholder="Where to?"
                 className="pl-10"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
               />
             </div>
           </div>
