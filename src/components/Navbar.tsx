@@ -33,6 +33,12 @@ const Navbar = () => {
             <Link to="/flights" className="text-foreground hover:text-accent transition-smooth">
               Flights
             </Link>
+            <Link to="/about" className="text-foreground hover:text-accent transition-smooth">
+              About
+            </Link>
+            <Link to="/contact" className="text-foreground hover:text-accent transition-smooth">
+              Contact
+            </Link>
           </div>
 
           {/* Actions */}
@@ -100,6 +106,20 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
             >
               Flights
+            </Link>
+            <Link
+              to="/about"
+              className="block py-2 text-foreground hover:text-accent transition-smooth"
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="block py-2 text-foreground hover:text-accent transition-smooth"
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
             </Link>
             {user ? (
               <>
