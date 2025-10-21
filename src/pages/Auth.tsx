@@ -1,19 +1,52 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/hooks/useAuth";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Authentication logic will be added here
-    setTimeout(() => setIsLoading(false), 1000);
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      // Error handled in useAuth
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await signUp(email, password, fullName);
+    } catch (error) {
+      // Error handled in useAuth
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -43,13 +76,15 @@ const Auth = () => {
               </TabsList>
 
               <TabsContent value="signin">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
                       placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -59,17 +94,10 @@ const Auth = () => {
                       id="password"
                       type="password"
                       placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <label className="flex items-center space-x-2 text-sm">
-                      <input type="checkbox" className="rounded" />
-                      <span className="text-muted-foreground">Remember me</span>
-                    </label>
-                    <a href="#" className="text-sm text-accent hover:underline">
-                      Forgot password?
-                    </a>
                   </div>
                   <Button
                     type="submit"
@@ -83,13 +111,15 @@ const Auth = () => {
               </TabsContent>
 
               <TabsContent value="signup">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
                     <Input
                       id="name"
                       type="text"
                       placeholder="John Doe"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       required
                     />
                   </div>
@@ -99,6 +129,8 @@ const Auth = () => {
                       id="signup-email"
                       type="email"
                       placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -108,6 +140,8 @@ const Auth = () => {
                       id="signup-password"
                       type="password"
                       placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                   </div>
@@ -117,14 +151,19 @@ const Auth = () => {
                       id="confirm-password"
                       type="password"
                       placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
                   </div>
+                  {password !== confirmPassword && confirmPassword && (
+                    <p className="text-sm text-destructive">Passwords do not match</p>
+                  )}
                   <Button
                     type="submit"
                     variant="hero"
                     className="w-full"
-                    disabled={isLoading}
+                    disabled={isLoading || (password !== confirmPassword && !!confirmPassword)}
                   >
                     {isLoading ? "Creating account..." : "Create Account"}
                   </Button>

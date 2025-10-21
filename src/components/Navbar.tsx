@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, User } from "lucide-react";
+import { Menu, X, Search, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm">
@@ -38,12 +40,19 @@ const Navbar = () => {
             <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
             </Button>
-            <Link to="/auth">
-              <Button variant="ocean" size="sm">
-                <User className="h-4 w-4" />
-                Sign In
+            {user ? (
+              <Button variant="ocean" size="sm" onClick={signOut}>
+                <LogOut className="h-4 w-4" />
+                Sign Out
               </Button>
-            </Link>
+            ) : (
+              <Link to="/auth">
+                <Button variant="ocean" size="sm">
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,12 +96,19 @@ const Navbar = () => {
             >
               Flights
             </Link>
-            <Link to="/auth">
-              <Button variant="ocean" className="w-full">
-                <User className="h-4 w-4" />
-                Sign In
+            {user ? (
+              <Button variant="ocean" className="w-full" onClick={signOut}>
+                <LogOut className="h-4 w-4" />
+                Sign Out
               </Button>
-            </Link>
+            ) : (
+              <Link to="/auth">
+                <Button variant="ocean" className="w-full">
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         )}
       </nav>
