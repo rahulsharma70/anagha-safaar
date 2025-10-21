@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plane, Clock, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const Flights = () => {
+  const navigate = useNavigate();
   const { data: flights, isLoading } = useQuery({
     queryKey: ["flights"],
     queryFn: async () => {
@@ -101,8 +103,8 @@ const Flights = () => {
                         </p>
                         <p className="text-xs text-muted-foreground">per person</p>
                       </div>
-                      <Button variant="hero" className="w-full">
-                        Book Now
+                      <Button variant="hero" className="w-full" onClick={() => navigate(`/flights/${flight.id}`)}>
+                        View Details
                       </Button>
                     </div>
                   </div>

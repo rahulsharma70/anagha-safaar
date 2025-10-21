@@ -37,14 +37,19 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
             {user ? (
-              <Button variant="ocean" size="sm" onClick={signOut}>
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
+              <>
+                <Link to="/dashboard">
+                  <Button variant="ghost" size="sm">
+                    <User className="h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button variant="ocean" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <Link to="/auth">
                 <Button variant="ocean" size="sm">
@@ -97,10 +102,18 @@ const Navbar = () => {
               Flights
             </Link>
             {user ? (
-              <Button variant="ocean" className="w-full" onClick={signOut}>
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
+              <>
+                <Link to="/dashboard">
+                  <Button variant="ghost" className="w-full" onClick={() => setIsOpen(false)}>
+                    <User className="h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button variant="ocean" className="w-full" onClick={signOut}>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <Link to="/auth">
                 <Button variant="ocean" className="w-full">
