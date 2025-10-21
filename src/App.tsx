@@ -7,7 +7,9 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Hotels from "./pages/Hotels";
+import HotelDetail from "./pages/HotelDetail";
 import Tours from "./pages/Tours";
+import TourDetail from "./pages/TourDetail";
 import Flights from "./pages/Flights";
 import NotFound from "./pages/NotFound";
 
@@ -24,7 +26,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/hotels" element={<Hotels />} />
+            <Route path="/hotels/:slug" element={<HotelDetail />} />
             <Route path="/tours" element={<Tours />} />
+            <Route path="/tours/:slug" element={<TourDetail />} />
             <Route path="/flights" element={<Flights />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

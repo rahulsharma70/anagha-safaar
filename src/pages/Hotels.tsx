@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PackageCard from "@/components/PackageCard";
@@ -51,20 +52,21 @@ const Hotels = () => {
           ) : hotels && hotels.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hotels.map((hotel) => (
-                <PackageCard
-                  key={hotel.id}
-                  image={
-                    (hotel.images as string[])?.[0] ||
-                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
-                  }
-                  title={hotel.name}
-                  location={`${hotel.location_city}, ${hotel.location_state}`}
-                  duration={`${hotel.star_rating}⭐ Hotel`}
-                  rating={hotel.star_rating || 4.5}
-                  reviews={Math.floor(Math.random() * 300) + 50}
-                  price={Number(hotel.price_per_night)}
-                  badge={hotel.is_featured ? "Featured" : undefined}
-                />
+                <Link key={hotel.id} to={`/hotels/${hotel.slug}`}>
+                  <PackageCard
+                    image={
+                      (hotel.images as string[])?.[0] ||
+                      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
+                    }
+                    title={hotel.name}
+                    location={`${hotel.location_city}, ${hotel.location_state}`}
+                    duration={`${hotel.star_rating}⭐ Hotel`}
+                    rating={hotel.star_rating || 4.5}
+                    reviews={Math.floor(Math.random() * 300) + 50}
+                    price={Number(hotel.price_per_night)}
+                    badge={hotel.is_featured ? "Featured" : undefined}
+                  />
+                </Link>
               ))}
             </div>
           ) : (
