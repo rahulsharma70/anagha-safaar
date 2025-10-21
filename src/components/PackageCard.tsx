@@ -11,6 +11,8 @@ interface PackageCardProps {
   reviews: number;
   price: number;
   badge?: string;
+  href?: string;
+  onClick?: () => void;
 }
 
 const PackageCard = ({
@@ -22,6 +24,8 @@ const PackageCard = ({
   reviews,
   price,
   badge,
+  href,
+  onClick,
 }: PackageCardProps) => {
   return (
     <div className="group bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-smooth cursor-pointer">
@@ -69,8 +73,8 @@ const PackageCard = ({
             <span className="text-sm text-muted-foreground">From</span>
             <p className="text-2xl font-bold text-accent">₹{price.toLocaleString()}</p>
           </div>
-          <Button variant="ocean" size="sm">
-            View Details
+          <Button variant="ocean" size="sm" onClick={onClick} asChild={!!href}>
+            {href ? <a href={href}>View Details</a> : "View Details"}
           </Button>
         </div>
       </div>

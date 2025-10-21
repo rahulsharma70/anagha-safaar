@@ -3,9 +3,15 @@ import { Search, MapPin, Calendar, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [searchType, setSearchType] = useState<"hotels" | "tours" | "flights">("hotels");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    navigate(`/${searchType}`);
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto animate-fade-in-up">
@@ -111,7 +117,7 @@ const SearchBar = () => {
 
         {/* Search Button */}
         <div className="mt-6">
-          <Button variant="hero" size="lg" className="w-full md:w-auto md:min-w-[200px]">
+          <Button variant="hero" size="lg" className="w-full md:w-auto md:min-w-[200px]" onClick={handleSearch}>
             <Search className="h-5 w-5" />
             Search
           </Button>

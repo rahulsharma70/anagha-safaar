@@ -4,6 +4,7 @@ import SearchBar from "@/components/SearchBar";
 import PackageCard from "@/components/PackageCard";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Award, Shield, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-travel.jpg";
 
 const Index = () => {
@@ -95,12 +96,16 @@ const Index = () => {
               Discover luxury hotels, spiritual tours, and unforgettable experiences
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up">
-              <Button variant="hero" size="lg">
-                Explore Packages
-              </Button>
-              <Button variant="outline" size="lg" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
-                View Hotels
-              </Button>
+              <Link to="/tours">
+                <Button variant="hero" size="lg">
+                  Explore Packages
+                </Button>
+              </Link>
+              <Link to="/hotels">
+                <Button variant="outline" size="lg" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+                  View Hotels
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -153,9 +158,11 @@ const Index = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="hero" size="lg">
-              View All Packages
-            </Button>
+            <Link to="/tours">
+              <Button variant="hero" size="lg">
+                View All Packages
+              </Button>
+            </Link>
           </div>
         </section>
 
@@ -168,9 +175,11 @@ const Index = () => {
             <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
               Join thousands of happy travelers who trusted us with their dream vacations
             </p>
-            <Button variant="hero" size="lg">
-              Get Started Today
-            </Button>
+            <Link to="/auth">
+              <Button variant="hero" size="lg">
+                Get Started Today
+              </Button>
+            </Link>
           </div>
         </section>
       </main>
