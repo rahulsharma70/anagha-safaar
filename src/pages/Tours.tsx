@@ -137,6 +137,15 @@ const Tours = () => {
                 </Link>
               ))}
             </div>
+          ) : tours && tours.length > 0 ? (
+            <div className="text-center py-20">
+              <h3 className="text-2xl font-semibold text-muted-foreground mb-4">
+                No tours match your filters
+              </h3>
+              <p className="text-muted-foreground">
+                Try adjusting your search criteria
+              </p>
+            </div>
           ) : (
             <div className="text-center py-20">
               <h3 className="text-2xl font-semibold text-muted-foreground mb-4">
