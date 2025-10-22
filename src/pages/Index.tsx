@@ -18,7 +18,7 @@ const Index = () => {
       reviews: 234,
       price: 45000,
       badge: "Popular",
-      href: "/tours",
+      href: "/tours/luxury-himalayan-retreat",
     },
     {
       image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop",
@@ -28,7 +28,7 @@ const Index = () => {
       rating: 4.8,
       reviews: 189,
       price: 28000,
-      href: "/tours",
+      href: "/tours/spiritual-varanasi-tour",
     },
     {
       image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&h=600&fit=crop",
@@ -39,7 +39,7 @@ const Index = () => {
       reviews: 312,
       price: 52000,
       badge: "Luxury",
-      href: "/tours",
+      href: "/tours/kerala-backwaters-cruise",
     },
     {
       image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&h=600&fit=crop",
@@ -49,7 +49,7 @@ const Index = () => {
       rating: 4.7,
       reviews: 267,
       price: 68000,
-      href: "/tours",
+      href: "/tours/rajasthan-heritage-trail",
     },
   ];
 

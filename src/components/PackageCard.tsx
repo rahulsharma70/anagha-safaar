@@ -28,7 +28,7 @@ const PackageCard = ({
   href,
   onClick,
 }: PackageCardProps) => {
-  return (
+  const CardContent = () => (
     <div className="group bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-smooth cursor-pointer">
       {/* Image */}
       <div className="relative overflow-hidden h-64">
@@ -74,19 +74,34 @@ const PackageCard = ({
             <span className="text-sm text-muted-foreground">From</span>
             <p className="text-2xl font-bold text-accent">₹{price.toLocaleString()}</p>
           </div>
-          {href ? (
-            <Button variant="ocean" size="sm" asChild>
-              <Link to={href}>View Details</Link>
-            </Button>
-          ) : (
-            <Button variant="ocean" size="sm" onClick={onClick}>
-              View Details
-            </Button>
-          )}
+          <Button variant="ocean" size="sm">
+            View Details
+          </Button>
         </div>
       </div>
     </div>
   );
+
+  // If href is provided, wrap the entire card in a Link
+  if (href) {
+    return (
+      <Link to={href} className="block">
+        <CardContent />
+      </Link>
+    );
+  }
+
+  // If onClick is provided, use a div with onClick
+  if (onClick) {
+    return (
+      <div onClick={onClick}>
+        <CardContent />
+      </div>
+    );
+  }
+
+  // Default case - just return the content
+  return <CardContent />;
 };
 
 export default PackageCard;
