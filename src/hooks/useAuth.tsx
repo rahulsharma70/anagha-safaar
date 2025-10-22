@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -35,13 +35,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/` }
+  const signUp = async (email: string, password: string, fullName?: string) => {
+    // Call edge function for server-side password validation
+    const { data, error } = await supabase.functions.invoke('signup-with-validation', {
+      body: { email, password, fullName }
     });
-    return { error };
+
+    if (error) {
+      return { error: { message: error.message } };
+    }
+
+    if (data?.error) {
+      return { error: { message: data.error, details: data.details } };
+    }
+
+    // Sign in the user after successful signup
+    const { error: signInError } = await supabase.auth.signInWithPassword({ 
+      email, 
+      password 
+    });
+
+    return { error: signInError };
   };
 
   const signOut = async () => {

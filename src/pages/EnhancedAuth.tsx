@@ -98,12 +98,18 @@ const EnhancedAuth = () => {
     }
 
     setIsLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, fullName);
     setIsLoading(false);
 
     if (error) {
-      // Check for password-related errors from backend
-      if (error.message?.toLowerCase().includes('password')) {
+      // Display detailed validation errors if available
+      const errorDetails = (error as any).details;
+      if (errorDetails && Array.isArray(errorDetails)) {
+        toast.error(error.message || "Password does not meet security requirements", {
+          description: errorDetails.join('. '),
+          duration: 6000
+        });
+      } else if (error.message?.toLowerCase().includes('password')) {
         toast.error("Password is too weak or commonly used", {
           description: "Please choose a stronger, unique password"
         });
@@ -112,7 +118,7 @@ const EnhancedAuth = () => {
           description: "Please sign in or use a different email"
         });
       } else {
-        toast.error("Unable to create account. Please try again.");
+        toast.error(error.message || "Unable to create account. Please try again.");
       }
     }
   };
