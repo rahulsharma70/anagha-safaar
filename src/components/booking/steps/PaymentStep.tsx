@@ -13,7 +13,7 @@ export const PaymentStep = () => {
   const { bookingData, getTotalPrice, clearBooking, prevStep } = useBooking();
   const navigate = useNavigate();
   
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'netbanking' | 'wallet'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'googlepay' | 'netbanking' | 'wallet'>('card');
   const [processing, setProcessing] = useState(false);
 
   const handlePayment = async () => {
@@ -101,7 +101,18 @@ export const PaymentStep = () => {
                   <Smartphone className="h-5 w-5" />
                   <div>
                     <p className="font-medium">UPI</p>
-                    <p className="text-sm text-muted-foreground">PhonePe, Google Pay, Paytm</p>
+                    <p className="text-sm text-muted-foreground">PhonePe, Paytm, BHIM</p>
+                  </div>
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent">
+                <RadioGroupItem value="googlepay" id="googlepay" />
+                <Label htmlFor="googlepay" className="flex items-center gap-3 cursor-pointer flex-1">
+                  <Smartphone className="h-5 w-5" />
+                  <div>
+                    <p className="font-medium">Google Pay</p>
+                    <p className="text-sm text-muted-foreground">Pay directly with Google Pay</p>
                   </div>
                 </Label>
               </div>
@@ -139,7 +150,7 @@ export const PaymentStep = () => {
               Your payment is secured with 256-bit SSL encryption
             </p>
             <p className="text-xs text-muted-foreground">
-              Powered by Razorpay • PCI DSS Compliant
+              Powered by Razorpay & Google Pay • PCI DSS Compliant
             </p>
           </div>
         </CardContent>
