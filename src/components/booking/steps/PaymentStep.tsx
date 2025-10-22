@@ -13,7 +13,7 @@ export const PaymentStep = () => {
   const { bookingData, getTotalPrice, clearBooking, prevStep } = useBooking();
   const navigate = useNavigate();
   
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'googlepay' | 'netbanking' | 'wallet'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'netbanking' | 'wallet' | 'googlepay'>('card');
   const [processing, setProcessing] = useState(false);
 
   const handlePayment = async () => {
@@ -64,7 +64,7 @@ export const PaymentStep = () => {
 
       <Alert>
         <AlertDescription>
-          Payment gateway integration ready. In production, this will connect to Razorpay for secure payments.
+          Payment gateway integration ready. In production, this will connect to Razorpay and Google Pay for secure payments.
         </AlertDescription>
       </Alert>
 
@@ -96,23 +96,23 @@ export const PaymentStep = () => {
               </div>
 
               <div className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent">
+                <RadioGroupItem value="googlepay" id="googlepay" />
+                <Label htmlFor="googlepay" className="flex items-center gap-3 cursor-pointer flex-1">
+                  <Wallet className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="font-medium">Google Pay</p>
+                    <p className="text-sm text-muted-foreground">Fast & secure payments</p>
+                  </div>
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent">
                 <RadioGroupItem value="upi" id="upi" />
                 <Label htmlFor="upi" className="flex items-center gap-3 cursor-pointer flex-1">
                   <Smartphone className="h-5 w-5" />
                   <div>
                     <p className="font-medium">UPI</p>
                     <p className="text-sm text-muted-foreground">PhonePe, Paytm, BHIM</p>
-                  </div>
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent">
-                <RadioGroupItem value="googlepay" id="googlepay" />
-                <Label htmlFor="googlepay" className="flex items-center gap-3 cursor-pointer flex-1">
-                  <Smartphone className="h-5 w-5" />
-                  <div>
-                    <p className="font-medium">Google Pay</p>
-                    <p className="text-sm text-muted-foreground">Pay directly with Google Pay</p>
                   </div>
                 </Label>
               </div>
