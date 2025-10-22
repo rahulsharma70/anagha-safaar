@@ -1,6 +1,7 @@
 import { Star, MapPin, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface PackageCardProps {
   image: string;
@@ -73,9 +74,15 @@ const PackageCard = ({
             <span className="text-sm text-muted-foreground">From</span>
             <p className="text-2xl font-bold text-accent">₹{price.toLocaleString()}</p>
           </div>
-          <Button variant="ocean" size="sm" onClick={onClick} asChild={!!href}>
-            {href ? <a href={href}>View Details</a> : "View Details"}
-          </Button>
+          {href ? (
+            <Button variant="ocean" size="sm" asChild>
+              <Link to={href}>View Details</Link>
+            </Button>
+          ) : (
+            <Button variant="ocean" size="sm" onClick={onClick}>
+              View Details
+            </Button>
+          )}
         </div>
       </div>
     </div>
