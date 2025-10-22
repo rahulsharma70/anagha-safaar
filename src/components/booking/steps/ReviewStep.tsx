@@ -8,7 +8,15 @@ import { Calendar, Users, MapPin, CreditCard } from 'lucide-react';
 export const ReviewStep = () => {
   const { bookingData, getTotalPrice, nextStep, prevStep } = useBooking();
 
-  if (!bookingData) return null;
+  if (!bookingData) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center">
+          <p className="text-muted-foreground">No booking data available. Please start from the beginning.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const nights = bookingData.type === 'hotel' && bookingData.tripSelection.startDate && bookingData.tripSelection.endDate
     ? Math.ceil(
