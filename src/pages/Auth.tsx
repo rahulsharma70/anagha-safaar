@@ -41,7 +41,7 @@ const Auth = () => {
     }
     setIsLoading(true);
     try {
-      await signUp(email, password, fullName);
+      await signUp(email, password);
     } catch (error) {
       // Error handled in useAuth
     } finally {
