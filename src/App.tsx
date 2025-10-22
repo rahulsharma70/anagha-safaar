@@ -35,6 +35,8 @@ import AdminDashboard from "./components/dashboard/AdminDashboard";
 import UserDashboard from "./components/dashboard/UserDashboard";
 import BookingCheckout from "./pages/BookingCheckout";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
+import DashboardSettings from "./pages/DashboardSettings";
+import DashboardNotifications from "./pages/DashboardNotifications";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -92,9 +94,11 @@ const App = () => {
                 <Route path="/cancellation-policy" element={<CancellationPolicy />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/booking/checkout" element={<BookingCheckout />} />
-                <Route path="/booking/confirmation/:bookingId" element={<BookingConfirmationPage />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/booking/checkout" element={<BookingCheckout />} />
+            <Route path="/booking/confirmation/:bookingId" element={<BookingConfirmationPage />} />
+            <Route path="/dashboard/settings" element={<DashboardSettings />} />
+            <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
               </BookingProvider>

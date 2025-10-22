@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
@@ -10,10 +10,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Star, MapPin, Wifi, Coffee, Waves, Dumbbell, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import ReviewSection from "@/components/ReviewSection";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const HotelDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(2);
 
   const { data: hotel, isLoading } = useQuery({
     queryKey: ["hotel", slug],
@@ -36,6 +43,37 @@ const HotelDetail = () => {
     "Spa": Star,
     "Fitness Center": Dumbbell,
     "Restaurant": Coffee,
+  };
+
+  const handleBookNow = async () => {
+    if (!user) {
+      toast.error('Please login to book');
+      navigate('/auth', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    if (!checkIn || !checkOut) {
+      toast.error('Please select check-in and check-out dates');
+      return;
+    }
+
+    if (new Date(checkIn) >= new Date(checkOut)) {
+      toast.error('Check-out date must be after check-in date');
+      return;
+    }
+
+    // Navigate to booking checkout with hotel details
+    const params = new URLSearchParams({
+      type: 'hotel',
+      itemId: hotel.id,
+      itemName: hotel.name,
+      price: hotel.price_per_night.toString(),
+      checkIn,
+      checkOut,
+      guests: guests.toString()
+    });
+
+    navigate(`/booking/checkout?${params.toString()}`);
   };
 
   if (isLoading) {
@@ -198,6 +236,9 @@ const HotelDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Check-in</label>
                       <input
                         type="date"
+                        value={checkIn}
+                        onChange={(e) => setCheckIn(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
@@ -205,6 +246,9 @@ const HotelDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Check-out</label>
                       <input
                         type="date"
+                        value={checkOut}
+                        onChange={(e) => setCheckOut(e.target.value)}
+                        min={checkIn || new Date().toISOString().split('T')[0]}
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
@@ -214,13 +258,19 @@ const HotelDetail = () => {
                         type="number"
                         min="1"
                         max="10"
-                        defaultValue="2"
+                        value={guests}
+                        onChange={(e) => setGuests(parseInt(e.target.value))}
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
                   </div>
 
-                  <Button variant="hero" size="lg" className="w-full">
+                  <Button 
+                    variant="hero" 
+                    size="lg" 
+                    className="w-full" 
+                    onClick={handleBookNow}
+                  >
                     Book Now
                   </Button>
 
@@ -243,6 +293,8 @@ const HotelDetail = () => {
             </div>
           </div>
         </section>
+
+        <ReviewSection itemId={hotel.id} itemType="hotel" />
       </main>
 
       <Footer />

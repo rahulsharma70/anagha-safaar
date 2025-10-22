@@ -1,4 +1,3 @@
-// src/components/dashboard/UserDashboard.tsx
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,13 +17,14 @@ import {
   Settings,
   Bell,
   Heart,
-  Shield
+  Shield,
+  CheckCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useUserRole } from '@/hooks/useUserRole';
 import { logger } from '@/lib/logger';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface UserBooking {
   id: string;
@@ -49,14 +49,7 @@ interface UserProfile {
   avatar_url?: string;
   created_at?: string;
   updated_at?: string;
-  preferences?: {
-    currency: string;
-    language: string;
-    notifications: boolean;
-    marketing: boolean;
-  };
-  loyalty_points: number;
-  member_since: string;
+  loyalty_points?: number;
 }
 
 interface TravelStats {
@@ -69,11 +62,11 @@ interface TravelStats {
 
 const UserDashboard = () => {
   const { user } = useAuth();
-  const { role } = useUserRole();
   const [bookings, setBookings] = useState<UserBooking[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [travelStats, setTravelStats] = useState<TravelStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [payingBooking, setPayingBooking] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -85,7 +78,6 @@ const UserDashboard = () => {
     try {
       setLoading(true);
 
-      // Fetch user bookings
       const { data: bookingsData, error: bookingsError } = await supabase
         .from('bookings')
         .select('*')
@@ -95,7 +87,6 @@ const UserDashboard = () => {
       if (bookingsError) throw bookingsError;
       setBookings((bookingsData || []) as UserBooking[]);
 
-      // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -105,7 +96,6 @@ const UserDashboard = () => {
       if (profileError) throw profileError;
       setProfile(profileData as UserProfile);
 
-      // Calculate travel stats
       const stats = calculateTravelStats((bookingsData || []) as UserBooking[]);
       setTravelStats(stats);
 
@@ -116,29 +106,65 @@ const UserDashboard = () => {
     }
   };
 
-  const calculateTravelStats = (bookings: UserBooking[]): TravelStats => {
-    const totalTrips = bookings.filter(b => b.status === 'confirmed').length;
-    const totalSpent = bookings
-      .filter(b => b.status === 'confirmed')
-      .reduce((sum, b) => sum + b.total_amount, 0);
-    
-    const destinations = bookings.map(b => b.item_id);
-    const favoriteDestinations = [...new Set(destinations)].slice(0, 3);
-    
-    const confirmedBookings = bookings.filter(b => b.status === 'confirmed');
-    const averageTripDuration = confirmedBookings.length > 0 
-      ? confirmedBookings.reduce((sum, b) => {
-          const start = new Date(b.start_date);
-          const end = new Date(b.end_date || b.start_date);
-          return sum + (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
-        }, 0) / confirmedBookings.length
-      : 0;
+  const handlePayLater = async (bookingId: string) => {
+    setPayingBooking(bookingId);
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ 
+          status: 'confirmed',
+          payment_status: 'paid' 
+        })
+        .eq('id', bookingId)
+        .eq('user_id', user?.id);
 
-    // Calculate loyalty tier based on total spent
-    let loyaltyTier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum' = 'Bronze';
-    if (totalSpent >= 100000) loyaltyTier = 'Platinum';
-    else if (totalSpent >= 50000) loyaltyTier = 'Gold';
-    else if (totalSpent >= 20000) loyaltyTier = 'Silver';
+      if (error) throw error;
+
+      toast.success('Booking confirmed! Payment marked as completed.');
+      fetchUserData(); // Refresh data
+    } catch (error) {
+      logger.error('Error updating booking:', error);
+      toast.error('Failed to update booking');
+    } finally {
+      setPayingBooking(null);
+    }
+  };
+
+  const calculateTravelStats = (bookings: UserBooking[]): TravelStats => {
+    const totalTrips = bookings.filter(booking => booking.status === 'confirmed').length;
+    const totalSpent = bookings.reduce((acc, booking) => acc + booking.total_amount, 0);
+
+    // Basic logic to determine favorite destinations (most frequent)
+    const destinationCounts: { [key: string]: number } = {};
+    bookings.forEach(booking => {
+      destinationCounts[booking.item_type] = (destinationCounts[booking.item_type] || 0) + 1;
+    });
+
+    const favoriteDestinations = Object.entries(destinationCounts)
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, 3)
+      .map(([destination]) => destination);
+
+    // Calculate average trip duration in days
+    const totalDuration = bookings.reduce((acc, booking) => {
+      const startDate = new Date(booking.start_date);
+      const endDate = booking.end_date ? new Date(booking.end_date) : startDate;
+      const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
+      return acc + duration;
+    }, 0);
+    const averageTripDuration = totalTrips > 0 ? totalDuration / totalTrips : 0;
+
+    // Determine loyalty tier based on total trips
+    let loyaltyTier: TravelStats['loyaltyTier'] = 'Bronze';
+    if (totalTrips >= 5) {
+      loyaltyTier = 'Silver';
+    }
+    if (totalTrips >= 10) {
+      loyaltyTier = 'Gold';
+    }
+    if (totalTrips >= 20) {
+      loyaltyTier = 'Platinum';
+    }
 
     return {
       totalTrips,
@@ -151,10 +177,10 @@ const UserDashboard = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      case 'failed': return 'bg-gray-100 text-gray-800';
+      case 'confirmed': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'failed': return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -202,50 +228,60 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">My Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, {profile?.full_name || user?.email}!</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            My Dashboard
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Welcome back, {profile?.full_name || user?.email}!
+          </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Button>
-          <Button variant="outline" size="sm">
-            <Bell className="h-4 w-4 mr-2" />
-            Notifications
-          </Button>
+          <Link to="/dashboard/settings">
+            <Button variant="outline" size="sm" className="hover-scale">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+          </Link>
+          <Link to="/dashboard/notifications">
+            <Button variant="outline" size="sm" className="hover-scale">
+              <Bell className="h-4 w-4 mr-2" />
+              Notifications
+            </Button>
+          </Link>
         </div>
       </div>
 
       {/* Profile Card */}
       {profile && (
-        <Card>
+        <Card className="hover-scale overflow-hidden border-2">
           <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
-              <Avatar className="h-16 w-16">
+            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4">
+              <Avatar className="h-20 w-20 border-4 border-primary/20">
                 <AvatarImage src={profile.avatar_url} />
-                <AvatarFallback>{profile.full_name?.charAt(0) || 'U'}</AvatarFallback>
+                <AvatarFallback className="text-2xl bg-gradient-to-br from-primary to-accent text-white">
+                  {profile.full_name?.charAt(0) || 'U'}
+                </AvatarFallback>
               </Avatar>
-              <div className="flex-1">
+              <div className="flex-1 text-center md:text-left">
                 <h2 className="text-xl font-semibold">{profile.full_name}</h2>
-                <p className="text-muted-foreground">{profile.email}</p>
-                <div className="flex items-center space-x-4 mt-2">
-                  <Badge variant="outline" className="flex items-center space-x-1">
-                    <Star className="h-3 w-3" />
-                    <span>{travelStats?.loyaltyTier}</span>
+                <p className="text-muted-foreground text-sm">{profile.email}</p>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3">
+                  <Badge variant="outline" className="flex items-center space-x-1 gradient-gold">
+                    <Star className="h-3 w-3 fill-current" />
+                    <span>{travelStats?.loyaltyTier} Member</span>
                   </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    Member since {new Date(profile.member_since).toLocaleDateString()}
+                  <span className="text-xs text-muted-foreground">
+                    Member since {new Date(profile.created_at!).toLocaleDateString()}
                   </span>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold">{profile.loyalty_points || 0}</div>
-                <div className="text-sm text-muted-foreground">Loyalty Points</div>
+              <div className="text-center bg-gradient-to-br from-primary/10 to-accent/10 p-4 rounded-lg">
+                <div className="text-3xl font-bold text-primary">{profile.loyalty_points || 0}</div>
+                <div className="text-xs text-muted-foreground font-medium">Loyalty Points</div>
               </div>
             </div>
           </CardContent>
@@ -254,48 +290,50 @@ const UserDashboard = () => {
 
       {/* Stats Cards */}
       {travelStats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="hover-scale border-l-4 border-l-primary">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Trips</CardTitle>
-              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <MapPin className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{travelStats.totalTrips}</div>
-              <p className="text-xs text-muted-foreground">Completed bookings</p>
+              <div className="text-3xl font-bold text-primary">{travelStats.totalTrips}</div>
+              <p className="text-xs text-muted-foreground mt-1">Completed bookings</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover-scale border-l-4 border-l-accent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <CreditCard className="h-4 w-4 text-accent" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₹{travelStats.totalSpent.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">All time</p>
+              <div className="text-3xl font-bold text-accent">₹{travelStats.totalSpent.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground mt-1">All time</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover-scale border-l-4 border-l-blue-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Avg Trip Duration</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{travelStats.averageTripDuration.toFixed(1)}</div>
-              <p className="text-xs text-muted-foreground">Days per trip</p>
+              <div className="text-3xl font-bold text-blue-500">
+                {travelStats.averageTripDuration.toFixed(1)}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Days per trip</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover-scale border-l-4 border-l-purple-500">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Loyalty Tier</CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground" />
+              <Star className="h-4 w-4 text-purple-500 fill-purple-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{travelStats.loyaltyTier}</div>
-              <p className="text-xs text-muted-foreground">Current tier</p>
+              <div className="text-3xl font-bold text-purple-500">{travelStats.loyaltyTier}</div>
+              <p className="text-xs text-muted-foreground mt-1">Current tier</p>
             </CardContent>
           </Card>
         </div>
@@ -303,7 +341,7 @@ const UserDashboard = () => {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="bookings" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
           <TabsTrigger value="bookings">My Bookings</TabsTrigger>
           <TabsTrigger value="favorites">Favorites</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
@@ -313,50 +351,87 @@ const UserDashboard = () => {
         <TabsContent value="bookings" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Bookings</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Recent Bookings
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {bookings.length === 0 ? (
-                <div className="text-center py-8">
-                  <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="text-center py-12">
+                  <MapPin className="h-16 w-16 mx-auto text-muted-foreground mb-4 opacity-50" />
                   <h3 className="text-lg font-semibold mb-2">No bookings yet</h3>
-                  <p className="text-muted-foreground mb-4">Start planning your next adventure!</p>
-                  <Button>Explore Destinations</Button>
+                  <p className="text-muted-foreground mb-6">Start planning your next adventure!</p>
+                  <Link to="/">
+                    <Button variant="hero">Explore Destinations</Button>
+                  </Link>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {bookings.map((booking) => (
-                    <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
+                    <div 
+                      key={booking.id} 
+                      className="flex flex-col md:flex-row md:items-center justify-between p-5 border-2 rounded-xl hover:border-primary/50 transition-all hover:shadow-md"
+                    >
+                      <div className="flex items-start space-x-4 mb-4 md:mb-0">
+                        <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex-shrink-0">
                           {getItemIcon(booking.item_type)}
                         </div>
                         <div>
-                          <div className="font-semibold">
-                            {booking.item_type.charAt(0).toUpperCase() + booking.item_type.slice(1)} - {booking.item_id}
+                          <div className="font-semibold text-lg">
+                            {booking.item_type.charAt(0).toUpperCase() + booking.item_type.slice(1)}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {booking.start_date} {booking.end_date && `to ${booking.end_date}`}
+                          <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(booking.start_date).toLocaleDateString()} 
+                            {booking.end_date && ` - ${new Date(booking.end_date).toLocaleDateString()}`}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-xs text-muted-foreground mt-1 font-mono">
                             Ref: {booking.booking_reference}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center justify-between md:justify-end space-x-4">
                         <div className="text-right">
-                          <div className="font-semibold">{booking.currency} {booking.total_amount.toLocaleString()}</div>
-                          <Badge className={getStatusColor(booking.status)}>
-                            {booking.status}
-                          </Badge>
+                          <div className="text-xl font-bold text-primary">
+                            {booking.currency} {booking.total_amount.toLocaleString()}
+                          </div>
+                          <div className="flex gap-2 mt-2">
+                            <Badge className={getStatusColor(booking.status)}>
+                              {booking.status}
+                            </Badge>
+                            <Badge variant="outline">
+                              {booking.payment_status}
+                            </Badge>
+                          </div>
                         </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => downloadBookingDetails(booking)}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
+                        <div className="flex flex-col gap-2">
+                          {booking.status === 'pending' && booking.payment_status === 'pending' && (
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="whitespace-nowrap"
+                              onClick={() => handlePayLater(booking.id)}
+                              disabled={payingBooking === booking.id}
+                            >
+                              {payingBooking === booking.id ? (
+                                <>Processing...</>
+                              ) : (
+                                <>
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Mark as Paid
+                                </>
+                              )}
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadBookingDetails(booking)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -366,69 +441,36 @@ const UserDashboard = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="favorites" className="space-y-4">
+        <TabsContent value="favorites">
           <Card>
             <CardHeader>
-              <CardTitle>Favorite Destinations</CardTitle>
+              <CardTitle>Favorites</CardTitle>
+              <CardContent>
+                Feature comming soon
+              </CardContent>
             </CardHeader>
-            <CardContent>
-              {travelStats?.favoriteDestinations.length === 0 ? (
-                <div className="text-center py-8">
-                  <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No favorites yet</h3>
-                  <p className="text-muted-foreground">Start exploring and add destinations to your favorites!</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {travelStats?.favoriteDestinations.map((destination, index) => (
-                    <Card key={destination} className="relative">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="font-semibold">{destination}</h3>
-                            <p className="text-sm text-muted-foreground">#{index + 1} favorite</p>
-                          </div>
-                          <Button variant="ghost" size="sm">
-                            <Heart className="h-4 w-4 fill-red-500 text-red-500" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="reviews" className="space-y-4">
+        <TabsContent value="reviews">
           <Card>
             <CardHeader>
-              <CardTitle>My Reviews</CardTitle>
+              <CardTitle>Reviews</CardTitle>
+              <CardContent>
+                Feature comming soon
+              </CardContent>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Star className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No reviews yet</h3>
-                <p className="text-muted-foreground">Share your travel experiences with others!</p>
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="recommendations" className="space-y-4">
+        <TabsContent value="recommendations">
           <Card>
             <CardHeader>
-              <CardTitle>Personalized Recommendations</CardTitle>
+              <CardTitle>Recommendations</CardTitle>
+              <CardContent>
+                Feature comming soon
+              </CardContent>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Discover New Places</h3>
-                <p className="text-muted-foreground mb-4">Based on your travel history and preferences</p>
-                <Button>Get Recommendations</Button>
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
