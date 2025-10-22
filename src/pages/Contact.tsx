@@ -50,17 +50,17 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Visit Us",
-      content: "UA Biotech Park, Udaipur, Rajasthan, India",
+      content: "Alkapuri Gwalior - M.P. (India)",
     },
     {
       icon: Phone,
       title: "Call Us",
-      content: "+91 1234567890",
+      content: "+91 9039939555",
     },
     {
       icon: Mail,
       title: "Email Us",
-      content: "info@anaghasafar.com",
+      content: "support@anaghasafar.com",
     },
     {
       icon: Clock,
@@ -220,7 +220,7 @@ const Contact = () => {
               <div className="text-center">
                 <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">
-                  UA Biotech Park, Udaipur, Rajasthan
+                  Alkapuri Gwalior - M.P. (India)
                 </p>
               </div>
             </div>
