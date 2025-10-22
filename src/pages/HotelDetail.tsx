@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Star, MapPin, Wifi, Coffee, Waves, Dumbbell, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import BookingForm from "@/components/BookingForm";
 import ReviewSection from "@/components/ReviewSection";
 
 const HotelDetail = () => {

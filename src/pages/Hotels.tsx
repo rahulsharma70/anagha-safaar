@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
 import { useState, useMemo } from "react";
-import { travelAPI, HotelSearchParams, HotelOffer } from "@/lib/api/travel";
 import { format, addDays } from "date-fns";
 
 const Hotels = () => {
@@ -40,30 +39,8 @@ const Hotels = () => {
     },
   });
 
-  // Real API data query
-  const { data: apiHotels, isLoading: isLoadingAPI, error: apiError, refetch: refetchAPI } = useQuery({
-    queryKey: ["hotels-api", searchQuery, checkInDate, checkOutDate, adults, rooms],
-    queryFn: async () => {
-      if (!searchQuery.trim()) return [];
-      
-      const searchParams: HotelSearchParams = {
-        cityCode: searchQuery.toUpperCase(),
-        checkInDate,
-        checkOutDate,
-        adults,
-        rooms,
-        currency: "INR",
-      };
-
-      return await travelAPI.searchHotels(searchParams);
-    },
-    enabled: useRealAPI && searchQuery.trim().length > 0,
-    retry: 2,
-    retryDelay: 1000,
-  });
-
-  const hotels = useRealAPI ? apiHotels : localHotels;
-  const isLoading = useRealAPI ? isLoadingAPI : isLoadingLocal;
+  const hotels = localHotels;
+  const isLoading = isLoadingLocal;
 
   const filteredHotels = useMemo(() => {
     if (!hotels) return [];

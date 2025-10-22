@@ -2,17 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plane, Clock, Calendar, Search, RefreshCw, AlertCircle, MapPin, Users } from "lucide-react";
+import { Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
+import { useState, useMemo } from "react";
 import { format, addDays } from "date-fns";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState, useMemo } from "react";
-import { travelAPI, FlightSearchParams, FlightOffer } from "@/lib/api/travel";
 
 const Flights = () => {
   const navigate = useNavigate();
@@ -42,41 +41,17 @@ const Flights = () => {
     },
   });
 
-  // Real API data query
-  const { data: apiFlights, isLoading: isLoadingAPI, error: apiError, refetch: refetchAPI } = useQuery({
-    queryKey: ["flights-api", originCity, destinationCity, departureDate, returnDate, adults, children, infants, travelClass],
-    queryFn: async () => {
-      const searchParams: FlightSearchParams = {
-        originLocationCode: originCity,
-        destinationLocationCode: destinationCity,
-        departureDate,
-        returnDate,
-        adults,
-        children: children > 0 ? children : undefined,
-        infants: infants > 0 ? infants : undefined,
-        travelClass,
-        currency: "INR",
-      };
-
-      return await travelAPI.searchFlights(searchParams);
-    },
-    enabled: useRealAPI && originCity.trim().length > 0 && destinationCity.trim().length > 0,
-    retry: 2,
-    retryDelay: 1000,
-  });
-
-  const flights = useRealAPI ? apiFlights : localFlights;
-  const isLoading = useRealAPI ? isLoadingAPI : isLoadingLocal;
+  const flights = localFlights;
+  const isLoading = isLoadingLocal;
 
   const filteredFlights = useMemo(() => {
     if (!flights) return [];
     
     return flights.filter((flight) => {
-      // Handle both API and local data structures
-      const flightPrice = useRealAPI ? flight.price : flight.price_economy;
-      const flightAirline = useRealAPI ? flight.airline : flight.airline;
-      const flightDeparture = useRealAPI ? flight.departure.city : flight.departure_city;
-      const flightArrival = useRealAPI ? flight.arrival.city : flight.arrival_city;
+      const flightPrice = flight.price_economy;
+      const flightAirline = flight.airline;
+      const flightDeparture = flight.departure_city;
+      const flightArrival = flight.arrival_city;
       
       const matchesPrice = priceFilter === "all" || 
         (priceFilter === "low" && Number(flightPrice) < 5000) ||

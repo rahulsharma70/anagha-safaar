@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MapPin, Clock, Users, CheckCircle, XCircle, ArrowLeft, Calendar } from "lucide-react";
 import { useState } from "react";
-import BookingForm from "@/components/BookingForm";
 import ReviewSection from "@/components/ReviewSection";
 
 const TourDetail = () => {

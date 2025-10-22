@@ -44,6 +44,8 @@ interface UserProfile {
   email: string;
   phone?: string;
   avatar_url?: string;
+  created_at?: string;
+  updated_at?: string;
   preferences?: {
     currency: string;
     language: string;
@@ -87,7 +89,7 @@ const UserDashboard = () => {
         .order('created_at', { ascending: false });
 
       if (bookingsError) throw bookingsError;
-      setBookings(bookingsData || []);
+      setBookings((bookingsData || []) as UserBooking[]);
 
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
@@ -97,10 +99,10 @@ const UserDashboard = () => {
         .single();
 
       if (profileError) throw profileError;
-      setProfile(profileData);
+      setProfile(profileData as UserProfile);
 
       // Calculate travel stats
-      const stats = calculateTravelStats(bookingsData || []);
+      const stats = calculateTravelStats((bookingsData || []) as UserBooking[]);
       setTravelStats(stats);
 
     } catch (error) {

@@ -24,7 +24,6 @@ import CancellationPolicy from "./pages/CancellationPolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
-import ItineraryGenerator from "./components/ItineraryGenerator";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
 import UserDashboard from "./components/dashboard/UserDashboard";
 
@@ -74,7 +73,6 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/user-dashboard" element={<UserDashboard />} />
-                <Route path="/itinerary" element={<ItineraryGenerator />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/help" element={<HelpCenter />} />

@@ -12,7 +12,12 @@ export interface LogContext {
   sessionId?: string;
   component?: string;
   action?: string;
+  message?: string;
+  errors?: any;
+  level?: string;
+  data?: any;
   metadata?: Record<string, any>;
+  [key: string]: any; // Allow any additional properties
 }
 
 class Logger {
