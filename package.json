@@ -76,7 +76,14 @@
     "tailwindcss-animate": "^1.0.7",
     "twilio": "^5.10.3",
     "vaul": "^0.9.9",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "crypto-js": "^4.2.0",
+    "dompurify": "^3.0.8",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "ioredis": "^5.3.2",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
@@ -87,6 +94,8 @@
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
+    "@types/crypto-js": "^4.2.1",
+    "@types/dompurify": "^3.0.5",
     "@vitejs/plugin-react": "^5.0.4",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.21",
