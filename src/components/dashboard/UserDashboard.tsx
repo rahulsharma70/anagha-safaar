@@ -17,11 +17,14 @@ import {
   CreditCard,
   Settings,
   Bell,
-  Heart
+  Heart,
+  Shield
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserRole } from '@/hooks/useUserRole';
 import { logger } from '@/lib/logger';
+import { Link } from 'react-router-dom';
 
 interface UserBooking {
   id: string;
@@ -66,6 +69,7 @@ interface TravelStats {
 
 const UserDashboard = () => {
   const { user } = useAuth();
+  const { role } = useUserRole();
   const [bookings, setBookings] = useState<UserBooking[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [travelStats, setTravelStats] = useState<TravelStats | null>(null);

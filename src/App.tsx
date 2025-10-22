@@ -5,11 +5,18 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AuthSecurityProvider } from "@/hooks/useAuthSecurity";
 import { BookingProvider } from "@/contexts/BookingContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { SessionExpirationModal } from "@/components/auth/SessionExpirationModal";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import EnhancedAuth from "./pages/EnhancedAuth";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import SecuritySettings from "./pages/SecuritySettings";
+import AccessDenied from "./pages/AccessDenied";
 import Hotels from "./pages/Hotels";
 import HotelDetail from "./pages/HotelDetail";
 import Tours from "./pages/Tours";
@@ -60,10 +67,16 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <AuthProvider>
-                <BookingProvider>
+                <AuthSecurityProvider>
+                  <SessionExpirationModal />
+                  <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
+                <Route path="/auth" element={<EnhancedAuth />} />
+                <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+                <Route path="/auth/reset-password" element={<ResetPassword />} />
+                <Route path="/security-settings" element={<SecuritySettings />} />
+                <Route path="/access-denied" element={<AccessDenied />} />
                 <Route path="/hotels" element={<Hotels />} />
                 <Route path="/hotels/:slug" element={<HotelDetail />} />
                 <Route path="/tours" element={<Tours />} />
@@ -85,8 +98,9 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               </BookingProvider>
-            </AuthProvider>
-          </BrowserRouter>
+                </AuthSecurityProvider>
+              </AuthProvider>
+            </BrowserRouter>
         </TooltipProvider>
         </ThemeProvider>
       </QueryClientProvider>

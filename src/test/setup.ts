@@ -7,11 +7,4 @@ process.env.VITE_SUPABASE_URL = 'https://test.supabase.co';
 process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key';
 
 // Global test setup
-beforeEach(() => {
-  // Reset any global state before each test
-  // Note: Using vitest globals instead of jest
-});
-
-afterEach(() => {
-  // Cleanup after each test
-});
+// Note: Test globals are handled by vitest configuration
