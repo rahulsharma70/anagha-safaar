@@ -11,6 +11,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { MapPin, Clock, Users, CheckCircle, XCircle, ArrowLeft, Calendar } from "lucide-react";
 import { useState } from "react";
 import ReviewSection from "@/components/ReviewSection";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const TourDetail = () => {
   const { slug } = useParams();

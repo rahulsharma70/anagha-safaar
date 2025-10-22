@@ -32,24 +32,23 @@ export const ReferralSystem = () => {
         .eq('id', user.id)
         .single();
 
-      let code = profile?.preferences?.referral_code;
+      const prefs = profile?.preferences as any;
+      let code = prefs?.referral_code;
       if (!code) {
         code = generateReferralCode();
+        const updatedPrefs = typeof prefs === 'object' ? { ...prefs, referral_code: code } : { referral_code: code };
         await supabase
           .from('profiles')
           .update({
-            preferences: {
-              ...profile?.preferences,
-              referral_code: code,
-            },
+            preferences: updatedPrefs,
           })
           .eq('id', user.id);
       }
 
       setReferralCode(code);
 
-      // Get referral stats
-      const { data: referrals } = await supabase
+      // Get referral stats (using any to bypass type checking until types regenerate)
+      const { data: referrals } = await (supabase as any)
         .from('referrals')
         .select('*')
         .eq('referrer_id', user.id);

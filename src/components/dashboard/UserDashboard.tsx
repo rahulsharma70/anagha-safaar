@@ -25,6 +25,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { logger } from '@/lib/logger';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { LoyaltyPoints } from '@/components/loyalty/LoyaltyPoints';
+import { ReferralSystem } from '@/components/referral/ReferralSystem';
 
 interface UserBooking {
   id: string;
@@ -67,6 +69,7 @@ const UserDashboard = () => {
   const [travelStats, setTravelStats] = useState<TravelStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [payingBooking, setPayingBooking] = useState<string | null>(null);
+  const [loyaltyData, setLoyaltyData] = useState({ points: 0, tier: 'bronze' as any });
 
   useEffect(() => {
     if (user) {
@@ -98,6 +101,17 @@ const UserDashboard = () => {
 
       const stats = calculateTravelStats((bookingsData || []) as UserBooking[]);
       setTravelStats(stats);
+
+      // Fetch loyalty points
+      const { data: loyaltyPoints } = await (supabase as any)
+        .from('loyalty_points')
+        .select('points, tier')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+
+      if (loyaltyPoints) {
+        setLoyaltyData(loyaltyPoints);
+      }
 
     } catch (error) {
       logger.error('Error fetching user data:', error);
@@ -308,18 +322,28 @@ const UserDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="hover-scale border-l-4 border-l-purple-500">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Loyalty Tier</CardTitle>
-              <Star className="h-4 w-4 text-purple-500 fill-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-purple-500">{travelStats.loyaltyTier}</div>
-              <p className="text-xs text-muted-foreground mt-1">Current tier</p>
-            </CardContent>
-          </Card>
+          <Link to="/wishlist" className="block">
+            <Card className="hover-scale border-l-4 border-l-purple-500 h-full cursor-pointer">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">My Wishlist</CardTitle>
+                <Heart className="h-4 w-4 text-purple-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-purple-500">
+                  <Heart className="h-8 w-8 fill-purple-500" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">View saved items</p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       )}
+
+      {/* Loyalty and Referral Section */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <LoyaltyPoints points={loyaltyData.points} tier={loyaltyData.tier} />
+        <ReferralSystem />
+      </div>
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="bookings" className="space-y-4">

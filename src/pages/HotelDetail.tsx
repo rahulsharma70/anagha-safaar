@@ -12,6 +12,7 @@ import { useState } from "react";
 import ReviewSection from "@/components/ReviewSection";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 
 const HotelDetail = () => {
   const { slug } = useParams();

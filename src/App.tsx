@@ -10,6 +10,8 @@ import { BookingProvider } from "@/contexts/BookingContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { SessionExpirationModal } from "@/components/auth/SessionExpirationModal";
 import { useEffect } from "react";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EnhancedAuth from "./pages/EnhancedAuth";
@@ -37,6 +39,7 @@ import BookingCheckout from "./pages/BookingCheckout";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import DashboardSettings from "./pages/DashboardSettings";
 import DashboardNotifications from "./pages/DashboardNotifications";
+import Wishlist from "./pages/Wishlist";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +58,8 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  const { showOnboarding, completeOnboarding } = useOnboarding();
+
   useEffect(() => {
     // App initialization
     console.log('App initialized');
@@ -71,6 +76,7 @@ const App = () => {
               <AuthProvider>
                 <AuthSecurityProvider>
                   <SessionExpirationModal />
+                  <OnboardingModal open={showOnboarding} onComplete={completeOnboarding} />
                   <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
@@ -98,6 +104,7 @@ const App = () => {
             <Route path="/booking/confirmation/:bookingId" element={<BookingConfirmationPage />} />
             <Route path="/dashboard/settings" element={<DashboardSettings />} />
             <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

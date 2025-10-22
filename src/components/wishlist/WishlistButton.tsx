@@ -25,7 +25,7 @@ export const WishlistButton = ({ itemId, itemType, itemName }: WishlistButtonPro
   const checkFavoriteStatus = async () => {
     if (!user) return;
 
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from('wishlist')
       .select('id')
       .eq('user_id', user.id)
@@ -45,7 +45,7 @@ export const WishlistButton = ({ itemId, itemType, itemName }: WishlistButtonPro
     setLoading(true);
     try {
       if (isFavorite) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('wishlist')
           .delete()
           .eq('user_id', user.id)
@@ -56,7 +56,7 @@ export const WishlistButton = ({ itemId, itemType, itemName }: WishlistButtonPro
         toast.success('Removed from wishlist');
         setIsFavorite(false);
       } else {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('wishlist')
           .insert({
             user_id: user.id,
