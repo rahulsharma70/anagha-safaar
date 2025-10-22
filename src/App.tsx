@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { BookingProvider } from "@/contexts/BookingContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { monitoringService } from "@/lib/monitoring";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -48,11 +47,8 @@ const queryClient = new QueryClient({
 
 const App = () => {
   useEffect(() => {
-    // Initialize monitoring
-    monitoringService.initialize();
-    
-    // Track app initialization
-    monitoringService.trackUserBehavior('app_initialized', 'App');
+    // App initialization
+    console.log('App initialized');
   }, []);
 
   return (

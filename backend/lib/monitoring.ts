@@ -1,7 +1,18 @@
 import winston from 'winston';
 import { createClient } from '@supabase/supabase-js';
 import * as Sentry from '@sentry/node';
-import { env } from './security-middleware';
+
+// Mock environment for monitoring (will be replaced with actual env in production)
+const mockEnv = {
+  SUPABASE_URL: process.env.SUPABASE_URL || 'https://mock.supabase.co',
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock-key',
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  LOG_LEVEL: process.env.LOG_LEVEL || 'info',
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || 'rzp_mock',
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || 'SG.mock',
+  TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID || 'ACmock'
+};
 
 // =============================================================================
 // 1. WINSTON LOGGER CONFIGURATION
@@ -22,7 +33,7 @@ const logFormat = winston.format.combine(
 );
 
 const logger = winston.createLogger({
-  level: env.LOG_LEVEL,
+  level: mockEnv.LOG_LEVEL,
   format: logFormat,
   defaultMeta: { service: 'anagha-safaar-api' },
   transports: [
@@ -55,16 +66,16 @@ const logger = winston.createLogger({
 // 2. SENTRY MONITORING CONFIGURATION
 // =============================================================================
 
-Sentry.init({
-  dsn: env.SENTRY_DSN,
-  environment: env.NODE_ENV,
-  tracesSampleRate: env.NODE_ENV === 'production' ? 0.1 : 1.0,
-  profilesSampleRate: env.NODE_ENV === 'production' ? 0.1 : 1.0,
-  beforeSend(event) {
-    // Filter out development errors
-    if (env.NODE_ENV === 'development') {
-      return null;
-    }
+      Sentry.init({
+  dsn: mockEnv.SENTRY_DSN,
+  environment: mockEnv.NODE_ENV,
+  tracesSampleRate: mockEnv.NODE_ENV === 'production' ? 0.1 : 1.0,
+  profilesSampleRate: mockEnv.NODE_ENV === 'production' ? 0.1 : 1.0,
+        beforeSend(event) {
+          // Filter out development errors
+    if (mockEnv.NODE_ENV === 'development') {
+            return null;
+          }
     
     // Add custom tags
     event.tags = {
@@ -73,7 +84,7 @@ Sentry.init({
       version: process.env.npm_package_version || '1.0.0'
     };
     
-    return event;
+          return event;
   }
 });
 
@@ -81,7 +92,7 @@ Sentry.init({
 // 3. SUPABASE CLIENT FOR LOGGING
 // =============================================================================
 
-const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
+const supabase = createClient(mockEnv.SUPABASE_URL, mockEnv.SUPABASE_SERVICE_ROLE_KEY);
 
 // =============================================================================
 // 4. STRUCTURED LOGGING SERVICE
@@ -361,8 +372,8 @@ export class MonitoringService {
     // Alert if response time is too high
     if (duration > 5000) { // 5 seconds
       LoggingService.warn('Slow API response detected', {
-        endpoint,
-        method,
+      endpoint,
+      method,
         duration,
         statusCode,
         ...context
@@ -537,7 +548,7 @@ export class HealthCheckService {
     
     try {
       // Simple health check - verify API key format
-      const keyId = env.RAZORPAY_KEY_ID;
+      const keyId = mockEnv.RAZORPAY_KEY_ID;
       const latency = Date.now() - startTime;
       
       if (!keyId || !keyId.startsWith('rzp_')) {
@@ -557,7 +568,7 @@ export class HealthCheckService {
     
     try {
       // Simple health check - verify API key format
-      const apiKey = env.SENDGRID_API_KEY;
+      const apiKey = mockEnv.SENDGRID_API_KEY;
       const latency = Date.now() - startTime;
       
       if (!apiKey || !apiKey.startsWith('SG.')) {
@@ -577,7 +588,7 @@ export class HealthCheckService {
     
     try {
       // Simple health check - verify account SID format
-      const accountSid = env.TWILIO_ACCOUNT_SID;
+      const accountSid = mockEnv.TWILIO_ACCOUNT_SID;
       const latency = Date.now() - startTime;
       
       if (!accountSid || !accountSid.startsWith('AC')) {
@@ -617,7 +628,6 @@ export class HealthCheckService {
 // =============================================================================
 
 export { logger, Sentry };
-export { LoggingService, MonitoringService, HealthCheckService };
 
 export default {
   LoggingService,

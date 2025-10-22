@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => ({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    exclude: ['**/node_modules/**', '**/backend/**'],
   },
   resolve: {
     alias: {
