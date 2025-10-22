@@ -46,11 +46,11 @@ const Hotels = () => {
     if (!hotels) return [];
     
     return hotels.filter((hotel) => {
-      // Handle both local Supabase data and API data structures
-      const hotelName = useRealAPI ? hotel.name : hotel.name;
-      const hotelPrice = useRealAPI ? hotel.price : hotel.price_per_night;
-      const hotelRating = useRealAPI ? hotel.starRating : hotel.star_rating;
-      const hotelLocation = useRealAPI ? hotel.location.city : hotel.location_city;
+      // Use local database structure
+      const hotelName = hotel.name;
+      const hotelPrice = hotel.price_per_night;
+      const hotelRating = hotel.star_rating;
+      const hotelLocation = hotel.location_city;
       
       const matchesSearch = searchQuery === "" || 
         hotelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -172,30 +172,10 @@ const Hotels = () => {
                     onClick={() => setUseRealAPI(!useRealAPI)}
                     className="flex items-center gap-2"
                   >
-                    {useRealAPI ? "Live Search" : "Sample Data"}
+                    Sample Data
                   </Button>
-                  {useRealAPI && (
-                    <Button
-                      variant="outline"
-                      onClick={() => refetchAPI()}
-                      disabled={isLoadingAPI}
-                      className="flex items-center gap-2"
-                    >
-                      <RefreshCw className={`h-4 w-4 ${isLoadingAPI ? 'animate-spin' : ''}`} />
-                      Refresh
-                    </Button>
-                  )}
                 </div>
               </div>
-              
-              {apiError && (
-                <Alert className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Failed to fetch live hotel data. Showing sample data instead.
-                  </AlertDescription>
-                </Alert>
-              )}
             </CardContent>
           </Card>
         </section>
@@ -217,15 +197,13 @@ const Hotels = () => {
               {filteredHotels.map((hotel) => {
                 // Handle both API and local data structures
                 const hotelId = useRealAPI ? hotel.id : hotel.id;
-                const hotelSlug = useRealAPI ? hotel.id : hotel.slug;
-                const hotelImages = useRealAPI ? hotel.images : hotel.images;
-                const hotelName = useRealAPI ? hotel.name : hotel.name;
-                const hotelLocation = useRealAPI 
-                  ? `${hotel.location.city}, ${hotel.location.country}`
-                  : `${hotel.location_city}, ${hotel.location_state}`;
-                const hotelRating = useRealAPI ? hotel.starRating : hotel.star_rating;
-                const hotelPrice = useRealAPI ? hotel.price : hotel.price_per_night;
-                const hotelFeatured = useRealAPI ? false : hotel.is_featured;
+                const hotelSlug = hotel.slug;
+                const hotelImages = hotel.images;
+                const hotelName = hotel.name;
+                const hotelLocation = `${hotel.location_city}, ${hotel.location_state}`;
+                const hotelRating = hotel.star_rating;
+                const hotelPrice = hotel.price_per_night;
+                const hotelFeatured = hotel.is_featured;
                 
                 return (
                   <Link key={hotelId} to={`/hotels/${hotelSlug}`}>

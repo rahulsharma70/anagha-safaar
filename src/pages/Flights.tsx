@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
+import { Plane, Clock, Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
 import { useState, useMemo } from "react";
 import { format, addDays } from "date-fns";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -198,28 +198,8 @@ const Flights = () => {
                   >
                     {useRealAPI ? "Live Search" : "Sample Data"}
                   </Button>
-                  {useRealAPI && (
-                    <Button
-                      variant="outline"
-                      onClick={() => refetchAPI()}
-                      disabled={isLoadingAPI}
-                      className="flex items-center gap-2"
-                    >
-                      <RefreshCw className={`h-4 w-4 ${isLoadingAPI ? 'animate-spin' : ''}`} />
-                      Refresh
-                    </Button>
-                  )}
                 </div>
               </div>
-              
-              {apiError && (
-                <Alert className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Failed to fetch live flight data. Showing sample data instead.
-                  </AlertDescription>
-                </Alert>
-              )}
             </CardContent>
           </Card>
         </section>
@@ -235,15 +215,15 @@ const Flights = () => {
           ) : filteredFlights.length > 0 ? (
             <div className="space-y-4 max-w-4xl mx-auto">
               {filteredFlights.map((flight) => {
-                // Handle both API and local data structures
-                const flightId = useRealAPI ? flight.id : flight.id;
-                const flightAirline = useRealAPI ? flight.airline : flight.airline;
-                const flightNumber = useRealAPI ? flight.flightNumber : flight.flight_number;
-                const flightDepartureCity = useRealAPI ? flight.departure.city : flight.departure_city;
-                const flightArrivalCity = useRealAPI ? flight.arrival.city : flight.arrival_city;
-                const flightDepartureTime = useRealAPI ? flight.departure.time : flight.departure_time;
-                const flightArrivalTime = useRealAPI ? flight.arrival.time : flight.arrival_time;
-                const flightPrice = useRealAPI ? flight.price : flight.price_economy;
+                // Use local database structure
+                const flightId = flight.id;
+                const flightAirline = flight.airline;
+                const flightNumber = flight.flight_number;
+                const flightDepartureCity = flight.departure_city;
+                const flightArrivalCity = flight.arrival_city;
+                const flightDepartureTime = flight.departure_time;
+                const flightArrivalTime = flight.arrival_time;
+                const flightPrice = flight.price_economy;
                 
                 return (
                   <Card key={flightId} className="p-6 hover:shadow-lg transition-smooth">
