@@ -64,12 +64,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/cancellation" className="hover:text-accent transition-smooth">
+                <Link to="/cancellation-policy" className="hover:text-accent transition-smooth">
                   Cancellation Policy
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="hover:text-accent transition-smooth">
+                <Link to="/privacy-policy" className="hover:text-accent transition-smooth">
                   Privacy Policy
                 </Link>
               </li>
