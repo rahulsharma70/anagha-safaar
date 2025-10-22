@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Award, Shield, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-travel.jpg";
+import himalayanRetreat from "@/assets/himalayan-retreat.jpg";
+import varanasiGhats from "@/assets/varanasi-ghats.jpg";
+import keralaBackwaters from "@/assets/kerala-backwaters.jpg";
+import rajasthanHeritage from "@/assets/rajasthan-heritage.jpg";
 
 const Index = () => {
   const featuredPackages = [
     {
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop",
+      image: himalayanRetreat,
       title: "Luxury Himalayan Retreat",
       location: "Dharamshala, HP",
       duration: "5 Days",
@@ -21,7 +25,7 @@ const Index = () => {
       href: "/tours/luxury-himalayan-retreat",
     },
     {
-      image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop",
+      image: varanasiGhats,
       title: "Spiritual Varanasi Tour",
       location: "Varanasi, UP",
       duration: "3 Days",
@@ -31,7 +35,7 @@ const Index = () => {
       href: "/tours/spiritual-varanasi-tour",
     },
     {
-      image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&h=600&fit=crop",
+      image: keralaBackwaters,
       title: "Kerala Backwaters Cruise",
       location: "Alleppey, Kerala",
       duration: "4 Days",
@@ -42,7 +46,7 @@ const Index = () => {
       href: "/tours/kerala-backwaters-cruise",
     },
     {
-      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&h=600&fit=crop",
+      image: rajasthanHeritage,
       title: "Rajasthan Heritage Trail",
       location: "Jaipur, Rajasthan",
       duration: "7 Days",
