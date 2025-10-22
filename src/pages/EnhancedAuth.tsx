@@ -7,7 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { PasswordStrengthIndicator, validatePassword } from "@/components/auth/PasswordStrengthIndicator";
+import { PasswordRequirements } from "@/components/auth/PasswordRequirements";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import CaptchaComponent from "@/components/CaptchaComponent";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -41,49 +43,77 @@ const EnhancedAuth = () => {
     e.preventDefault();
     
     if (requireCaptcha && !captchaToken) {
+      toast.error("Please complete the CAPTCHA verification");
       return;
     }
 
     setIsLoading(true);
-    try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setAttemptCount(prev => prev + 1);
-      } else {
-        setAttemptCount(0);
-      }
-    } catch (error) {
+    const { error } = await signIn(email, password);
+    
+    if (error) {
       setAttemptCount(prev => prev + 1);
-    } finally {
+      
+      // Check for account lockout
+      if (error.message?.toLowerCase().includes('locked') || 
+          error.message?.toLowerCase().includes('too many requests') ||
+          error.message?.toLowerCase().includes('rate limit')) {
+        toast.error("Account locked. Try again after 15 minutes.", {
+          duration: 8000,
+          description: "Multiple failed login attempts detected. For security, your account has been temporarily locked."
+        });
+      } else if (error.message?.toLowerCase().includes('invalid')) {
+        toast.error("Invalid email or password", {
+          description: `${5 - attemptCount} attempts remaining before account lock`
+        });
+      } else {
+        toast.error("Unable to sign in. Please check your credentials.");
+      }
+      
       setIsLoading(false);
-      setCaptchaToken(null);
+      return;
     }
+
+    setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Validate password strength
     if (!validation.isValid) {
+      toast.error("Password does not meet security requirements", {
+        description: "Password must be at least 8 characters with uppercase, lowercase, number, and special character"
+      });
       return;
     }
 
     if (!passwordsMatch) {
+      toast.error("Passwords do not match");
       return;
     }
-
+    
     if (requireCaptcha && !captchaToken) {
+      toast.error("Please complete the CAPTCHA verification");
       return;
     }
 
     setIsLoading(true);
-    try {
-      await signUp(email, password);
-      setAttemptCount(0);
-    } catch (error) {
-      // Error handled by useAuth
-    } finally {
-      setIsLoading(false);
-      setCaptchaToken(null);
+    const { error } = await signUp(email, password);
+    setIsLoading(false);
+
+    if (error) {
+      // Check for password-related errors from backend
+      if (error.message?.toLowerCase().includes('password')) {
+        toast.error("Password is too weak or commonly used", {
+          description: "Please choose a stronger, unique password"
+        });
+      } else if (error.message?.toLowerCase().includes('email')) {
+        toast.error("Email is already registered", {
+          description: "Please sign in or use a different email"
+        });
+      } else {
+        toast.error("Unable to create account. Please try again.");
+      }
     }
   };
 
@@ -210,6 +240,7 @@ const EnhancedAuth = () => {
                     
                     <div className="space-y-2">
                       <Label htmlFor="signup-password">Password</Label>
+                      <PasswordRequirements />
                       <div className="relative">
                         <Input
                           id="signup-password"

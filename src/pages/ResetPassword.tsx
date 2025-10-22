@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuthSecurity } from '@/hooks/useAuthSecurity';
 import { PasswordStrengthIndicator, validatePassword } from '@/components/auth/PasswordStrengthIndicator';
+import { PasswordRequirements } from '@/components/auth/PasswordRequirements';
 import { Eye, EyeOff } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -61,6 +62,7 @@ const ResetPassword = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="password">New Password</Label>
+                  <PasswordRequirements />
                   <div className="relative">
                     <Input
                       id="password"

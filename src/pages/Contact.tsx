@@ -19,8 +19,32 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Field length limits
+  const LIMITS = {
+    name: 100,
+    email: 255,
+    phone: 20,
+    subject: 200,
+    message: 2000,
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate lengths
+    if (formData.name.length > LIMITS.name) {
+      toast.error(`Name must be less than ${LIMITS.name} characters`);
+      return;
+    }
+    if (formData.subject.length > LIMITS.subject) {
+      toast.error(`Subject must be less than ${LIMITS.subject} characters`);
+      return;
+    }
+    if (formData.message.length > LIMITS.message) {
+      toast.error(`Message must be less than ${LIMITS.message} characters`);
+      return;
+    }
+
     setIsSubmitting(true);
 
     // Simulate form submission
@@ -131,18 +155,29 @@ const Contact = () => {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Full Name *</Label>
+                        <Label htmlFor="name">
+                          Full Name * 
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({formData.name.length}/{LIMITS.name})
+                          </span>
+                        </Label>
                         <Input
                           id="name"
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
                           placeholder="John Doe"
+                          maxLength={LIMITS.name}
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email Address *</Label>
+                        <Label htmlFor="email">
+                          Email Address *
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({formData.email.length}/{LIMITS.email})
+                          </span>
+                        </Label>
                         <Input
                           id="email"
                           name="email"
@@ -150,6 +185,7 @@ const Contact = () => {
                           value={formData.email}
                           onChange={handleChange}
                           placeholder="john@example.com"
+                          maxLength={LIMITS.email}
                           required
                         />
                       </div>
@@ -157,7 +193,12 @@ const Contact = () => {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
+                        <Label htmlFor="phone">
+                          Phone Number
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({formData.phone.length}/{LIMITS.phone})
+                          </span>
+                        </Label>
                         <Input
                           id="phone"
                           name="phone"
@@ -165,23 +206,35 @@ const Contact = () => {
                           value={formData.phone}
                           onChange={handleChange}
                           placeholder="+91 1234567890"
+                          maxLength={LIMITS.phone}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="subject">Subject *</Label>
+                        <Label htmlFor="subject">
+                          Subject *
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({formData.subject.length}/{LIMITS.subject})
+                          </span>
+                        </Label>
                         <Input
                           id="subject"
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="How can we help?"
+                          maxLength={LIMITS.subject}
                           required
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="message">
+                        Message *
+                        <span className="text-xs text-muted-foreground ml-2">
+                          ({formData.message.length}/{LIMITS.message})
+                        </span>
+                      </Label>
                       <Textarea
                         id="message"
                         name="message"
@@ -189,8 +242,14 @@ const Contact = () => {
                         onChange={handleChange}
                         placeholder="Tell us more about your inquiry..."
                         rows={6}
+                        maxLength={LIMITS.message}
                         required
                       />
+                      {formData.message.length > LIMITS.message * 0.9 && (
+                        <p className="text-xs text-warning">
+                          Approaching character limit
+                        </p>
+                      )}
                     </div>
 
                     <Button

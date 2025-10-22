@@ -44,22 +44,35 @@ export const GuestDetailsStep = () => {
     const newErrors: Record<string, string> = {};
     
     guests.forEach((guest, index) => {
+      // Length validation
       if (!guest.firstName.trim()) {
         newErrors[`${index}-firstName`] = 'First name is required';
+      } else if (guest.firstName.length > 50) {
+        newErrors[`${index}-firstName`] = 'First name must be less than 50 characters';
       }
+      
       if (!guest.lastName.trim()) {
         newErrors[`${index}-lastName`] = 'Last name is required';
+      } else if (guest.lastName.length > 50) {
+        newErrors[`${index}-lastName`] = 'Last name must be less than 50 characters';
       }
+      
       if (index === 0) {
         if (!guest.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.email)) {
           newErrors[`${index}-email`] = 'Valid email is required';
+        } else if (guest.email.length > 255) {
+          newErrors[`${index}-email`] = 'Email must be less than 255 characters';
         }
+        
         if (!guest.phone.trim() || !/^\d{10}$/.test(guest.phone)) {
           newErrors[`${index}-phone`] = 'Valid 10-digit phone is required';
         }
       }
+      
       if (!guest.idNumber.trim()) {
         newErrors[`${index}-idNumber`] = 'ID number is required';
+      } else if (guest.idNumber.length > 30) {
+        newErrors[`${index}-idNumber`] = 'ID number must be less than 30 characters';
       }
     });
     
@@ -95,12 +108,18 @@ export const GuestDetailsStep = () => {
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`first-name-${index}`}>First Name*</Label>
+                  <Label htmlFor={`first-name-${index}`}>
+                    First Name* 
+                    <span className="text-xs text-muted-foreground ml-2">
+                      (max 50)
+                    </span>
+                  </Label>
                   <Input
                     id={`first-name-${index}`}
                     value={guest.firstName}
                     onChange={(e) => updateGuest(index, 'firstName', e.target.value)}
                     placeholder="Enter first name"
+                    maxLength={50}
                   />
                   {errors[`${index}-firstName`] && (
                     <p className="text-sm text-destructive">{errors[`${index}-firstName`]}</p>
@@ -108,12 +127,18 @@ export const GuestDetailsStep = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`last-name-${index}`}>Last Name*</Label>
+                  <Label htmlFor={`last-name-${index}`}>
+                    Last Name*
+                    <span className="text-xs text-muted-foreground ml-2">
+                      (max 50)
+                    </span>
+                  </Label>
                   <Input
                     id={`last-name-${index}`}
                     value={guest.lastName}
                     onChange={(e) => updateGuest(index, 'lastName', e.target.value)}
                     placeholder="Enter last name"
+                    maxLength={50}
                   />
                   {errors[`${index}-lastName`] && (
                     <p className="text-sm text-destructive">{errors[`${index}-lastName`]}</p>
@@ -124,13 +149,19 @@ export const GuestDetailsStep = () => {
               {index === 0 && (
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor={`email-${index}`}>Email*</Label>
+                    <Label htmlFor={`email-${index}`}>
+                      Email*
+                      <span className="text-xs text-muted-foreground ml-2">
+                        (max 255)
+                      </span>
+                    </Label>
                     <Input
                       id={`email-${index}`}
                       type="email"
                       value={guest.email}
                       onChange={(e) => updateGuest(index, 'email', e.target.value)}
                       placeholder="email@example.com"
+                      maxLength={255}
                     />
                     {errors[`${index}-email`] && (
                       <p className="text-sm text-destructive">{errors[`${index}-email`]}</p>
@@ -138,13 +169,19 @@ export const GuestDetailsStep = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor={`phone-${index}`}>Phone*</Label>
+                    <Label htmlFor={`phone-${index}`}>
+                      Phone*
+                      <span className="text-xs text-muted-foreground ml-2">
+                        (10 digits)
+                      </span>
+                    </Label>
                     <Input
                       id={`phone-${index}`}
                       type="tel"
                       value={guest.phone}
                       onChange={(e) => updateGuest(index, 'phone', e.target.value)}
                       placeholder="10-digit mobile number"
+                      maxLength={10}
                     />
                     {errors[`${index}-phone`] && (
                       <p className="text-sm text-destructive">{errors[`${index}-phone`]}</p>
@@ -155,7 +192,12 @@ export const GuestDetailsStep = () => {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor={`id-type-${index}`}>ID Type*</Label>
+                  <Label htmlFor={`id-type-${index}`}>
+                    ID Type*
+                    <span className="text-xs text-muted-foreground ml-2">
+                      (for verification only)
+                    </span>
+                  </Label>
                   <Select
                     value={guest.idType}
                     onValueChange={(value: 'passport' | 'aadhar' | 'license') =>
@@ -174,12 +216,18 @@ export const GuestDetailsStep = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`id-number-${index}`}>ID Number*</Label>
+                  <Label htmlFor={`id-number-${index}`}>
+                    ID Number*
+                    <span className="text-xs text-muted-foreground ml-2">
+                      (max 30, encrypted)
+                    </span>
+                  </Label>
                   <Input
                     id={`id-number-${index}`}
                     value={guest.idNumber}
                     onChange={(e) => updateGuest(index, 'idNumber', e.target.value)}
                     placeholder="Enter ID number"
+                    maxLength={30}
                   />
                   {errors[`${index}-idNumber`] && (
                     <p className="text-sm text-destructive">{errors[`${index}-idNumber`]}</p>

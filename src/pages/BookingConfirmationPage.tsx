@@ -145,11 +145,11 @@ const BookingConfirmationPage = () => {
           {primaryGuest && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Primary Guest Details</CardTitle>
+                <CardTitle>Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div>
-                  <p className="text-sm text-muted-foreground">Name</p>
+                  <p className="text-sm text-muted-foreground">Guest Name</p>
                   <p className="font-medium">
                     {primaryGuest.firstName} {primaryGuest.lastName}
                   </p>
@@ -162,6 +162,9 @@ const BookingConfirmationPage = () => {
                   <p className="text-sm text-muted-foreground">Phone</p>
                   <p className="font-medium">{primaryGuest.phone}</p>
                 </div>
+                <p className="text-xs text-muted-foreground pt-2 border-t">
+                  ID verification details are securely stored and encrypted
+                </p>
               </CardContent>
             </Card>
           )}

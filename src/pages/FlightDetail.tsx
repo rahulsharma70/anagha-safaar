@@ -50,7 +50,7 @@ const FlightDetail = () => {
 
     try {
       const price = flightClass === "economy" ? flight?.price_economy : flight?.price_business;
-      const bookingReference = `FL${Date.now().toString().slice(-8)}`;
+      const bookingReference = 'BK' + crypto.randomUUID().slice(0, 8).toUpperCase();
 
       const { error } = await supabase.from("bookings").insert({
         user_id: user.id,
@@ -60,17 +60,20 @@ const FlightDetail = () => {
         start_date: bookingDate,
         guests_count: passengers,
         total_amount: price * passengers,
-        status: "confirmed",
+        status: "pending",
         payment_status: "pending",
         guest_details: { class: flightClass },
       });
 
       if (error) throw error;
 
-      toast.success("Flight booked successfully!");
-      navigate("/dashboard");
+      toast.success("Booking created! Complete payment to confirm.");
+      navigate(`/booking-confirmation/${bookingReference}`, { 
+        state: { bookingReference } 
+      });
     } catch (error: any) {
-      toast.error(error.message || "Booking failed");
+      toast.error("Unable to process booking. Please try again.");
+      console.error('Booking error:', error);
     }
   };
 
