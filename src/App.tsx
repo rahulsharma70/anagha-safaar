@@ -10,8 +10,7 @@ import { BookingProvider } from "@/contexts/BookingContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { SessionExpirationModal } from "@/components/auth/SessionExpirationModal";
 import { useEffect } from "react";
-import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
-import { useOnboarding } from "@/hooks/useOnboarding";
+import { AppContent } from "@/components/AppContent";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EnhancedAuth from "./pages/EnhancedAuth";
@@ -58,8 +57,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const { showOnboarding, completeOnboarding } = useOnboarding();
-
   useEffect(() => {
     // App initialization
     console.log('App initialized');
@@ -76,8 +73,8 @@ const App = () => {
               <AuthProvider>
                 <AuthSecurityProvider>
                   <SessionExpirationModal />
-                  <OnboardingModal open={showOnboarding} onComplete={completeOnboarding} />
-                  <BookingProvider>
+                  <AppContent>
+                    <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<EnhancedAuth />} />
@@ -109,6 +106,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               </BookingProvider>
+                  </AppContent>
                 </AuthSecurityProvider>
               </AuthProvider>
             </BrowserRouter>
