@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { BookingProvider } from "@/contexts/BookingContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { monitoringService } from "@/lib/monitoring";
 import { useEffect } from "react";
@@ -26,6 +27,8 @@ import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
 import UserDashboard from "./components/dashboard/UserDashboard";
+import BookingCheckout from "./pages/BookingCheckout";
+import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +64,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <AuthProvider>
+                <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
@@ -79,9 +83,12 @@ const App = () => {
                 <Route path="/cancellation-policy" element={<CancellationPolicy />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/booking/checkout" element={<BookingCheckout />} />
+                <Route path="/booking/confirmation/:bookingId" element={<BookingConfirmationPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </BookingProvider>
             </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>
