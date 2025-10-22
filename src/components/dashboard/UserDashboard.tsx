@@ -106,28 +106,10 @@ const UserDashboard = () => {
     }
   };
 
-  const handlePayLater = async (bookingId: string) => {
-    setPayingBooking(bookingId);
-    try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ 
-          status: 'confirmed',
-          payment_status: 'paid' 
-        })
-        .eq('id', bookingId)
-        .eq('user_id', user?.id);
-
-      if (error) throw error;
-
-      toast.success('Booking confirmed! Payment marked as completed.');
-      fetchUserData(); // Refresh data
-    } catch (error) {
-      logger.error('Error updating booking:', error);
-      toast.error('Failed to update booking');
-    } finally {
-      setPayingBooking(null);
-    }
+  const handlePayNow = (booking: UserBooking) => {
+    // Redirect to payment gateway with booking details
+    const paymentUrl = `/booking/checkout?type=${booking.item_type}&id=${booking.item_id}&bookingId=${booking.id}&amount=${booking.total_amount}`;
+    window.location.href = paymentUrl;
   };
 
   const calculateTravelStats = (bookings: UserBooking[]): TravelStats => {
@@ -411,17 +393,10 @@ const UserDashboard = () => {
                               size="sm"
                               variant="default"
                               className="whitespace-nowrap"
-                              onClick={() => handlePayLater(booking.id)}
-                              disabled={payingBooking === booking.id}
+                              onClick={() => handlePayNow(booking)}
                             >
-                              {payingBooking === booking.id ? (
-                                <>Processing...</>
-                              ) : (
-                                <>
-                                  <CheckCircle className="h-4 w-4 mr-1" />
-                                  Mark as Paid
-                                </>
-                              )}
+                              <CreditCard className="h-4 w-4 mr-1" />
+                              Pay Now
                             </Button>
                           )}
                           <Button

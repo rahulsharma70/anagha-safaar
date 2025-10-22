@@ -210,6 +210,7 @@ const TourDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Start Date</label>
                       <input
                         type="date"
+                        id="tour-start-date"
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
@@ -217,6 +218,7 @@ const TourDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Number of Travelers</label>
                       <input
                         type="number"
+                        id="tour-travelers"
                         min="1"
                         max={tour.max_group_size}
                         defaultValue="2"
@@ -225,9 +227,11 @@ const TourDetail = () => {
                     </div>
                   </div>
 
-                  <Button variant="hero" size="lg" className="w-full">
-                    Book This Tour
-                  </Button>
+                  <Link to={`/booking/checkout?type=tour&id=${tour.id}&name=${encodeURIComponent(tour.name)}&price=${tour.price_per_person}`}>
+                    <Button variant="hero" size="lg" className="w-full">
+                      Book This Tour
+                    </Button>
+                  </Link>
 
                   <p className="text-xs text-center text-muted-foreground">
                     Reserve your spot today

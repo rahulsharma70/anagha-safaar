@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -17,6 +17,11 @@ const DashboardSettings = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [profileData, setProfileData] = useState({
+    fullName: '',
+    phone: '',
+    dob: ''
+  });
   
   const [settings, setSettings] = useState({
     emailNotifications: true,
@@ -28,12 +33,49 @@ const DashboardSettings = () => {
     timeZone: 'Asia/Kolkata'
   });
 
+  useEffect(() => {
+    if (user) {
+      fetchUserSettings();
+    }
+  }, [user]);
+
+  const fetchUserSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name, phone, preferences')
+        .eq('id', user?.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setProfileData({
+          fullName: data.full_name || '',
+          phone: data.phone || '',
+          dob: ''
+        });
+        
+        if (data.preferences) {
+          setSettings({
+            ...settings,
+            ...(data.preferences as any)
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
   const handleSaveSettings = async () => {
     setLoading(true);
     try {
       const { error } = await supabase
         .from('profiles')
         .update({ 
+          full_name: profileData.fullName,
+          phone: profileData.phone,
           preferences: settings,
           updated_at: new Date().toISOString()
         })
@@ -84,7 +126,12 @@ const DashboardSettings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="fullName">Full Name</Label>
-                  <Input id="fullName" placeholder="John Doe" />
+                  <Input 
+                    id="fullName" 
+                    placeholder="John Doe"
+                    value={profileData.fullName}
+                    onChange={(e) => setProfileData({...profileData, fullName: e.target.value})}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
@@ -92,11 +139,22 @@ const DashboardSettings = () => {
                 </div>
                 <div>
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" placeholder="+91 98765 43210" />
+                  <Input 
+                    id="phone" 
+                    type="tel" 
+                    placeholder="+91 98765 43210"
+                    value={profileData.phone}
+                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="dob">Date of Birth</Label>
-                  <Input id="dob" type="date" />
+                  <Input 
+                    id="dob" 
+                    type="date"
+                    value={profileData.dob}
+                    onChange={(e) => setProfileData({...profileData, dob: e.target.value})}
+                  />
                 </div>
               </div>
             </CardContent>
