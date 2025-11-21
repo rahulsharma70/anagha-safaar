@@ -17,7 +17,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto animate-fade-in-up mt-5">
+    <div className="w-full max-w-5xl mx-auto animate-fade-in-up">
       {/* Search Type Tabs */}
       <div className="flex space-x-2 mb-4">
         <button
