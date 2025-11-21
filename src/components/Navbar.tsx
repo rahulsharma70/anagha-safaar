@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,10 +17,8 @@ const Navbar = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <h1 className="text-2xl font-bold text-primary">
-              Anagha <span className="text-accent">Safar</span>
-            </h1>
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="Anagha Safar" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
