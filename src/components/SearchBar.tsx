@@ -17,7 +17,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto animate-fade-in-up">
+    <div className="w-full max-w-5xl mx-auto animate-fade-in-up mt-5">
       {/* Search Type Tabs */}
       <div className="flex space-x-2 mb-4">
         <button
@@ -79,11 +79,7 @@ const SearchBar = () => {
             </Label>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="checkin"
-                type="date"
-                className="pl-10"
-              />
+              <Input id="checkin" type="date" className="pl-10" />
             </div>
           </div>
 
@@ -94,11 +90,7 @@ const SearchBar = () => {
             </Label>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="checkout"
-                type="date"
-                className="pl-10"
-              />
+              <Input id="checkout" type="date" className="pl-10" />
             </div>
           </div>
 
@@ -109,13 +101,7 @@ const SearchBar = () => {
             </Label>
             <div className="relative">
               <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="guests"
-                type="number"
-                placeholder="2 guests"
-                min="1"
-                className="pl-10"
-              />
+              <Input id="guests" type="number" placeholder="2 guests" min="1" className="pl-10" />
             </div>
           </div>
         </div>
