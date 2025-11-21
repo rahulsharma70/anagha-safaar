@@ -93,7 +93,7 @@ const Index = () => {
               backgroundImage: `url(${heroImage})`,
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/70" />
+            <div className="mt-5 absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/70" />
           </div>
 
           <div className="relative z-10 text-center px-4 space-y-6 max-w-4xl mx-auto">
@@ -145,21 +145,13 @@ const Index = () => {
         {/* Featured Packages */}
         <section className="container mx-auto px-4 py-20">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Featured Experiences
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Handpicked journeys for the discerning traveler
-            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Featured Experiences</h2>
+            <p className="text-lg text-muted-foreground">Handpicked journeys for the discerning traveler</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredPackages.map((pkg, index) => (
-              <div
-                key={index}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+              <div key={index} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                 <PackageCard {...pkg} />
               </div>
             ))}
