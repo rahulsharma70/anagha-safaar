@@ -8,9 +8,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold">
-              Anagha <span className="text-accent">Safar</span>
-            </h3>
+            <img
+              alt="Anagha Safar"
+              className="h-12 w-auto bg-transparent"
+              src="/lovable-uploads/97003a1e-ad57-4330-8cb6-16e5bcbac5ef.png"
+            />
             <p className="text-sm text-primary-foreground/80">
               Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
             </p>
