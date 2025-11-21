@@ -19,7 +19,7 @@ const SearchBar = () => {
   return (
     <div className="w-full max-w-5xl mx-auto animate-fade-in-up">
       {/* Search Type Tabs */}
-      <div className="flex space-x-2 mb-4">
+      <div className="flex space-x-2 mb-4 mt-4">
         <button
           onClick={() => setSearchType("hotels")}
           className={`px-6 py-2 rounded-lg font-medium transition-smooth ${
