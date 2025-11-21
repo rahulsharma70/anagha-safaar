@@ -7,18 +7,18 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, signOut } = useAuth();
-
-  return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm">
+  const {
+    user,
+    signOut
+  } = useAuth();
+  return <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src={logo} alt="Anagha Safar" className="h-12 w-auto bg-transparent" />
+            <img alt="Anagha Safar" className="h-12 w-auto bg-transparent" src="/lovable-uploads/97003a1e-ad57-4330-8cb6-16e5bcbac5ef.png" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -50,8 +50,7 @@ const Navbar = () => {
           {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            {user ? (
-              <>
+            {user ? <>
                 <Link to="/user-dashboard">
                   <Button variant="ghost" size="sm">
                     <User className="h-4 w-4 mr-2" />
@@ -62,27 +61,22 @@ const Navbar = () => {
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>
-              </>
-            ) : (
-              <Link to="/auth">
+              </> : <Link to="/auth">
                 <Button variant="default" size="sm">
                   Sign In
                 </Button>
-              </Link>
-            )}
+              </Link>}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
-            >
-              <motion.div
-                animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
+            <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+              <motion.div animate={{
+              rotate: isOpen ? 180 : 0
+            }} transition={{
+              duration: 0.2
+            }}>
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </motion.div>
             </button>
@@ -90,60 +84,30 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden mt-4 space-y-4 animate-fade-in">
-            <Link
-              to="/"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+        {isOpen && <div className="md:hidden mt-4 space-y-4 animate-fade-in">
+            <Link to="/" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Home
             </Link>
-            <Link
-              to="/hotels"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/hotels" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Hotels
             </Link>
-            <Link
-              to="/tours"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/tours" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Tours
             </Link>
-            <Link
-              to="/flights"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/flights" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Flights
             </Link>
-            <Link
-              to="/itinerary"
-              className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/itinerary" className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1" onClick={() => setIsOpen(false)}>
               <Sparkles className="h-4 w-4" />
               AI Planner
             </Link>
-            <Link
-              to="/about"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/about" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               About
             </Link>
-            <Link
-              to="/contact"
-              className="block py-2 text-foreground hover:text-accent transition-smooth"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/contact" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Contact
             </Link>
-            {user ? (
-              <>
+            {user ? <>
                 <Link to="/dashboard">
                   <Button variant="ghost" className="w-full" onClick={() => setIsOpen(false)}>
                     <User className="h-4 w-4" />
@@ -154,20 +118,14 @@ const Navbar = () => {
                   <LogOut className="h-4 w-4" />
                   Sign Out
                 </Button>
-              </>
-            ) : (
-              <Link to="/auth">
+              </> : <Link to="/auth">
                 <Button variant="ocean" className="w-full">
                   <User className="h-4 w-4" />
                   Sign In
                 </Button>
-              </Link>
-            )}
-          </div>
-        )}
+              </Link>}
+          </div>}
       </nav>
-    </header>
-  );
+    </header>;
 };
-
 export default Navbar;
