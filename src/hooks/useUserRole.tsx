@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/lib/logger";
 
 export const useUserRole = () => {
   const { user } = useAuth();
@@ -25,7 +26,10 @@ export const useUserRole = () => {
         if (error) throw error;
         setRole(data?.role || 'user');
       } catch (error) {
-        console.error("Error fetching user role:", error);
+        logger.error("Failed to fetch user role", error as Error, {
+          component: 'useUserRole',
+          userId: user.id
+        });
         setRole('user'); // Default to user role
       } finally {
         setLoading(false);

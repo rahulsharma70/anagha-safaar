@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
 export type BookingType = 'hotel' | 'flight' | 'tour';
 
@@ -74,15 +75,29 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
         setBookingData(parsed);
       } catch (e) {
-        console.error('Failed to parse stored booking data', e);
+        logger.error('Failed to parse stored booking data', e as Error, {
+          component: 'BookingContext'
+        });
       }
     }
   }, []);
 
-  // Save to session storage whenever booking data changes
+  // Save to session storage whenever booking data changes (excluding sensitive guest details)
   useEffect(() => {
     if (bookingData) {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(bookingData));
+      // Store only non-sensitive booking metadata
+      const safeBookingData = {
+        type: bookingData.type,
+        itemId: bookingData.itemId,
+        itemName: bookingData.itemName,
+        basePrice: bookingData.basePrice,
+        tripSelection: bookingData.tripSelection,
+        addOns: bookingData.addOns,
+        termsAccepted: bookingData.termsAccepted,
+        // Store only guest count, not actual guest details
+        guestDetailsCount: bookingData.guestDetails.length
+      };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(safeBookingData));
     }
   }, [bookingData]);
 
