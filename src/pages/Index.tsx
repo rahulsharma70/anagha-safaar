@@ -92,9 +92,8 @@ const Index = () => {
             style={{
               backgroundImage: `url(${heroImage})`,
             }}
-          >
-            <div className="mt-5 absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/70" />
-          </div>
+          />
+
 
           <div className="relative z-10 text-center px-4 space-y-6 max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground animate-fade-in">
