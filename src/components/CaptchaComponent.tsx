@@ -149,8 +149,8 @@ const CaptchaComponent: React.FC<CaptchaProps> = ({
     return (
       <div className="space-y-4">
         <div className="text-center">
-          <Shield className="w-12 h-12 mx-auto text-blue-600 mb-2" />
-          <p className="text-sm text-gray-600">
+          <Shield className="w-12 h-12 mx-auto text-primary mb-2" />
+          <p className="text-sm text-muted-foreground">
             Click the button below to verify you're human
           </p>
         </div>
@@ -222,8 +222,8 @@ const CaptchaComponent: React.FC<CaptchaProps> = ({
 
         {!state.isLoaded && !state.error && (
           <div className="text-center py-8">
-            <Loader2 className="w-8 h-8 mx-auto animate-spin text-blue-600 mb-2" />
-            <p className="text-sm text-gray-600">Loading security verification...</p>
+            <Loader2 className="w-8 h-8 mx-auto animate-spin text-primary mb-2" />
+            <p className="text-sm text-muted-foreground">Loading security verification...</p>
           </div>
         )}
 
@@ -234,9 +234,9 @@ const CaptchaComponent: React.FC<CaptchaProps> = ({
           </>
         )}
 
-        <div className="mt-4 text-xs text-gray-500 text-center">
+        <div className="mt-4 text-xs text-muted-foreground text-center">
           This site is protected by reCAPTCHA and the Google{' '}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
             Privacy Policy
           </a>{' '}
           and{' '}
@@ -303,7 +303,7 @@ export const InvisibleCaptcha: React.FC<{
   return (
     <div className="invisible-captcha">
       {isLoading && (
-        <div className="text-xs text-gray-500 text-center">
+        <div className="text-xs text-muted-foreground text-center">
           <Loader2 className="w-3 h-3 inline animate-spin mr-1" />
           Verifying...
         </div>
