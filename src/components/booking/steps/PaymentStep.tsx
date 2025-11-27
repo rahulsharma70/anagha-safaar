@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CreditCard, Smartphone, Building2, Wallet, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 export const PaymentStep = () => {
   const { bookingData, getTotalPrice, clearBooking, prevStep } = useBooking();
@@ -46,7 +47,10 @@ export const PaymentStep = () => {
       });
 
     } catch (error) {
-      console.error('Payment error:', error);
+      logger.error('Payment processing failed', error as Error, {
+        component: 'PaymentStep',
+        action: 'handlePayment'
+      });
       toast.error('Payment failed. Please try again.');
     } finally {
       setProcessing(false);

@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Share2, Users, Copy, Check } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export const ReferralSystem = () => {
   const { user } = useAuth();
@@ -58,7 +59,11 @@ export const ReferralSystem = () => {
         earnings: (referrals?.length || 0) * 500, // ₹500 per referral
       });
     } catch (error: any) {
-      console.error('Error fetching referral data:', error);
+      logger.error('Failed to fetch referral data', error as Error, {
+        component: 'ReferralSystem',
+        userId: user?.id
+      });
+      toast.error('Unable to load referral data');
     } finally {
       setLoading(false);
     }
