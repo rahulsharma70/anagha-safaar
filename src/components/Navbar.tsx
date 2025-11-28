@@ -18,7 +18,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center">
             <img
               alt="Anagha Safar"
-              className="h-12 w-auto bg-transparent"
+              className="h-[20rem] w-[20rem] bg-transparent"
               src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
             />
           </Link>
