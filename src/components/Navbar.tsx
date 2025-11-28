@@ -17,9 +17,9 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              alt="Safar"
+              alt="Anagha Safar"
               className="h-12 w-auto bg-transparent"
-              src="/lovable-uploads/Safar_LOGO-2.png"
+              src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
             />
           </Link>
 

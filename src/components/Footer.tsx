@@ -9,9 +9,9 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <img
-              alt="Safar"
+              alt="Anagha Safar"
               className="h-12 w-auto bg-transparent"
-              src="/lovable-uploads/Safar_LOGO-2.png"
+              src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
             />
             <p className="text-sm text-primary-foreground/80">
               Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
