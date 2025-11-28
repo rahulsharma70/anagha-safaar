@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@/assets/logo.png";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
@@ -17,9 +17,9 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              alt="Anagha Safar"
+              alt="Safar"
               className="h-12 w-auto bg-transparent"
-              src="/lovable-uploads/97003a1e-ad57-4330-8cb6-16e5bcbac5ef.png"
+              src="/lovable-uploads/Safar_LOGO-2.png"
             />
           </Link>
 
