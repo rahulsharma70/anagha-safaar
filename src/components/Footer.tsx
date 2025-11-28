@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="space-y-4">
             <img
               alt="Anagha Safar"
-              className="h-[20rem] w-[20rem] bg-transparent"
+              className="h-[30px] w-[10rem] bg-transparent"
               src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
             />
             <p className="text-sm text-primary-foreground/80">
