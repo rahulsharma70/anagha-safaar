@@ -8,14 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     subject: "",
-    message: "",
+    message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,9 +24,8 @@ const Contact = () => {
     email: 255,
     phone: 20,
     subject: 200,
-    message: 2000,
+    message: 2000
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -44,7 +42,6 @@ const Contact = () => {
       toast.error(`Message must be less than ${LIMITS.message} characters`);
       return;
     }
-
     setIsSubmitting(true);
 
     // Simulate form submission
@@ -55,46 +52,35 @@ const Contact = () => {
         email: "",
         phone: "",
         subject: "",
-        message: "",
+        message: ""
       });
       setIsSubmitting(false);
     }, 1500);
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
-
-  const contactInfo = [
-    {
-      icon: MapPin,
-      title: "Visit Us",
-      content: "Alkapuri Gwalior - M.P. (India)",
-    },
-    {
-      icon: Phone,
-      title: "Call Us",
-      content: "+91 9039939555",
-    },
-    {
-      icon: Mail,
-      title: "Email Us",
-      content: "support@anaghasafar.com",
-    },
-    {
-      icon: Clock,
-      title: "Working Hours",
-      content: "Mon - Sat: 9:00 AM - 6:00 PM",
-    },
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const contactInfo = [{
+    icon: MapPin,
+    title: "Visit Us",
+    content: "Alkapuri Gwalior - M.P. (India)"
+  }, {
+    icon: Phone,
+    title: "Call Us",
+    content: "+91 9039939555"
+  }, {
+    icon: Mail,
+    title: "Email Us",
+    content: "support@anaghasafar.com"
+  }, {
+    icon: Clock,
+    title: "Working Hours",
+    content: "Mon - Sat: 9:00 AM - 6:00 PM"
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1">
@@ -124,8 +110,7 @@ const Contact = () => {
                 </p>
               </div>
 
-              {contactInfo.map((info, index) => (
-                <Card key={index}>
+              {contactInfo.map((info, index) => <Card key={index}>
                   <CardContent className="pt-6">
                     <div className="flex items-start space-x-4">
                       <div className="p-3 rounded-full gradient-ocean">
@@ -141,8 +126,7 @@ const Contact = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
 
             {/* Contact Form */}
@@ -157,37 +141,16 @@ const Contact = () => {
                       <div className="space-y-2">
                         <Label htmlFor="name">
                           Full Name * 
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({formData.name.length}/{LIMITS.name})
-                          </span>
+                          
                         </Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="John Doe"
-                          maxLength={LIMITS.name}
-                          required
-                        />
+                        <Input id="name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" maxLength={LIMITS.name} required />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">
                           Email Address *
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({formData.email.length}/{LIMITS.email})
-                          </span>
+                          
                         </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="john@example.com"
-                          maxLength={LIMITS.email}
-                          required
-                        />
+                        <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" maxLength={LIMITS.email} required />
                       </div>
                     </div>
 
@@ -195,70 +158,31 @@ const Contact = () => {
                       <div className="space-y-2">
                         <Label htmlFor="phone">
                           Phone Number
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({formData.phone.length}/{LIMITS.phone})
-                          </span>
+                          
                         </Label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          placeholder="+91 1234567890"
-                          maxLength={LIMITS.phone}
-                        />
+                        <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="+91 1234567890" maxLength={LIMITS.phone} />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="subject">
                           Subject *
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({formData.subject.length}/{LIMITS.subject})
-                          </span>
+                          
                         </Label>
-                        <Input
-                          id="subject"
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          placeholder="How can we help?"
-                          maxLength={LIMITS.subject}
-                          required
-                        />
+                        <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="How can we help?" maxLength={LIMITS.subject} required />
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="message">
                         Message *
-                        <span className="text-xs text-muted-foreground ml-2">
-                          ({formData.message.length}/{LIMITS.message})
-                        </span>
+                        
                       </Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="Tell us more about your inquiry..."
-                        rows={6}
-                        maxLength={LIMITS.message}
-                        required
-                      />
-                      {formData.message.length > LIMITS.message * 0.9 && (
-                        <p className="text-xs text-warning">
+                      <Textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder="Tell us more about your inquiry..." rows={6} maxLength={LIMITS.message} required />
+                      {formData.message.length > LIMITS.message * 0.9 && <p className="text-xs text-warning">
                           Approaching character limit
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
-                    <Button
-                      type="submit"
-                      variant="hero"
-                      size="lg"
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
+                    <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </Button>
 
@@ -276,24 +200,15 @@ const Contact = () => {
         <section className="container mx-auto px-4 pb-20">
           <Card className="overflow-hidden">
             <div className="w-full h-[450px]">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229085.18221770864!2d78.02608252949295!3d26.21436995752023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c5d1792291fb%3A0xff4fb56d65bc3adf!2sGwalior%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1764413887593!5m2!1sen!2sin" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Anagha Safar Location"
-              />
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229085.18221770864!2d78.02608252949295!3d26.21436995752023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c5d1792291fb%3A0xff4fb56d65bc3adf!2sGwalior%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1764413887593!5m2!1sen!2sin" width="100%" height="100%" style={{
+              border: 0
+            }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Anagha Safar Location" />
             </div>
           </Card>
         </section>
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
