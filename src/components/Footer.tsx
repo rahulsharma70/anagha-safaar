@@ -1,18 +1,12 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
-
 const Footer = () => {
-  return (
-    <footer className="gradient-hero text-primary-foreground mt-20">
+  return <footer className="gradient-hero text-primary-foreground mt-20">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <img
-              alt="Anagha Safar"
-              className="h-[30px] w-[10rem] bg-transparent"
-              src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
-            />
+            <img alt="Anagha Safar" className="h-[30px] w-[10rem] bg-transparent" src="/lovable-uploads/ANAGHA_SAFAR_LOGO.png" />
             <p className="text-sm text-primary-foreground/80">
               Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
             </p>
@@ -89,7 +83,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start space-x-2">
                 <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span>Alkapuri Gwalior - M.P. (India)</span>
+                <span> Gwalior - M.P. (India)</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 flex-shrink-0" />
@@ -108,8 +102,6 @@ const Footer = () => {
           <p className="mt-2">Powered by UA Biotech</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
