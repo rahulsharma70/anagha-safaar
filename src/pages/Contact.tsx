@@ -272,16 +272,20 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* Map Section - Placeholder */}
+        {/* Map Section */}
         <section className="container mx-auto px-4 pb-20">
           <Card className="overflow-hidden">
-            <div className="h-96 bg-muted flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Alkapuri Gwalior - M.P. (India)
-                </p>
-              </div>
+            <div className="w-full h-[450px]">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.995114842623!2d78.19228517412027!3d26.196837190490555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c40e98ccf6b3%3A0xe45307a2be384351!2sAlkapuri%20City%20Center%2C%20City%20Center%2C%20Madhuwan%20Enclave%2C%20Mahalgaon%2C%20Gwalior%2C%20Madhya%20Pradesh%20474001!5e0!3m2!1sen!2sin!4v1764400380989!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Anagha Safar Location"
+              />
             </div>
           </Card>
         </section>
