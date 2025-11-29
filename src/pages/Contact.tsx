@@ -277,7 +277,7 @@ const Contact = () => {
           <Card className="overflow-hidden">
             <div className="w-full h-[450px]">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.995114842623!2d78.19228517412027!3d26.196837190490555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c40e98ccf6b3%3A0xe45307a2be384351!2sAlkapuri%20City%20Center%2C%20City%20Center%2C%20Madhuwan%20Enclave%2C%20Mahalgaon%2C%20Gwalior%2C%20Madhya%20Pradesh%20474001!5e0!3m2!1sen!2sin!4v1764400380989!5m2!1sen!2sin" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229085.18221770864!2d78.02608252949295!3d26.21436995752023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c5d1792291fb%3A0xff4fb56d65bc3adf!2sGwalior%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1764413887593!5m2!1sen!2sin" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
