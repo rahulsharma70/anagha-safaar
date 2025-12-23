@@ -66,7 +66,7 @@ const Contact = () => {
   const contactInfo = [{
     icon: MapPin,
     title: "Visit Us",
-    content: "Alkapuri Gwalior - M.P. (India)"
+    content: "Gwalior - M.P. (India)"
   }, {
     icon: Phone,
     title: "Call Us",
