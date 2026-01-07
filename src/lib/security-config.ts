@@ -1,25 +1,22 @@
 // Security Configuration for Anagha Safaar
 // This file contains all security-related environment variables and configuration
+// NOTE: Server-side secrets (ENCRYPTION_KEY, JWT_SECRET, RECAPTCHA_SECRET_KEY) 
+// must ONLY be used in Edge Functions, never in client-side code
 
 export const SECURITY_ENV = {
-  // Encryption Keys (should be set in production)
-  ENCRYPTION_KEY: import.meta.env.VITE_ENCRYPTION_KEY || 'dev-key-change-in-production',
-  JWT_SECRET: import.meta.env.VITE_JWT_SECRET || 'dev-jwt-secret-change-in-production',
-  
-  // reCAPTCHA Configuration
+  // reCAPTCHA Configuration (only site key is safe for client-side)
   RECAPTCHA_SITE_KEY: import.meta.env.VITE_RECAPTCHA_SITE_KEY || '',
-  RECAPTCHA_SECRET_KEY: import.meta.env.VITE_RECAPTCHA_SECRET_KEY || '',
   RECAPTCHA_VERSION: import.meta.env.VITE_RECAPTCHA_VERSION || 'v3',
   
-  // Rate Limiting
+  // Rate Limiting (client-side settings only)
   RATE_LIMIT_WINDOW_MS: parseInt(import.meta.env.VITE_RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
   RATE_LIMIT_MAX_REQUESTS: parseInt(import.meta.env.VITE_RATE_LIMIT_MAX_REQUESTS || '100'),
   
-  // Session Security
+  // Session Security (timeout values are safe for client-side)
   SESSION_TIMEOUT_MS: parseInt(import.meta.env.VITE_SESSION_TIMEOUT_MS || '1800000'), // 30 minutes
   REFRESH_TOKEN_TIMEOUT_MS: parseInt(import.meta.env.VITE_REFRESH_TOKEN_TIMEOUT_MS || '604800000'), // 7 days
   
-  // Password Security
+  // Password Security (validation rules are safe for client-side)
   MIN_PASSWORD_LENGTH: parseInt(import.meta.env.VITE_MIN_PASSWORD_LENGTH || '8'),
   REQUIRE_PASSWORD_COMPLEXITY: import.meta.env.VITE_REQUIRE_PASSWORD_COMPLEXITY === 'true',
   
@@ -31,7 +28,7 @@ export const SECURITY_ENV = {
   FRAUD_DETECTION_ENABLED: import.meta.env.VITE_FRAUD_DETECTION_ENABLED === 'true',
   FRAUD_RISK_THRESHOLD: parseInt(import.meta.env.VITE_FRAUD_RISK_THRESHOLD || '70'),
   
-  // PCI Compliance
+  // PCI Compliance (retention settings are safe for client-side)
   PCI_DATA_RETENTION_DAYS: parseInt(import.meta.env.VITE_PCI_DATA_RETENTION_DAYS || '30'),
   PCI_TOKEN_EXPIRY_HOURS: parseInt(import.meta.env.VITE_PCI_TOKEN_EXPIRY_HOURS || '24'),
   

@@ -2,27 +2,29 @@ import crypto from 'crypto-js';
 import DOMPurify from 'dompurify';
 
 // Security configuration
+// NOTE: Encryption operations requiring secret keys should ONLY happen server-side (Edge Functions)
+// Client-side should only use validation/sanitization utilities, NOT encryption with real keys
 export const SECURITY_CONFIG = {
-  // Encryption settings
-  ENCRYPTION_KEY: import.meta.env.VITE_ENCRYPTION_KEY || 'default-key-change-in-production',
+  // Encryption settings (client-side uses dummy key for interface compatibility only)
+  // REAL encryption must happen server-side in Edge Functions
   ENCRYPTION_ALGORITHM: 'AES-256-CBC',
   
-  // Session settings
+  // Session settings (timeout values are safe for client-side)
   SESSION_TIMEOUT: 30 * 60 * 1000, // 30 minutes
   REFRESH_TOKEN_TIMEOUT: 7 * 24 * 60 * 60 * 1000, // 7 days
   
-  // Rate limiting
+  // Rate limiting (client-side tracking)
   RATE_LIMIT_WINDOW: 15 * 60 * 1000, // 15 minutes
   MAX_REQUESTS_PER_WINDOW: 100,
   
-  // Password requirements
+  // Password requirements (validation rules are safe for client-side)
   MIN_PASSWORD_LENGTH: 8,
   REQUIRE_UPPERCASE: true,
   REQUIRE_LOWERCASE: true,
   REQUIRE_NUMBERS: true,
   REQUIRE_SPECIAL_CHARS: true,
   
-  // PCI DSS requirements
+  // PCI DSS requirements (retention settings are safe for client-side)
   PCI_TOKEN_EXPIRY: 24 * 60 * 60 * 1000, // 24 hours
   PCI_DATA_RETENTION_DAYS: 30,
   
@@ -31,22 +33,30 @@ export const SECURITY_CONFIG = {
   DATA_RETENTION_PERIOD: 7 * 365 * 24 * 60 * 60 * 1000, // 7 years
 };
 
-// Data encryption utilities
+// WARNING: Client-side encryption is NOT secure for sensitive data
+// These utilities are for non-sensitive data only (e.g., session IDs, UI state)
+// For sensitive data encryption, use Edge Functions with proper server-side secrets
 export class EncryptionService {
-  private static key = SECURITY_CONFIG.ENCRYPTION_KEY;
+  // Use a client-side only key for non-sensitive operations
+  // This is NOT a secret - just for basic obfuscation of non-sensitive data
+  private static readonly clientKey = 'client-obfuscation-key';
 
+  // WARNING: This provides obfuscation ONLY, not security
+  // Use Edge Functions for actual encryption of sensitive data
   static encrypt(data: string): string {
     try {
-      return crypto.AES.encrypt(data, this.key).toString();
+      console.warn('EncryptionService.encrypt: Client-side encryption should only be used for non-sensitive data');
+      return crypto.AES.encrypt(data, this.clientKey).toString();
     } catch (error) {
       console.error('Encryption failed:', error);
       throw new Error('Data encryption failed');
     }
   }
 
+  // WARNING: This provides obfuscation ONLY, not security
   static decrypt(encryptedData: string): string {
     try {
-      const bytes = crypto.AES.decrypt(encryptedData, this.key);
+      const bytes = crypto.AES.decrypt(encryptedData, this.clientKey);
       return bytes.toString(crypto.enc.Utf8);
     } catch (error) {
       console.error('Decryption failed:', error);
