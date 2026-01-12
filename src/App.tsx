@@ -39,6 +39,7 @@ import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import DashboardSettings from "./pages/DashboardSettings";
 import DashboardNotifications from "./pages/DashboardNotifications";
 import Wishlist from "./pages/Wishlist";
+import AITripPlanner from "./pages/AITripPlanner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -102,6 +103,7 @@ const App = () => {
             <Route path="/dashboard/settings" element={<DashboardSettings />} />
             <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/itinerary" element={<AITripPlanner />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
