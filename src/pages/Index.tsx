@@ -265,7 +265,7 @@ const Index = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <SearchBar className="pl-0 pt-[85px]" />
+            <SearchBar className="pl-0 pt-[85px] py-[95px]" />
           </motion.div>
         </section>
 
