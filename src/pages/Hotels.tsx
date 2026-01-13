@@ -7,27 +7,22 @@ import PackageCard from "@/components/PackageCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Search, MapPin, Calendar, Users, RefreshCw, AlertCircle } from "lucide-react";
+import { Search, MapPin, Star, Building2, Sparkles, Calendar, Users } from "lucide-react";
 import { useState, useMemo } from "react";
-import { format, addDays } from "date-fns";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const Hotels = () => {
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("destination") || "");
   const [priceFilter, setPriceFilter] = useState<string>("all");
   const [starFilter, setStarFilter] = useState<string>("all");
-  const [checkInDate, setCheckInDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
-  const [checkOutDate, setCheckOutDate] = useState<string>(format(addDays(new Date(), 1), "yyyy-MM-dd"));
-  const [adults, setAdults] = useState<number>(2);
-  const [rooms, setRooms] = useState<number>(1);
-  const [useRealAPI, setUseRealAPI] = useState<boolean>(false);
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState("2");
 
-  // Local Supabase data query
-  const { data: localHotels, isLoading: isLoadingLocal } = useQuery({
-    queryKey: ["hotels-local"],
+  const { data: hotels, isLoading } = useQuery({
+    queryKey: ["hotels"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("hotels")
@@ -39,149 +34,247 @@ const Hotels = () => {
     },
   });
 
-  const hotels = localHotels;
-  const isLoading = isLoadingLocal;
-
   const filteredHotels = useMemo(() => {
     if (!hotels) return [];
     
     return hotels.filter((hotel) => {
-      // Use local database structure
-      const hotelName = hotel.name;
-      const hotelPrice = hotel.price_per_night;
-      const hotelRating = hotel.star_rating;
-      const hotelLocation = hotel.location_city;
-      
       const matchesSearch = searchQuery === "" || 
-        hotelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hotelLocation.toLowerCase().includes(searchQuery.toLowerCase());
+        hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        hotel.location_city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        hotel.location_state.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesPrice = priceFilter === "all" || 
-        (priceFilter === "low" && Number(hotelPrice) < 3000) ||
-        (priceFilter === "medium" && Number(hotelPrice) >= 3000 && Number(hotelPrice) < 7000) ||
-        (priceFilter === "high" && Number(hotelPrice) >= 7000);
+        (priceFilter === "budget" && hotel.price_per_night <= 3000) ||
+        (priceFilter === "mid" && hotel.price_per_night > 3000 && hotel.price_per_night <= 8000) ||
+        (priceFilter === "luxury" && hotel.price_per_night > 8000);
       
-      const matchesStar = starFilter === "all" || 
-        String(hotelRating) === starFilter;
+      const matchesStars = starFilter === "all" || 
+        hotel.star_rating === parseInt(starFilter);
       
-      return matchesSearch && matchesPrice && matchesStar;
+      return matchesSearch && matchesPrice && matchesStars;
     });
-  }, [hotels, searchQuery, priceFilter, starFilter, useRealAPI]);
+  }, [hotels, searchQuery, priceFilter, starFilter]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
+  const popularDestinations = [
+    { name: "Goa", image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop" },
+    { name: "Jaipur", image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=400&h=300&fit=crop" },
+    { name: "Kerala", image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=300&fit=crop" },
+    { name: "Mumbai", image: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&h=300&fit=crop" },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
       <main className="flex-1">
-        {/* Header */}
-        <section className="gradient-hero py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground mb-4">
-              Luxury Hotels
-            </h1>
-            <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
-              Discover handpicked accommodations that blend comfort, elegance, and exceptional service
-            </p>
-          </div>
-        </section>
+        {/* Hero Section with Parallax */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+          {/* Background Image with Overlay */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-fixed"
+            style={{
+              backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&h=1080&fit=crop')",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/60 to-background" />
+          
+          {/* Floating Elements */}
+          <motion.div
+            animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-20 left-10 w-20 h-20 bg-accent/20 rounded-full blur-xl"
+          />
+          <motion.div
+            animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-40 right-10 w-32 h-32 bg-secondary/20 rounded-full blur-xl"
+          />
 
-        {/* Enhanced Search & Filters */}
-        <section className="container mx-auto px-4 py-8">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
-                Search Hotels
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="City or Airport Code (e.g., DEL, BOM)"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
+          <div className="container mx-auto px-4 relative z-10 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-primary-foreground text-sm font-medium mb-6">
+                <Sparkles className="w-4 h-4" />
+                Discover Your Perfect Stay
+              </span>
+              <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
+                Find Your Dream
+                <span className="block bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent">
+                  Hotel
+                </span>
+              </h1>
+              <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto mb-8">
+                From luxury resorts to cozy boutique hotels, find accommodations that make every trip memorable
+              </p>
+            </motion.div>
+
+            {/* Enhanced Search Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-5xl mx-auto"
+            >
+              <div className="bg-card/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-border/50">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  {/* Destination */}
+                  <div className="md:col-span-2 relative">
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Where do you want to stay?"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-12 h-14 text-lg rounded-xl border-border/50 bg-background/50"
+                    />
+                  </div>
+                  
+                  {/* Check-in */}
+                  <div className="relative">
+                    <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      type="date"
+                      value={checkIn}
+                      onChange={(e) => setCheckIn(e.target.value)}
+                      className="pl-12 h-14 rounded-xl border-border/50 bg-background/50"
+                      placeholder="Check-in"
+                    />
+                  </div>
+                  
+                  {/* Check-out */}
+                  <div className="relative">
+                    <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      type="date"
+                      value={checkOut}
+                      onChange={(e) => setCheckOut(e.target.value)}
+                      className="pl-12 h-14 rounded-xl border-border/50 bg-background/50"
+                      placeholder="Check-out"
+                    />
+                  </div>
+                  
+                  {/* Search Button */}
+                  <Button className="h-14 text-lg rounded-xl bg-primary hover:bg-primary/90 shadow-lg">
+                    <Search className="w-5 h-5 mr-2" />
+                    Search
+                  </Button>
                 </div>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="date"
-                    value={checkInDate}
-                    onChange={(e) => setCheckInDate(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="date"
-                    value={checkOutDate}
-                    onChange={(e) => setCheckOutDate(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Select value={adults.toString()} onValueChange={(value) => setAdults(parseInt(value))}>
-                    <SelectTrigger className="pl-10">
-                      <SelectValue placeholder="Adults" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5, 6].map((num) => (
-                        <SelectItem key={num} value={num.toString()}>
-                          {num} Adult{num > 1 ? 's' : ''}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div className="flex gap-4">
+
+                {/* Quick Filters */}
+                <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t border-border/30">
                   <Select value={priceFilter} onValueChange={setPriceFilter}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[140px] rounded-xl bg-background/50">
                       <SelectValue placeholder="Price Range" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Prices</SelectItem>
-                      <SelectItem value="low">Under ₹3,000</SelectItem>
-                      <SelectItem value="medium">₹3,000 - ₹7,000</SelectItem>
-                      <SelectItem value="high">Above ₹7,000</SelectItem>
+                      <SelectItem value="budget">Under ₹3,000</SelectItem>
+                      <SelectItem value="mid">₹3,000 - ₹8,000</SelectItem>
+                      <SelectItem value="luxury">₹8,000+</SelectItem>
                     </SelectContent>
                   </Select>
+                  
                   <Select value={starFilter} onValueChange={setStarFilter}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[140px] rounded-xl bg-background/50">
                       <SelectValue placeholder="Star Rating" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Ratings</SelectItem>
-                      <SelectItem value="3">3 Stars</SelectItem>
-                      <SelectItem value="4">4 Stars</SelectItem>
-                      <SelectItem value="5">5 Stars</SelectItem>
+                      <SelectItem value="all">All Stars</SelectItem>
+                      <SelectItem value="5">5 Star</SelectItem>
+                      <SelectItem value="4">4 Star</SelectItem>
+                      <SelectItem value="3">3 Star</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={guests} onValueChange={setGuests}>
+                    <SelectTrigger className="w-[140px] rounded-xl bg-background/50">
+                      <Users className="w-4 h-4 mr-2" />
+                      <SelectValue placeholder="Guests" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 Guest</SelectItem>
+                      <SelectItem value="2">2 Guests</SelectItem>
+                      <SelectItem value="3">3 Guests</SelectItem>
+                      <SelectItem value="4">4+ Guests</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div className="flex gap-2">
-                  <Button
-                    variant={useRealAPI ? "default" : "outline"}
-                    onClick={() => setUseRealAPI(!useRealAPI)}
-                    className="flex items-center gap-2"
-                  >
-                    Sample Data
-                  </Button>
-                </div>
               </div>
-            </CardContent>
-          </Card>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Popular Destinations */}
+        <section className="container mx-auto px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-3xl font-bold mb-2">Popular Destinations</h2>
+            <p className="text-muted-foreground">Trending places to stay</p>
+          </motion.div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {popularDestinations.map((dest, index) => (
+              <motion.div
+                key={dest.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                className="relative rounded-2xl overflow-hidden cursor-pointer group"
+                onClick={() => setSearchQuery(dest.name)}
+              >
+                <img 
+                  src={dest.image} 
+                  alt={dest.name}
+                  className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-4 left-4 text-white">
+                  <h3 className="font-bold text-lg">{dest.name}</h3>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </section>
 
         {/* Hotels Grid */}
         <section className="container mx-auto px-4 pb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-between mb-8"
+          >
+            <div>
+              <h2 className="text-3xl font-bold">
+                {searchQuery ? `Hotels in ${searchQuery}` : "All Hotels"}
+              </h2>
+              <p className="text-muted-foreground mt-1">
+                {filteredHotels.length} properties found
+              </p>
+            </div>
+          </motion.div>
+
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
@@ -193,55 +286,68 @@ const Hotels = () => {
               ))}
             </div>
           ) : filteredHotels.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredHotels.map((hotel) => {
-                // Handle both API and local data structures
-                const hotelId = useRealAPI ? hotel.id : hotel.id;
-                const hotelSlug = hotel.slug;
-                const hotelImages = hotel.images;
-                const hotelName = hotel.name;
-                const hotelLocation = `${hotel.location_city}, ${hotel.location_state}`;
-                const hotelRating = hotel.star_rating;
-                const hotelPrice = hotel.price_per_night;
-                const hotelFeatured = hotel.is_featured;
-                
-                return (
-                  <Link key={hotelId} to={`/hotels/${hotelSlug}`}>
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {filteredHotels.map((hotel) => (
+                <motion.div key={hotel.id} variants={itemVariants}>
+                  <Link to={`/hotels/${hotel.slug}`}>
                     <PackageCard
                       image={
-                        (hotelImages as string[])?.[0] ||
+                        (hotel.images as string[])?.[0] ||
                         "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
                       }
-                      title={hotelName}
-                      location={hotelLocation}
-                      duration={`${hotelRating}⭐ Hotel`}
-                      rating={hotelRating || 4.5}
-                      reviews={Math.floor(Math.random() * 300) + 50}
-                      price={Number(hotelPrice)}
-                      badge={hotelFeatured ? "Featured" : useRealAPI ? "Live" : undefined}
+                      title={hotel.name}
+                      location={`${hotel.location_city}, ${hotel.location_state}`}
+                      duration={`${hotel.star_rating || 4} Star Hotel`}
+                      rating={4.5 + Math.random() * 0.5}
+                      reviews={Math.floor(Math.random() * 500) + 100}
+                      price={Number(hotel.price_per_night)}
+                      badge={hotel.is_featured ? "Featured" : undefined}
                     />
                   </Link>
-                );
-              })}
-            </div>
+                </motion.div>
+              ))}
+            </motion.div>
           ) : hotels && hotels.length > 0 ? (
-            <div className="text-center py-20">
-              <h3 className="text-2xl font-semibold text-muted-foreground mb-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20 bg-muted/30 rounded-3xl"
+            >
+              <Building2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-foreground mb-2">
                 No hotels match your filters
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-6">
                 Try adjusting your search criteria
               </p>
-            </div>
+              <Button variant="outline" onClick={() => {
+                setSearchQuery("");
+                setPriceFilter("all");
+                setStarFilter("all");
+              }}>
+                Clear Filters
+              </Button>
+            </motion.div>
           ) : (
-            <div className="text-center py-20">
-              <h3 className="text-2xl font-semibold text-muted-foreground mb-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20 bg-muted/30 rounded-3xl"
+            >
+              <Building2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-foreground mb-2">
                 No hotels available yet
               </h3>
               <p className="text-muted-foreground">
-                Check back soon for amazing hotel listings!
+                Check back soon for amazing hotel deals!
               </p>
-            </div>
+            </motion.div>
           )}
         </section>
       </main>
