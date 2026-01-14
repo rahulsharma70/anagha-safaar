@@ -5,7 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 
-const SearchBar = () => {
+interface SearchBarProps {
+  className?: string;
+}
+
+const SearchBar = ({ className }: SearchBarProps) => {
   const [searchType, setSearchType] = useState<"hotels" | "tours" | "flights">("hotels");
   const [destination, setDestination] = useState("");
   const navigate = useNavigate();
@@ -17,9 +21,9 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto animate-fade-in-up">
+    <div className={`w-full max-w-5xl mx-auto animate-fade-in-up mt-16 md:mt-24 ${className || ''}`}>
       {/* Search Type Tabs */}
-      <div className="flex space-x-2 mb-4 mt-4">
+      <div className="flex space-x-2 mb-4">
         <button
           onClick={() => setSearchType("hotels")}
           className={`px-6 py-2 rounded-lg font-medium transition-smooth ${
