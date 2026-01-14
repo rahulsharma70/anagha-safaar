@@ -145,29 +145,66 @@ const AITripPlanner = () => {
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 -z-10">
-        {/* Gradient Base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10" />
+        {/* Rich Gradient Base */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background via-50% to-accent/15" />
         
-        {/* Animated Orbs */}
+        {/* Mesh Gradient Overlay */}
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            background: `
+              radial-gradient(ellipse 80% 50% at 20% 40%, hsl(var(--primary) / 0.3), transparent),
+              radial-gradient(ellipse 60% 40% at 80% 20%, hsl(var(--accent) / 0.25), transparent),
+              radial-gradient(ellipse 50% 60% at 60% 80%, hsl(var(--primary) / 0.2), transparent)
+            `,
+          }}
+        />
+        
+        {/* Large Animated Orbs */}
         <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"
+          className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-primary/30 to-primary/10 rounded-full blur-3xl"
           animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.1, 1],
+            x: [0, 80, 0],
+            y: [0, 60, 0],
+            scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: 8,
+            duration: 15,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         <motion.div
-          className="absolute top-40 right-20 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
+          className="absolute top-1/4 -right-32 w-[600px] h-[600px] bg-gradient-to-bl from-accent/25 to-primary/15 rounded-full blur-3xl"
           animate={{
-            x: [0, -40, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1],
+            x: [0, -60, 0],
+            y: [0, 80, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-32 left-1/4 w-[550px] h-[550px] bg-gradient-to-tr from-primary/20 via-accent/15 to-transparent rounded-full blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.25, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-r from-primary/15 to-accent/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 0.8, 0.5],
           }}
           transition={{
             duration: 10,
@@ -175,54 +212,14 @@ const AITripPlanner = () => {
             ease: "easeInOut",
           }}
         />
-        <motion.div
-          className="absolute bottom-20 left-1/3 w-80 h-80 bg-primary/15 rounded-full blur-3xl"
-          animate={{
-            x: [0, 60, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
 
-        {/* Floating Icons */}
+        {/* Floating Travel Icons */}
         <motion.div
-          className="absolute top-32 right-1/4 text-primary/20"
+          className="absolute top-24 right-[20%] text-primary/30"
           animate={{
-            y: [0, -20, 0],
-            rotate: [0, 10, 0],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Globe className="w-16 h-16" />
-        </motion.div>
-        <motion.div
-          className="absolute bottom-40 right-20 text-accent/30"
-          animate={{
-            y: [0, 15, 0],
-            rotate: [0, -15, 0],
-          }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Compass className="w-12 h-12" />
-        </motion.div>
-        <motion.div
-          className="absolute top-60 left-20 text-primary/20"
-          animate={{
-            y: [0, -25, 0],
-            x: [0, 10, 0],
+            y: [0, -30, 0],
+            rotate: [0, 15, 0],
+            scale: [1, 1.1, 1],
           }}
           transition={{
             duration: 8,
@@ -230,30 +227,111 @@ const AITripPlanner = () => {
             ease: "easeInOut",
           }}
         >
-          <Map className="w-14 h-14" />
+          <Globe className="w-20 h-20" />
         </motion.div>
         <motion.div
-          className="absolute bottom-60 left-1/4 text-accent/25"
+          className="absolute bottom-32 right-[15%] text-accent/40"
           animate={{
-            y: [0, 20, 0],
-            rotate: [0, 20, 0],
+            y: [0, 25, 0],
+            rotate: [0, -20, 0],
           }}
           transition={{
-            duration: 5,
+            duration: 9,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
-          <Plane className="w-10 h-10" />
+          <Compass className="w-16 h-16" />
         </motion.div>
+        <motion.div
+          className="absolute top-[40%] left-[8%] text-primary/25"
+          animate={{
+            y: [0, -35, 0],
+            x: [0, 15, 0],
+            rotate: [0, 10, 0],
+          }}
+          transition={{
+            duration: 11,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Map className="w-18 h-18" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-[40%] left-[18%] text-accent/35"
+          animate={{
+            y: [0, 30, 0],
+            rotate: [0, 25, 0],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Plane className="w-14 h-14" />
+        </motion.div>
+        <motion.div
+          className="absolute top-[15%] left-[40%] text-primary/20"
+          animate={{
+            y: [0, -20, 0],
+            x: [0, -20, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Sparkles className="w-12 h-12" />
+        </motion.div>
+
+        {/* Animated Particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-primary/40 rounded-full"
+            style={{
+              left: `${15 + i * 15}%`,
+              top: `${20 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -40, 0],
+              opacity: [0.3, 0.8, 0.3],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5,
+            }}
+          />
+        ))}
 
         {/* Grid Pattern Overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
                               linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
+            backgroundSize: '80px 80px',
+          }}
+        />
+
+        {/* Diagonal Lines Pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              hsl(var(--primary)),
+              hsl(var(--primary)) 1px,
+              transparent 1px,
+              transparent 60px
+            )`,
           }}
         />
       </div>
