@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, MapPin, Calendar, Users, Wallet, Heart, Loader2, Plane, Send } from "lucide-react";
+import { Sparkles, MapPin, Calendar, Users, Wallet, Heart, Loader2, Plane, Send, Globe, Compass, Map } from "lucide-react";
 import { toast } from "sonner";
 
 const INTERESTS = [
@@ -141,28 +142,168 @@ const AITripPlanner = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 -z-10">
+        {/* Gradient Base */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10" />
+        
+        {/* Animated Orbs */}
+        <motion.div
+          className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 left-1/3 w-80 h-80 bg-primary/15 rounded-full blur-3xl"
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating Icons */}
+        <motion.div
+          className="absolute top-32 right-1/4 text-primary/20"
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 10, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Globe className="w-16 h-16" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-40 right-20 text-accent/30"
+          animate={{
+            y: [0, 15, 0],
+            rotate: [0, -15, 0],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Compass className="w-12 h-12" />
+        </motion.div>
+        <motion.div
+          className="absolute top-60 left-20 text-primary/20"
+          animate={{
+            y: [0, -25, 0],
+            x: [0, 10, 0],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Map className="w-14 h-14" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-60 left-1/4 text-accent/25"
+          animate={{
+            y: [0, 20, 0],
+            rotate: [0, 20, 0],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Plane className="w-10 h-10" />
+        </motion.div>
+
+        {/* Grid Pattern Overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
+                              linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
+        />
+      </div>
+
       <Navbar />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8 relative z-10">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div 
+            className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm text-primary px-4 py-2 rounded-full mb-4 border border-primary/20"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <Sparkles className="h-5 w-5" />
             <span className="font-medium">AI-Powered Trip Planning</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          </motion.div>
+          <motion.h1 
+            className="text-4xl md:text-5xl font-bold text-foreground mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             Plan Your Dream Trip with AI
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             Tell us your preferences and let our AI create a personalized travel itinerary just for you. 
             Experience smart travel planning in seconds!
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Input Form */}
-          <Card className="border-2">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+          <Card className="border-2 backdrop-blur-sm bg-card/80">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Plane className="h-5 w-5 text-primary" />
@@ -298,9 +439,15 @@ const AITripPlanner = () => {
               </Button>
             </CardContent>
           </Card>
-
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
           {/* Itinerary Output */}
-          <Card className="border-2">
+          <Card className="border-2 backdrop-blur-sm bg-card/80">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -338,6 +485,7 @@ const AITripPlanner = () => {
               )}
             </CardContent>
           </Card>
+          </motion.div>
         </div>
       </main>
 
