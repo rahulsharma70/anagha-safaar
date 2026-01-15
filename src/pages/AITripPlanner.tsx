@@ -143,29 +143,70 @@ const AITripPlanner = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* Animated Background */}
+      {/* Enhanced Eye-Catching Animated Background */}
       <div className="fixed inset-0 -z-10">
-        {/* Rich Gradient Base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background via-50% to-accent/15" />
+        {/* Deep Gradient Base */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/40 via-background via-40% to-cyan-900/30" />
         
-        {/* Mesh Gradient Overlay */}
+        {/* Vibrant Mesh Gradient Overlay */}
         <div 
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(ellipse 80% 50% at 20% 40%, hsl(var(--primary) / 0.3), transparent),
-              radial-gradient(ellipse 60% 40% at 80% 20%, hsl(var(--accent) / 0.25), transparent),
-              radial-gradient(ellipse 50% 60% at 60% 80%, hsl(var(--primary) / 0.2), transparent)
+              radial-gradient(ellipse 100% 80% at 10% 30%, hsl(280 70% 50% / 0.4), transparent 50%),
+              radial-gradient(ellipse 80% 60% at 90% 20%, hsl(200 80% 60% / 0.35), transparent 50%),
+              radial-gradient(ellipse 70% 80% at 50% 90%, hsl(320 60% 50% / 0.3), transparent 50%),
+              radial-gradient(ellipse 60% 40% at 70% 60%, hsl(180 70% 50% / 0.25), transparent 40%)
             `,
           }}
         />
         
-        {/* Large Animated Orbs */}
+        {/* Pulsing Aurora Effect */}
         <motion.div
-          className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-primary/30 to-primary/10 rounded-full blur-3xl"
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, 
+              hsl(280 80% 60% / 0.15) 0%, 
+              transparent 25%,
+              hsl(200 90% 60% / 0.2) 50%,
+              transparent 75%,
+              hsl(320 70% 55% / 0.15) 100%)`,
+          }}
           animate={{
-            x: [0, 80, 0],
-            y: [0, 60, 0],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Large Animated Glowing Orbs */}
+        <motion.div
+          className="absolute -top-32 -left-32 w-[700px] h-[700px] rounded-full blur-[100px]"
+          style={{
+            background: 'radial-gradient(circle, hsl(280 70% 60% / 0.5) 0%, hsl(280 70% 60% / 0) 70%)',
+          }}
+          animate={{
+            x: [0, 120, 0],
+            y: [0, 80, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-48 w-[800px] h-[800px] rounded-full blur-[120px]"
+          style={{
+            background: 'radial-gradient(circle, hsl(200 80% 55% / 0.5) 0%, hsl(200 80% 55% / 0) 70%)',
+          }}
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 100, 0],
             scale: [1, 1.2, 1],
           }}
           transition={{
@@ -175,11 +216,14 @@ const AITripPlanner = () => {
           }}
         />
         <motion.div
-          className="absolute top-1/4 -right-32 w-[600px] h-[600px] bg-gradient-to-bl from-accent/25 to-primary/15 rounded-full blur-3xl"
+          className="absolute -bottom-48 left-1/3 w-[750px] h-[750px] rounded-full blur-[100px]"
+          style={{
+            background: 'radial-gradient(circle, hsl(320 70% 55% / 0.45) 0%, hsl(320 70% 55% / 0) 70%)',
+          }}
           animate={{
-            x: [0, -60, 0],
-            y: [0, 80, 0],
-            scale: [1, 1.15, 1],
+            x: [0, 150, 0],
+            y: [0, -70, 0],
+            scale: [1, 1.35, 1],
           }}
           transition={{
             duration: 18,
@@ -188,81 +232,82 @@ const AITripPlanner = () => {
           }}
         />
         <motion.div
-          className="absolute -bottom-32 left-1/4 w-[550px] h-[550px] bg-gradient-to-tr from-primary/20 via-accent/15 to-transparent rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[80px]"
+          style={{
+            background: 'radial-gradient(circle, hsl(180 70% 50% / 0.4) 0%, hsl(180 70% 50% / 0) 70%)',
+          }}
           animate={{
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.25, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-r from-primary/15 to-accent/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Floating Travel Icons */}
-        <motion.div
-          className="absolute top-24 right-[20%] text-primary/30"
-          animate={{
-            y: [0, -30, 0],
-            rotate: [0, 15, 0],
-            scale: [1, 1.1, 1],
+            scale: [1, 1.5, 1],
+            opacity: [0.4, 0.7, 0.4],
           }}
           transition={{
             duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        >
-          <Globe className="w-20 h-20" />
-        </motion.div>
+        />
+
+        {/* Floating Glow Rings */}
         <motion.div
-          className="absolute bottom-32 right-[15%] text-accent/40"
+          className="absolute top-20 left-[15%] w-32 h-32 border-2 border-cyan-400/30 rounded-full"
           animate={{
-            y: [0, 25, 0],
-            rotate: [0, -20, 0],
+            scale: [1, 1.4, 1],
+            opacity: [0.3, 0.6, 0.3],
+            rotate: [0, 180, 360],
           }}
           transition={{
-            duration: 9,
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-32 right-[20%] w-48 h-48 border border-violet-400/25 rounded-full"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.5, 0.2],
+            rotate: [360, 180, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute top-[45%] right-[10%] w-24 h-24 border-2 border-pink-400/30 rounded-full"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.25, 0.55, 0.25],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating Travel Icons with Glow */}
+        <motion.div
+          className="absolute top-24 right-[20%]"
+          animate={{
+            y: [0, -40, 0],
+            rotate: [0, 20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 6,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
-          <Compass className="w-16 h-16" />
+          <Globe className="w-24 h-24 text-cyan-400/50 drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]" />
         </motion.div>
         <motion.div
-          className="absolute top-[40%] left-[8%] text-primary/25"
+          className="absolute bottom-40 right-[12%]"
           animate={{
-            y: [0, -35, 0],
-            x: [0, 15, 0],
-            rotate: [0, 10, 0],
-          }}
-          transition={{
-            duration: 11,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Map className="w-18 h-18" />
-        </motion.div>
-        <motion.div
-          className="absolute bottom-[40%] left-[18%] text-accent/35"
-          animate={{
-            y: [0, 30, 0],
-            rotate: [0, 25, 0],
+            y: [0, 35, 0],
+            rotate: [0, -25, 0],
           }}
           transition={{
             duration: 7,
@@ -270,68 +315,128 @@ const AITripPlanner = () => {
             ease: "easeInOut",
           }}
         >
-          <Plane className="w-14 h-14" />
+          <Compass className="w-20 h-20 text-violet-400/50 drop-shadow-[0_0_15px_rgba(167,139,250,0.5)]" />
         </motion.div>
         <motion.div
-          className="absolute top-[15%] left-[40%] text-primary/20"
+          className="absolute top-[35%] left-[6%]"
           animate={{
-            y: [0, -20, 0],
-            x: [0, -20, 0],
-            scale: [1, 1.2, 1],
+            y: [0, -45, 0],
+            x: [0, 20, 0],
+            rotate: [0, 15, 0],
           }}
           transition={{
-            duration: 12,
+            duration: 9,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
-          <Sparkles className="w-12 h-12" />
+          <Map className="w-20 h-20 text-pink-400/50 drop-shadow-[0_0_15px_rgba(244,114,182,0.5)]" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-[35%] left-[15%]"
+          animate={{
+            y: [0, 40, 0],
+            rotate: [0, 30, 0],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Plane className="w-18 h-18 text-teal-400/50 drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
+        </motion.div>
+        <motion.div
+          className="absolute top-[12%] left-[35%]"
+          animate={{
+            y: [0, -25, 0],
+            x: [0, -25, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Sparkles className="w-16 h-16 text-amber-400/50 drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]" />
         </motion.div>
 
-        {/* Animated Particles */}
-        {[...Array(6)].map((_, i) => (
+        {/* Animated Glowing Particles */}
+        {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-primary/40 rounded-full"
+            className="absolute rounded-full"
             style={{
-              left: `${15 + i * 15}%`,
-              top: `${20 + (i % 3) * 25}%`,
+              left: `${10 + i * 8}%`,
+              top: `${15 + (i % 4) * 20}%`,
+              width: `${6 + (i % 3) * 4}px`,
+              height: `${6 + (i % 3) * 4}px`,
+              background: i % 3 === 0 
+                ? 'radial-gradient(circle, hsl(200 80% 60% / 0.8) 0%, transparent 70%)' 
+                : i % 3 === 1 
+                ? 'radial-gradient(circle, hsl(280 70% 60% / 0.8) 0%, transparent 70%)'
+                : 'radial-gradient(circle, hsl(320 70% 55% / 0.8) 0%, transparent 70%)',
+              boxShadow: i % 3 === 0 
+                ? '0 0 15px 5px hsl(200 80% 60% / 0.4)' 
+                : i % 3 === 1 
+                ? '0 0 15px 5px hsl(280 70% 60% / 0.4)'
+                : '0 0 15px 5px hsl(320 70% 55% / 0.4)',
             }}
             animate={{
-              y: [0, -40, 0],
-              opacity: [0.3, 0.8, 0.3],
-              scale: [1, 1.5, 1],
+              y: [0, -60 - i * 5, 0],
+              opacity: [0.4, 1, 0.4],
+              scale: [1, 1.8, 1],
             }}
             transition={{
-              duration: 4 + i,
+              duration: 3 + i * 0.5,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 0.5,
+              delay: i * 0.3,
             }}
           />
         ))}
 
-        {/* Grid Pattern Overlay */}
+        {/* Shooting Stars Effect */}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={`star-${i}`}
+            className="absolute w-1 h-1 bg-white rounded-full"
+            style={{
+              left: `${20 + i * 30}%`,
+              top: `${10 + i * 15}%`,
+              boxShadow: '0 0 6px 2px rgba(255,255,255,0.8), -20px 0 20px 2px rgba(255,255,255,0.3)',
+            }}
+            animate={{
+              x: [0, 200],
+              y: [0, 100],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeOut",
+              delay: i * 4,
+              repeatDelay: 8,
+            }}
+          />
+        ))}
+
+        {/* Subtle Grid Pattern */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
-                              linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px',
+            backgroundImage: `linear-gradient(hsl(200 80% 60%) 1px, transparent 1px),
+                              linear-gradient(90deg, hsl(200 80% 60%) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
           }}
         />
 
-        {/* Diagonal Lines Pattern */}
+        {/* Noise Texture for Depth */}
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.015]"
           style={{
-            backgroundImage: `repeating-linear-gradient(
-              45deg,
-              hsl(var(--primary)),
-              hsl(var(--primary)) 1px,
-              transparent 1px,
-              transparent 60px
-            )`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           }}
         />
       </div>
