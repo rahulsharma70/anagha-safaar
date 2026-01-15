@@ -154,7 +154,7 @@ const Index = () => {
             y: 0
           }} transition={{
             duration: 0.6
-          }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2.5 rounded-full">
+          }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2.5 rounded-full mt-16 md:mt-20">
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="text-sm font-medium text-white">Trusted by 50,000+ Travelers</span>
             </motion.div>
