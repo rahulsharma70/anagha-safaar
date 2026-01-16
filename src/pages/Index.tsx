@@ -14,42 +14,42 @@ import rajasthanHeritage from "@/assets/rajasthan-heritage.jpg";
 const Index = () => {
   const featuredPackages = [{
     image: himalayanRetreat,
-    title: "Luxury Himalayan Retreat",
-    location: "Dharamshala, HP",
+    title: "Himalayan Spiritual Trek",
+    location: "Himachal Pradesh",
     duration: "5 Days",
     rating: 4.9,
     reviews: 234,
     price: 45000,
     badge: "Popular",
-    href: "/tours/luxury-himalayan-retreat"
+    href: "/tours/himalayan-trek-2024"
   }, {
     image: varanasiGhats,
-    title: "Spiritual Varanasi Tour",
+    title: "Spiritual Varanasi Journey",
     location: "Varanasi, UP",
     duration: "3 Days",
     rating: 4.8,
     reviews: 189,
     price: 28000,
-    href: "/tours/spiritual-varanasi-tour"
+    href: "/tours/varanasi-spiritual-2024"
   }, {
     image: keralaBackwaters,
-    title: "Kerala Backwaters Cruise",
+    title: "Kerala Backwaters Luxury Cruise",
     location: "Alleppey, Kerala",
     duration: "4 Days",
     rating: 4.9,
     reviews: 312,
     price: 52000,
     badge: "Luxury",
-    href: "/tours/kerala-backwaters-cruise"
+    href: "/tours/kerala-backwaters-2024"
   }, {
     image: rajasthanHeritage,
-    title: "Rajasthan Heritage Trail",
+    title: "Rajasthan Heritage Circuit",
     location: "Jaipur, Rajasthan",
     duration: "7 Days",
     rating: 4.7,
     reviews: 267,
     price: 68000,
-    href: "/tours/rajasthan-heritage-trail"
+    href: "/tours/rajasthan-heritage-2024"
   }];
   const features = [{
     icon: Award,
