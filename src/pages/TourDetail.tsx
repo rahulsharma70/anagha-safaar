@@ -8,17 +8,23 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MapPin, Clock, Users, CheckCircle, XCircle, ArrowLeft, Calendar } from "lucide-react";
-import { useState } from "react";
+import { MapPin, Clock, Users, CheckCircle, XCircle, ArrowLeft, Calendar, Sparkles, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import ReviewSection from "@/components/ReviewSection";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 const TourDetail = () => {
   const { slug } = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [startDate, setStartDate] = useState("");
+  const [travelers, setTravelers] = useState("2");
+  const [aiItinerary, setAiItinerary] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   const { data: tour, isLoading } = useQuery({
     queryKey: ["tour", slug],
@@ -33,6 +39,99 @@ const TourDetail = () => {
       return data;
     },
   });
+
+  // Auto-generate itinerary when tour loads and user fills in details
+  const generateAIItinerary = async () => {
+    if (!tour || !startDate || !travelers) {
+      toast.error("Please fill in start date and number of travelers");
+      return;
+    }
+
+    setIsGenerating(true);
+    setAiItinerary("");
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-trip-planner`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            destination: `${tour.name} - ${tour.location_city}, ${tour.location_state}`,
+            duration: tour.duration_days,
+            travelers: parseInt(travelers),
+            budget: `₹${Number(tour.price_per_person).toLocaleString()} per person`,
+            interests: [tour.tour_type || "Adventure", "Culture & History", "Nature & Wildlife"],
+            travelStyle: tour.difficulty === "easy" ? "mid-range" : tour.difficulty === "challenging" ? "backpacker" : "mid-range",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          toast.error("Rate limit exceeded. Please try again in a moment.");
+          return;
+        }
+        if (response.status === 402) {
+          toast.error("Service temporarily unavailable. Please try again later.");
+          return;
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate itinerary");
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      if (reader) {
+        let textBuffer = "";
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          textBuffer += decoder.decode(value, { stream: true });
+          
+          let newlineIndex: number;
+          while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+            let line = textBuffer.slice(0, newlineIndex);
+            textBuffer = textBuffer.slice(newlineIndex + 1);
+            
+            if (line.endsWith("\r")) line = line.slice(0, -1);
+            if (line.startsWith(":") || line.trim() === "") continue;
+            if (!line.startsWith("data: ")) continue;
+            
+            const jsonStr = line.slice(6).trim();
+            if (jsonStr === "[DONE]") break;
+            
+            try {
+              const parsed = JSON.parse(jsonStr);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                fullText += content;
+                setAiItinerary(fullText);
+              }
+            } catch {
+              textBuffer = line + "\n" + textBuffer;
+              break;
+            }
+          }
+        }
+      }
+
+      setHasGenerated(true);
+      toast.success("Personalized itinerary generated!");
+    } catch (error) {
+      console.error("Error generating itinerary:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to generate itinerary");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -142,9 +241,9 @@ const TourDetail = () => {
                 </p>
               </div>
 
-              {/* Itinerary */}
+              {/* Default Itinerary */}
               <div>
-                <h2 className="text-2xl font-semibold mb-4">Itinerary</h2>
+                <h2 className="text-2xl font-semibold mb-4">Standard Itinerary</h2>
                 <Accordion type="single" collapsible className="w-full">
                   {itinerary.map((day, idx) => (
                     <AccordionItem key={idx} value={`day-${idx}`}>
@@ -161,6 +260,37 @@ const TourDetail = () => {
                   ))}
                 </Accordion>
               </div>
+
+              {/* AI Generated Itinerary Section */}
+              {(aiItinerary || isGenerating) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="p-6 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Sparkles className="h-6 w-6 text-primary" />
+                      <h2 className="text-2xl font-semibold">AI-Personalized Itinerary</h2>
+                      {isGenerating && (
+                        <Loader2 className="h-5 w-5 animate-spin text-primary ml-2" />
+                      )}
+                    </div>
+                    <div className="prose prose-sm max-w-none dark:prose-invert">
+                      {aiItinerary ? (
+                        <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
+                          {aiItinerary}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Generating your personalized itinerary...</span>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </motion.div>
+              )}
 
               {/* Inclusions & Exclusions */}
               <div className="grid md:grid-cols-2 gap-6">
@@ -214,7 +344,8 @@ const TourDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Start Date</label>
                       <input
                         type="date"
-                        id="tour-start-date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
@@ -222,14 +353,35 @@ const TourDetail = () => {
                       <label className="text-sm font-medium mb-2 block">Number of Travelers</label>
                       <input
                         type="number"
-                        id="tour-travelers"
                         min="1"
                         max={tour.max_group_size}
-                        defaultValue="2"
+                        value={travelers}
+                        onChange={(e) => setTravelers(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-input bg-background"
                       />
                     </div>
                   </div>
+
+                  {/* AI Generate Button */}
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full gap-2 border-primary/50 hover:bg-primary/10"
+                    onClick={generateAIItinerary}
+                    disabled={isGenerating || !startDate || !travelers}
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        {hasGenerated ? "Regenerate AI Itinerary" : "Generate AI Itinerary"}
+                      </>
+                    )}
+                  </Button>
 
                   <Link to={`/booking/checkout?type=tour&id=${tour.id}&name=${encodeURIComponent(tour.name)}&price=${tour.price_per_person}`}>
                     <Button variant="hero" size="lg" className="w-full">
