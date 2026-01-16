@@ -29,7 +29,8 @@ export const validatePassword = (password: string): PasswordValidation => {
 
   const passedChecks = Object.values(checks).filter(Boolean).length;
   const strength = (passedChecks / 5) * 100;
-  const isValid = passedChecks >= 4; // At least 4 out of 5 criteria
+  // All 5 criteria must be met (matching server-side validation)
+  const isValid = passedChecks === 5;
 
   return { isValid, strength, checks };
 };
