@@ -47,33 +47,49 @@ const EnhancedAuth = () => {
       return;
     }
 
-    setIsLoading(true);
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      setAttemptCount(prev => prev + 1);
-      
-      // Check for account lockout
-      if (error.message?.toLowerCase().includes('locked') || 
-          error.message?.toLowerCase().includes('too many requests') ||
-          error.message?.toLowerCase().includes('rate limit')) {
-        toast.error("Account locked. Try again after 15 minutes.", {
-          duration: 8000,
-          description: "Multiple failed login attempts detected. For security, your account has been temporarily locked."
-        });
-      } else if (error.message?.toLowerCase().includes('invalid')) {
-        toast.error("Invalid email or password", {
-          description: `${5 - attemptCount} attempts remaining before account lock`
-        });
-      } else {
-        toast.error("Unable to sign in. Please check your credentials.");
-      }
-      
-      setIsLoading(false);
+    if (!email || !password) {
+      toast.error("Please enter your email and password");
       return;
     }
 
-    setIsLoading(false);
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        setAttemptCount(prev => prev + 1);
+        
+        // Check for account lockout
+        if (error.message?.toLowerCase().includes('locked') || 
+            error.message?.toLowerCase().includes('too many requests') ||
+            error.message?.toLowerCase().includes('rate limit')) {
+          toast.error("Account locked. Try again after 15 minutes.", {
+            duration: 8000,
+            description: "Multiple failed login attempts detected. For security, your account has been temporarily locked."
+          });
+        } else if (error.message?.toLowerCase().includes('invalid')) {
+          toast.error("Invalid email or password", {
+            description: `${5 - attemptCount} attempts remaining before account lock`
+          });
+        } else {
+          toast.error(error.message || "Unable to sign in. Please check your credentials.");
+        }
+        
+        setIsLoading(false);
+        return;
+      }
+
+      // Success - toast and redirect will happen via useEffect
+      toast.success("Welcome back!", {
+        description: "You have been signed in successfully."
+      });
+    } catch (err) {
+      console.error('Sign in error:', err);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
