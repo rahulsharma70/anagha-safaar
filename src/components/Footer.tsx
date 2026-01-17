@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 const Footer = () => {
-  return <footer className="gradient-hero text-primary-foreground mt-20">
+  return <footer className="gradient-hero text-white mt-20">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
             <img alt="Anagha Safar" className="h-12 w-auto object-contain" src="https://www.anaghasafar.com/lovable-uploads/97003a1e-ad57-4330-8cb6-16e5bcbac5ef.png" />
-            <p className="text-sm text-primary-foreground/80">
+            <p className="text-sm text-white/80">
               Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
             </p>
             <div className="flex space-x-4">
@@ -100,7 +100,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-sm text-primary-foreground/80">
+        <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/80">
           <p>&copy; {new Date().getFullYear()} Anagha Safar. All rights reserved.</p>
           <p className="mt-2">Powered by UA Biotech</p>
         </div>
