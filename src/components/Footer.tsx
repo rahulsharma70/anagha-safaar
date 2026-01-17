@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 const Footer = () => {
   return <footer className="gradient-hero text-primary-foreground mt-20">
       <div className="container mx-auto px-4 py-12">
@@ -18,7 +18,10 @@ const Footer = () => {
                 <Instagram className="h-5 w-5" />
               </a>
               <a href="#" className="hover:text-accent transition-smooth" aria-label="Twitter">
-                
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="hover:text-accent transition-smooth" aria-label="LinkedIn">
+                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
