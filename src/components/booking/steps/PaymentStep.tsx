@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useBooking } from '@/contexts/BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -9,17 +10,53 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CreditCard, Smartphone, Building2, Wallet, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { logger } from '@/lib/logger';
+import { supabase } from '@/integrations/supabase/client';
 
 export const PaymentStep = () => {
   const { bookingData, getTotalPrice, clearBooking, prevStep } = useBooking();
+  const { user } = useAuth();
   const navigate = useNavigate();
   
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'netbanking' | 'wallet' | 'googlepay'>('card');
   const [processing, setProcessing] = useState(false);
 
+  const sendAdminNotification = async (bookingReference: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('admin-notification', {
+        body: {
+          type: 'booking',
+          data: {
+            bookingReference,
+            userEmail: user?.email,
+            userName: user?.user_metadata?.full_name || 'Guest',
+            itemName: bookingData?.itemName,
+            itemType: bookingData?.type,
+            totalAmount: getTotalPrice(),
+            startDate: bookingData?.tripSelection?.startDate?.toLocaleDateString('en-IN'),
+            guestsCount: bookingData?.tripSelection?.guestsCount
+          }
+        }
+      });
+      
+      if (error) {
+        console.error('Failed to send admin notification:', error);
+      } else {
+        console.log('Admin notification sent successfully');
+      }
+    } catch (err) {
+      console.error('Error sending admin notification:', err);
+    }
+  };
+
   const handlePayment = async () => {
     if (!bookingData) {
       toast.error('Booking data not found');
+      return;
+    }
+
+    if (!user) {
+      toast.error('Please sign in to complete booking');
+      navigate('/auth', { state: { from: '/booking/checkout' } });
       return;
     }
 
@@ -31,6 +68,9 @@ export const PaymentStep = () => {
       
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Send admin notification
+      await sendAdminNotification(bookingReference);
       
       toast.success('Payment processed successfully!');
       

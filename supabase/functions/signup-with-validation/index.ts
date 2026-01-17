@@ -57,6 +57,53 @@ const validatePassword = (password: string): PasswordValidation => {
   };
 };
 
+// Function to send admin notification
+const sendAdminNotification = async (email: string, fullName?: string) => {
+  const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+  const ADMIN_EMAIL = "rahulsharma70@gmail.com";
+  
+  if (!RESEND_API_KEY) {
+    console.log("RESEND_API_KEY not configured, skipping admin notification");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Anagha Safar <onboarding@resend.dev>",
+        to: [ADMIN_EMAIL],
+        subject: "🎉 New User Signup - Anagha Safar",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h1 style="color: #1a1a2e; border-bottom: 2px solid #e94560; padding-bottom: 10px;">
+              New User Registration
+            </h1>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 10px 0;"><strong>Email:</strong> ${email}</p>
+              <p style="margin: 10px 0;"><strong>Name:</strong> ${fullName || "Not provided"}</p>
+              <p style="margin: 10px 0;"><strong>Signup Time:</strong> ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
+            </div>
+            <p style="color: #666; font-size: 14px;">
+              A new user has registered on Anagha Safar. You can view their details in the admin dashboard.
+            </p>
+          </div>
+        `,
+      }),
+    });
+
+    const data = await response.json();
+    console.log("Admin notification sent:", data);
+  } catch (error) {
+    console.error("Failed to send admin notification:", error);
+    // Don't throw - we don't want to fail signup if notification fails
+  }
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -120,6 +167,9 @@ serve(async (req) => {
     }
 
     console.log('User created successfully:', data.user?.email);
+
+    // Send admin notification email (async, don't wait)
+    sendAdminNotification(email, fullName);
 
     return new Response(
       JSON.stringify({ 
