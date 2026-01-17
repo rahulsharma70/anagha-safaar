@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.ai-trip-planner]
 verify_jwt = false
+
+[functions.admin-notification]
+verify_jwt = false
