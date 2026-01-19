@@ -16,8 +16,8 @@ const Navbar = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img alt="Anagha Safar" className="h-12 w-auto object-contain" src="/lovable-uploads/0e4cbbc1-2483-42cb-966f-f58e69bc02ae.png" />
+          <Link to="/" className="flex items-center ">
+            <img alt="Anagha Safar" className="h-12 w-auto object-contain" src="/lovable-uploads/ee677116-1ce7-4977-bf44-066fe376ce2e.png" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -35,7 +35,7 @@ const Navbar = () => {
               Flights
             </Link>
             <Link to="/itinerary" className="text-foreground hover:text-accent transition-smooth flex items-center gap-1">
-              <Sparkles className="h-4 w-4 ai-icon-gradient" />
+              <Sparkles className="h-4 w-4" />
               AI Planner
             </Link>
             <Link to="/about" className="text-foreground hover:text-accent transition-smooth">
@@ -97,7 +97,7 @@ const Navbar = () => {
               Flights
             </Link>
             <Link to="/itinerary" className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1" onClick={() => setIsOpen(false)}>
-              <Sparkles className="h-4 w-4 ai-icon-gradient" />
+              <Sparkles className="h-4 w-4" />
               AI Planner
             </Link>
             <Link to="/about" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
