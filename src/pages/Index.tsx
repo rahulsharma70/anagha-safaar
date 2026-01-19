@@ -200,14 +200,14 @@ const Index = () => {
             delay: 0.6
           }}>
               <Link to="/tours">
-                <Button size="lg" className="group bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-accent/25 transition-all duration-300">
+                <Button size="lg" className="group btn-cta px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-accent/25">
                   Explore Packages
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/itinerary">
                 <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-md border-white/30 text-white hover:bg-white/20 px-8 py-6 text-lg font-semibold">
-                  <Sparkles className="mr-2 h-5 w-5" />
+                  <Sparkles className="mr-2 h-5 w-5 ai-icon-gradient" />
                   AI Trip Planner
                 </Button>
               </Link>
@@ -458,7 +458,7 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/auth">
-                  <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-6 text-lg font-semibold shadow-lg hover:shadow-accent/25">
+                  <Button size="lg" className="btn-cta px-10 py-6 text-lg font-semibold shadow-lg hover:shadow-accent/25">
                     Get Started Today
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>

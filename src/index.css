@@ -49,6 +49,8 @@ All colors MUST be HSL.
     --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 40% 20%) 100%);
     --gradient-gold: linear-gradient(135deg, hsl(45 75% 53%) 0%, hsl(45 85% 65%) 100%);
     --gradient-ocean: linear-gradient(135deg, hsl(179 73% 36%) 0%, hsl(179 65% 50%) 100%);
+    --gradient-cta-hover: linear-gradient(135deg, hsl(30 80% 55%) 0%, hsl(45 85% 55%) 100%);
+    --gradient-ai-icon: linear-gradient(135deg, hsl(210 80% 50%) 0%, hsl(45 85% 55%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 2px 4px hsla(222, 47%, 11%, 0.06);
@@ -125,6 +127,17 @@ All colors MUST be HSL.
     background: var(--gradient-ocean);
   }
 
+  .gradient-cta-hover {
+    background: var(--gradient-cta-hover);
+  }
+
+  .ai-icon-gradient {
+    background: var(--gradient-ai-icon);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
   .shadow-sm {
     box-shadow: var(--shadow-sm);
   }
@@ -147,5 +160,15 @@ All colors MUST be HSL.
 
   .transition-bounce {
     transition: var(--transition-bounce);
+  }
+}
+
+@layer components {
+  .btn-cta {
+    @apply bg-accent text-accent-foreground transition-all duration-300;
+  }
+  
+  .btn-cta:hover {
+    background: var(--gradient-cta-hover);
   }
 }
