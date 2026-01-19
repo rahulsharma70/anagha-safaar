@@ -102,7 +102,7 @@ const Footer = () => {
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/80">
           <p>&copy; {new Date().getFullYear()} Anagha Safar. All rights reserved.</p>
-          <p className="mt-2">Powered by UA Biotech</p>
+          <p className="mt-2">“An Anagha Initiative”</p>
         </div>
       </div>
     </footer>;
