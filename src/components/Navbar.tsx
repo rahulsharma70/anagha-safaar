@@ -35,7 +35,7 @@ const Navbar = () => {
               Flights
             </Link>
             <Link to="/itinerary" className="text-foreground hover:text-accent transition-smooth flex items-center gap-1">
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="h-4 w-4 ai-icon-gradient" />
               AI Planner
             </Link>
             <Link to="/about" className="text-foreground hover:text-accent transition-smooth">
@@ -97,7 +97,7 @@ const Navbar = () => {
               Flights
             </Link>
             <Link to="/itinerary" className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1" onClick={() => setIsOpen(false)}>
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="h-4 w-4 ai-icon-gradient" />
               AI Planner
             </Link>
             <Link to="/about" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
