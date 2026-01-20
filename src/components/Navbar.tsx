@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center ">
-            <img alt="Anagha Safar" className="h-12 w-auto object-contain" src="/lovable-uploads/ee677116-1ce7-4977-bf44-066fe376ce2e.png" />
+            <img alt="Anagha Safar" className="h-10 w-auto object-contain" src="/lovable-uploads/ee677116-1ce7-4977-bf44-066fe376ce2e.png" />
           </Link>
 
           {/* Desktop Navigation */}
