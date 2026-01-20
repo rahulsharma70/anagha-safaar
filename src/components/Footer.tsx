@@ -6,7 +6,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <img alt="Anagha Safar" className="h-20 w-auto object-contain" src="/lovable-uploads/4a58eff2-2949-4bcd-82a2-7bac031b56b1.png" />
+            <img alt="Anagha Safar" className="h-24 w-auto object-contain" src="/lovable-uploads/4a58eff2-2949-4bcd-82a2-7bac031b56b1.png" />
             <p className="text-sm text-white/80">
               Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
             </p>
