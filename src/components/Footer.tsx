@@ -1,110 +1,160 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ArrowRight, Heart } from "lucide-react";
+import { motion } from "framer-motion";
+
 const Footer = () => {
-  return <footer className="gradient-hero text-white mt-20">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="space-y-4">
-            <img alt="Anagha Safar" className="h-32 w-auto object-contain transition-transform duration-200 hover:scale-105" src="/lovable-uploads/b64f0fec-511a-4b20-9a42-a0119383b45f.png" />
-            <p className="text-sm text-white/80">
-              Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences.
+  const currentYear = new Date().getFullYear();
+
+  const quickLinks = [
+    { label: "Hotels", href: "/hotels" },
+    { label: "Tours", href: "/tours" },
+    { label: "Flights", href: "/flights" },
+    { label: "AI Trip Planner", href: "/itinerary" },
+    { label: "Contact Us", href: "/contact" },
+  ];
+
+  const supportLinks = [
+    { label: "Help Center", href: "/help" },
+    { label: "Cancellation Policy", href: "/cancellation-policy" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "About Us", href: "/about" },
+  ];
+
+  const socialLinks = [
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
+  ];
+
+  return (
+    <footer className="relative gradient-hero text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 1px, transparent 1px)',
+        backgroundSize: '60px 60px'
+      }} />
+
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* Brand Section */}
+          <div className="space-y-6">
+            <motion.img
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              alt="Anagha Safar"
+              className="h-24 w-auto object-contain"
+              src="/lovable-uploads/b64f0fec-511a-4b20-9a42-a0119383b45f.png"
+            />
+            <p className="text-white/80 text-sm leading-relaxed">
+              Crafting journeys that touch the soul. Your trusted partner for luxury travel experiences across India.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="hover:text-accent transition-smooth" aria-label="Facebook">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-accent transition-smooth" aria-label="Instagram">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-accent transition-smooth" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="hover:text-accent transition-smooth" aria-label="LinkedIn">
-                <Linkedin className="h-5 w-5" />
-              </a>
+            <div className="flex gap-4">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-accent transition-colors duration-300"
+                  aria-label={social.label}
+                >
+                  <social.icon className="h-4 w-4" />
+                </motion.a>
+              ))}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/hotels" className="hover:text-accent transition-smooth">
-                  Hotels
-                </Link>
-              </li>
-              <li>
-                <Link to="/tours" className="hover:text-accent transition-smooth">
-                  Tours
-                </Link>
-              </li>
-              <li>
-                <Link to="/flights" className="hover:text-accent transition-smooth">
-                  Flights
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="hover:text-accent transition-smooth">
-                  Contact Us
-                </Link>
-              </li>
+            <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-accent" />
+              Quick Links
+            </h4>
+            <ul className="space-y-3">
+              {quickLinks.map((link, index) => (
+                <li key={index}>
+                  <Link
+                    to={link.href}
+                    className="group flex items-center gap-2 text-white/80 hover:text-accent transition-colors duration-300"
+                  >
+                    <ArrowRight className="h-3 w-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h4 className="font-semibold text-lg mb-4">Support</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/help" className="hover:text-accent transition-smooth">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link to="/cancellation-policy" className="hover:text-accent transition-smooth">
-                  Cancellation Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="hover:text-accent transition-smooth">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="hover:text-accent transition-smooth">
-                  Terms of Service
-                </Link>
-              </li>
+            <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-accent" />
+              Support
+            </h4>
+            <ul className="space-y-3">
+              {supportLinks.map((link, index) => (
+                <li key={index}>
+                  <Link
+                    to={link.href}
+                    className="group flex items-center gap-2 text-white/80 hover:text-accent transition-colors duration-300"
+                  >
+                    <ArrowRight className="h-3 w-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact Info */}
           <div>
-            <h4 className="font-semibold text-lg mb-4">Contact</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start space-x-2">
-                <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-                <span> Gwalior - M.P. (India)</span>
+            <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-accent" />
+              Contact Us
+            </h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 flex-shrink-0 mt-0.5">
+                  <MapPin className="h-4 w-4" />
+                </div>
+                <span className="text-white/80 text-sm">Gwalior, Madhya Pradesh, India</span>
               </li>
-              <li className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 flex-shrink-0" />
-                <span>+91 9039939555</span>
+              <li className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 flex-shrink-0">
+                  <Phone className="h-4 w-4" />
+                </div>
+                <a href="tel:+919039939555" className="text-white/80 text-sm hover:text-accent transition-colors">
+                  +91 9039939555
+                </a>
               </li>
-              <li className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 flex-shrink-0" />
-                <span>support@anaghasafar.com</span>
+              <li className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 flex-shrink-0">
+                  <Mail className="h-4 w-4" />
+                </div>
+                <a href="mailto:support@anaghasafar.com" className="text-white/80 text-sm hover:text-accent transition-colors">
+                  support@anaghasafar.com
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/80">
-          <p>&copy; {new Date().getFullYear()} Anagha Safar. All rights reserved.</p>
-          <p className="mt-2">“An Anagha Initiative”</p>
+        {/* Bottom Bar */}
+        <div className="border-t border-white/10 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-white/60 text-sm">
+              © {currentYear} Anagha Safar. All rights reserved.
+            </p>
+            <p className="text-white/60 text-sm flex items-center gap-1">
+              Made with <Heart className="h-4 w-4 text-destructive fill-destructive" /> — "An Anagha Initiative"
+            </p>
+          </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
