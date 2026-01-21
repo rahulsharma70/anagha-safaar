@@ -10,23 +10,27 @@ import {
   Plane, 
   Hotel, 
   Camera,
-  Download,
   Star,
   Clock,
   CreditCard,
   Settings,
   Bell,
   Heart,
-  Shield,
-  CheckCircle
+  Gift,
+  Users,
+  FileText,
+  User
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { logger } from '@/lib/logger';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import { LoyaltyPoints } from '@/components/loyalty/LoyaltyPoints';
 import { ReferralSystem } from '@/components/referral/ReferralSystem';
+import { ProfileManagement } from '@/components/profile/ProfileManagement';
+import { BookingManagementCard } from '@/components/booking/BookingManagementCard';
+import { LoyaltyRewards } from '@/components/loyalty/LoyaltyRewards';
+import { UserReviews } from '@/components/reviews/UserReviews';
 
 interface UserBooking {
   id: string;
@@ -34,13 +38,17 @@ interface UserBooking {
   item_type: 'hotel' | 'flight' | 'tour';
   start_date: string;
   end_date?: string;
-  status: 'confirmed' | 'pending' | 'cancelled' | 'failed';
+  status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
   payment_status: 'paid' | 'pending' | 'failed' | 'refunded';
   total_amount: number;
   currency: string;
   booking_reference: string;
   guests_count: number;
   created_at: string;
+  cancellation_reason?: string;
+  cancelled_at?: string;
+  refund_amount?: number;
+  refund_status?: string;
 }
 
 interface UserProfile {
@@ -50,14 +58,11 @@ interface UserProfile {
   phone?: string;
   avatar_url?: string;
   created_at?: string;
-  updated_at?: string;
-  loyalty_points?: number;
 }
 
 interface TravelStats {
   totalTrips: number;
   totalSpent: number;
-  favoriteDestinations: string[];
   averageTripDuration: number;
   loyaltyTier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum';
 }
@@ -68,8 +73,8 @@ const UserDashboard = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [travelStats, setTravelStats] = useState<TravelStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [payingBooking, setPayingBooking] = useState<string | null>(null);
-  const [loyaltyData, setLoyaltyData] = useState({ points: 0, tier: 'bronze' as any });
+  const [loyaltyData, setLoyaltyData] = useState({ points: 0, tier: 'bronze' as const });
+  const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
     if (user) {
@@ -120,29 +125,13 @@ const UserDashboard = () => {
     }
   };
 
-  const handlePayNow = (booking: UserBooking) => {
-    // Redirect to payment gateway with booking details
-    const paymentUrl = `/booking/checkout?type=${booking.item_type}&id=${booking.item_id}&bookingId=${booking.id}&amount=${booking.total_amount}`;
-    window.location.href = paymentUrl;
-  };
-
   const calculateTravelStats = (bookings: UserBooking[]): TravelStats => {
-    const totalTrips = bookings.filter(booking => booking.status === 'confirmed').length;
+    const confirmedBookings = bookings.filter(booking => booking.status === 'confirmed' || booking.status === 'completed');
+    const totalTrips = confirmedBookings.length;
     const totalSpent = bookings.reduce((acc, booking) => acc + booking.total_amount, 0);
 
-    // Basic logic to determine favorite destinations (most frequent)
-    const destinationCounts: { [key: string]: number } = {};
-    bookings.forEach(booking => {
-      destinationCounts[booking.item_type] = (destinationCounts[booking.item_type] || 0) + 1;
-    });
-
-    const favoriteDestinations = Object.entries(destinationCounts)
-      .sort(([, countA], [, countB]) => countB - countA)
-      .slice(0, 3)
-      .map(([destination]) => destination);
-
     // Calculate average trip duration in days
-    const totalDuration = bookings.reduce((acc, booking) => {
+    const totalDuration = confirmedBookings.reduce((acc, booking) => {
       const startDate = new Date(booking.start_date);
       const endDate = booking.end_date ? new Date(booking.end_date) : startDate;
       const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
@@ -152,66 +141,11 @@ const UserDashboard = () => {
 
     // Determine loyalty tier based on total trips
     let loyaltyTier: TravelStats['loyaltyTier'] = 'Bronze';
-    if (totalTrips >= 5) {
-      loyaltyTier = 'Silver';
-    }
-    if (totalTrips >= 10) {
-      loyaltyTier = 'Gold';
-    }
-    if (totalTrips >= 20) {
-      loyaltyTier = 'Platinum';
-    }
+    if (totalTrips >= 5) loyaltyTier = 'Silver';
+    if (totalTrips >= 10) loyaltyTier = 'Gold';
+    if (totalTrips >= 20) loyaltyTier = 'Platinum';
 
-    return {
-      totalTrips,
-      totalSpent,
-      favoriteDestinations,
-      averageTripDuration,
-      loyaltyTier,
-    };
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'failed': return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getItemIcon = (type: string) => {
-    switch (type) {
-      case 'hotel': return <Hotel className="h-4 w-4" />;
-      case 'flight': return <Plane className="h-4 w-4" />;
-      case 'tour': return <Camera className="h-4 w-4" />;
-      default: return <MapPin className="h-4 w-4" />;
-    }
-  };
-
-  const downloadBookingDetails = (booking: UserBooking) => {
-    const data = {
-      bookingReference: booking.booking_reference,
-      itemType: booking.item_type,
-      itemId: booking.item_id,
-      startDate: booking.start_date,
-      endDate: booking.end_date,
-      status: booking.status,
-      paymentStatus: booking.payment_status,
-      totalAmount: booking.total_amount,
-      currency: booking.currency,
-      guestsCount: booking.guests_count,
-      createdAt: booking.created_at,
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `booking-${booking.booking_reference}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    return { totalTrips, totalSpent, averageTripDuration, loyaltyTier };
   };
 
   if (loading) {
@@ -251,115 +185,175 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      {/* Profile Card */}
+      {/* Profile Summary Card */}
       {profile && (
-        <Card className="hover-scale overflow-hidden border-2">
+        <Card className="overflow-hidden border-2">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4">
-              <Avatar className="h-20 w-20 border-4 border-primary/20">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <Avatar className="h-24 w-24 border-4 border-primary/20">
                 <AvatarImage src={profile.avatar_url} />
-                <AvatarFallback className="text-2xl bg-gradient-to-br from-primary to-accent text-white">
+                <AvatarFallback className="text-3xl bg-gradient-to-br from-primary to-accent text-white">
                   {profile.full_name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-xl font-semibold">{profile.full_name}</h2>
-                <p className="text-muted-foreground text-sm">{profile.email}</p>
+                <h2 className="text-2xl font-semibold">{profile.full_name}</h2>
+                <p className="text-muted-foreground">{profile.email}</p>
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3">
-                  <Badge variant="outline" className="flex items-center space-x-1 gradient-gold">
+                  <Badge variant="outline" className="flex items-center gap-1 gradient-gold">
                     <Star className="h-3 w-3 fill-current" />
-                    <span>{travelStats?.loyaltyTier} Member</span>
+                    {loyaltyData.tier.charAt(0).toUpperCase() + loyaltyData.tier.slice(1)} Member
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-sm text-muted-foreground">
                     Member since {new Date(profile.created_at!).toLocaleDateString()}
                   </span>
                 </div>
               </div>
-              <div className="text-center bg-gradient-to-br from-primary/10 to-accent/10 p-4 rounded-lg">
-                <div className="text-3xl font-bold text-primary">{profile.loyalty_points || 0}</div>
-                <div className="text-xs text-muted-foreground font-medium">Loyalty Points</div>
+              <div className="text-center bg-gradient-to-br from-primary/10 to-accent/10 p-6 rounded-xl">
+                <div className="text-4xl font-bold text-primary">{loyaltyData.points.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground font-medium">Loyalty Points</div>
               </div>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Stats Cards */}
+      {/* Quick Stats */}
       {travelStats && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Card className="hover-scale border-l-4 border-l-primary">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Trips</CardTitle>
-              <MapPin className="h-4 w-4 text-primary" />
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                Total Trips
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-primary">{travelStats.totalTrips}</div>
-              <p className="text-xs text-muted-foreground mt-1">Completed bookings</p>
             </CardContent>
           </Card>
 
           <Card className="hover-scale border-l-4 border-l-accent">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
-              <CreditCard className="h-4 w-4 text-accent" />
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-accent" />
+                Total Spent
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-accent">₹{travelStats.totalSpent.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground mt-1">All time</p>
             </CardContent>
           </Card>
 
           <Card className="hover-scale border-l-4 border-l-blue-500">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Trip Duration</CardTitle>
-              <Clock className="h-4 w-4 text-blue-500" />
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Clock className="h-4 w-4 text-blue-500" />
+                Avg Duration
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-500">
-                {travelStats.averageTripDuration.toFixed(1)}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Days per trip</p>
+              <div className="text-3xl font-bold text-blue-500">{travelStats.averageTripDuration.toFixed(1)}</div>
+              <p className="text-xs text-muted-foreground">days</p>
             </CardContent>
           </Card>
 
           <Link to="/wishlist" className="block">
             <Card className="hover-scale border-l-4 border-l-purple-500 h-full cursor-pointer">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">My Wishlist</CardTitle>
-                <Heart className="h-4 w-4 text-purple-500" />
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-purple-500" />
+                  Wishlist
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-purple-500">
-                  <Heart className="h-8 w-8 fill-purple-500" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">View saved items</p>
+                <Heart className="h-8 w-8 fill-purple-500 text-purple-500" />
               </CardContent>
             </Card>
           </Link>
         </div>
       )}
 
-      {/* Loyalty and Referral Section */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <LoyaltyPoints points={loyaltyData.points} tier={loyaltyData.tier} />
-        <ReferralSystem />
-      </div>
-
       {/* Main Content Tabs */}
-      <Tabs defaultValue="bookings" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
-          <TabsTrigger value="bookings">My Bookings</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 lg:w-auto">
+          <TabsTrigger value="overview" className="flex items-center gap-1">
+            <MapPin className="h-4 w-4" />
+            <span className="hidden sm:inline">Overview</span>
+          </TabsTrigger>
+          <TabsTrigger value="bookings" className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Bookings</span>
+          </TabsTrigger>
+          <TabsTrigger value="rewards" className="flex items-center gap-1">
+            <Gift className="h-4 w-4" />
+            <span className="hidden sm:inline">Rewards</span>
+          </TabsTrigger>
+          <TabsTrigger value="reviews" className="flex items-center gap-1">
+            <Star className="h-4 w-4" />
+            <span className="hidden sm:inline">Reviews</span>
+          </TabsTrigger>
+          <TabsTrigger value="referrals" className="flex items-center gap-1">
+            <Users className="h-4 w-4" />
+            <span className="hidden sm:inline">Referrals</span>
+          </TabsTrigger>
+          <TabsTrigger value="profile" className="flex items-center gap-1">
+            <User className="h-4 w-4" />
+            <span className="hidden sm:inline">Profile</span>
+          </TabsTrigger>
         </TabsList>
 
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Loyalty and Quick Actions */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <LoyaltyPoints points={loyaltyData.points} tier={loyaltyData.tier} />
+            <ReferralSystem />
+          </div>
+
+          {/* Recent Bookings Preview */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Recent Bookings
+              </CardTitle>
+              <Button variant="link" onClick={() => setActiveTab('bookings')}>
+                View All
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {bookings.length === 0 ? (
+                <div className="text-center py-12">
+                  <MapPin className="h-16 w-16 mx-auto text-muted-foreground mb-4 opacity-50" />
+                  <h3 className="text-lg font-semibold mb-2">No bookings yet</h3>
+                  <p className="text-muted-foreground mb-6">Start planning your next adventure!</p>
+                  <Link to="/">
+                    <Button variant="default">Explore Destinations</Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {bookings.slice(0, 3).map((booking) => (
+                    <BookingManagementCard 
+                      key={booking.id} 
+                      booking={booking} 
+                      onUpdate={fetchUserData}
+                    />
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Bookings Tab */}
         <TabsContent value="bookings" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
-                Recent Bookings
+                All Bookings ({bookings.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -369,70 +363,17 @@ const UserDashboard = () => {
                   <h3 className="text-lg font-semibold mb-2">No bookings yet</h3>
                   <p className="text-muted-foreground mb-6">Start planning your next adventure!</p>
                   <Link to="/">
-                    <Button variant="hero">Explore Destinations</Button>
+                    <Button variant="default">Explore Destinations</Button>
                   </Link>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {bookings.map((booking) => (
-                    <div 
+                    <BookingManagementCard 
                       key={booking.id} 
-                      className="flex flex-col md:flex-row md:items-center justify-between p-5 border-2 rounded-xl hover:border-primary/50 transition-all hover:shadow-md"
-                    >
-                      <div className="flex items-start space-x-4 mb-4 md:mb-0">
-                        <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex-shrink-0">
-                          {getItemIcon(booking.item_type)}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-lg">
-                            {booking.item_type.charAt(0).toUpperCase() + booking.item_type.slice(1)}
-                          </div>
-                          <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
-                            <Calendar className="h-3 w-3" />
-                            {new Date(booking.start_date).toLocaleDateString()} 
-                            {booking.end_date && ` - ${new Date(booking.end_date).toLocaleDateString()}`}
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1 font-mono">
-                            Ref: {booking.booking_reference}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between md:justify-end space-x-4">
-                        <div className="text-right">
-                          <div className="text-xl font-bold text-primary">
-                            {booking.currency} {booking.total_amount.toLocaleString()}
-                          </div>
-                          <div className="flex gap-2 mt-2">
-                            <Badge className={getStatusColor(booking.status)}>
-                              {booking.status}
-                            </Badge>
-                            <Badge variant="outline">
-                              {booking.payment_status}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          {booking.status === 'pending' && booking.payment_status === 'pending' && (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="whitespace-nowrap"
-                              onClick={() => handlePayNow(booking)}
-                            >
-                              <CreditCard className="h-4 w-4 mr-1" />
-                              Pay Now
-                            </Button>
-                          )}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => downloadBookingDetails(booking)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                      booking={booking} 
+                      onUpdate={fetchUserData}
+                    />
                   ))}
                 </div>
               )}
@@ -440,37 +381,24 @@ const UserDashboard = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="favorites">
-          <Card>
-            <CardHeader>
-              <CardTitle>Favorites</CardTitle>
-              <CardContent>
-                Feature comming soon
-              </CardContent>
-            </CardHeader>
-          </Card>
+        {/* Rewards Tab */}
+        <TabsContent value="rewards">
+          <LoyaltyRewards />
         </TabsContent>
 
+        {/* Reviews Tab */}
         <TabsContent value="reviews">
-          <Card>
-            <CardHeader>
-              <CardTitle>Reviews</CardTitle>
-              <CardContent>
-                Feature comming soon
-              </CardContent>
-            </CardHeader>
-          </Card>
+          <UserReviews />
         </TabsContent>
 
-        <TabsContent value="recommendations">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recommendations</CardTitle>
-              <CardContent>
-                Feature comming soon
-              </CardContent>
-            </CardHeader>
-          </Card>
+        {/* Referrals Tab */}
+        <TabsContent value="referrals">
+          <ReferralSystem />
+        </TabsContent>
+
+        {/* Profile Tab */}
+        <TabsContent value="profile">
+          <ProfileManagement />
         </TabsContent>
       </Tabs>
     </div>
