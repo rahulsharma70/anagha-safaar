@@ -1,0 +1,10 @@
+export { default as AdminLayout } from "./AdminLayout";
+export { default as AdminDashboard } from "./AdminDashboard";
+export { default as UsersManagement } from "./UsersManagement";
+export { default as BookingsManagement } from "./BookingsManagement";
+export { default as HotelsManagement } from "./HotelsManagement";
+export { default as FlightsManagement } from "./FlightsManagement";
+export { default as ToursManagement } from "./ToursManagement";
+export { default as AnalyticsDashboard } from "./AnalyticsDashboard";
+export { default as ContentManagement } from "./ContentManagement";
+export { default as AdminSettings } from "./AdminSettings";
