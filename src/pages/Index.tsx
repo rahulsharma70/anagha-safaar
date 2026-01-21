@@ -11,6 +11,11 @@ import himalayanRetreat from "@/assets/himalayan-retreat.jpg";
 import varanasiGhats from "@/assets/varanasi-ghats.jpg";
 import keralaBackwaters from "@/assets/kerala-backwaters.jpg";
 import rajasthanHeritage from "@/assets/rajasthan-heritage.jpg";
+import { Testimonials } from "@/components/home/Testimonials";
+import { TrustBadges } from "@/components/home/TrustBadges";
+import { Newsletter } from "@/components/home/Newsletter";
+import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+
 const Index = () => {
   const featuredPackages = [{
     image: himalayanRetreat,
@@ -472,6 +477,18 @@ const Index = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* Trust Badges */}
+        <TrustBadges />
+
+        {/* Why Choose Us */}
+        <WhyChooseUs />
+
+        {/* Testimonials */}
+        <Testimonials />
+
+        {/* Newsletter */}
+        <Newsletter />
       </main>
 
       <Footer />
