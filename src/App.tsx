@@ -32,7 +32,6 @@ import CancellationPolicy from "./pages/CancellationPolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./components/dashboard/AdminDashboard";
 import UserDashboard from "./components/dashboard/UserDashboard";
 import BookingCheckout from "./pages/BookingCheckout";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
@@ -40,6 +39,20 @@ import DashboardSettings from "./pages/DashboardSettings";
 import DashboardNotifications from "./pages/DashboardNotifications";
 import Wishlist from "./pages/Wishlist";
 import AITripPlanner from "./pages/AITripPlanner";
+
+// Admin Panel Imports
+import {
+  AdminLayout,
+  AdminDashboard,
+  UsersManagement,
+  BookingsManagement,
+  HotelsManagement,
+  FlightsManagement,
+  ToursManagement,
+  AnalyticsDashboard,
+  ContentManagement,
+  AdminSettings,
+} from "./pages/admin";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,7 +103,6 @@ const App = () => {
                 <Route path="/flights" element={<Flights />} />
                 <Route path="/flights/:id" element={<FlightDetail />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/user-dashboard" element={<UserDashboard />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
@@ -104,6 +116,20 @@ const App = () => {
             <Route path="/dashboard/notifications" element={<DashboardNotifications />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/itinerary" element={<AITripPlanner />} />
+            
+            {/* Admin Panel Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="analytics" element={<AnalyticsDashboard />} />
+              <Route path="users" element={<UsersManagement />} />
+              <Route path="bookings" element={<BookingsManagement />} />
+              <Route path="hotels" element={<HotelsManagement />} />
+              <Route path="flights" element={<FlightsManagement />} />
+              <Route path="tours" element={<ToursManagement />} />
+              <Route path="content" element={<ContentManagement />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
