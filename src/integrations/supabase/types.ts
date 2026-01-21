@@ -14,9 +14,52 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_history: {
+        Row: {
+          action: string
+          booking_id: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_status: string | null
+          notes: string | null
+          old_status: string | null
+        }
+        Insert: {
+          action: string
+          booking_id: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          old_status?: string | null
+        }
+        Update: {
+          action?: string
+          booking_id?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          old_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_history_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_reference: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
           created_at: string
           currency: string | null
           end_date: string | null
@@ -26,6 +69,8 @@ export type Database = {
           item_id: string
           item_type: string
           payment_status: string | null
+          refund_amount: number | null
+          refund_status: string | null
           start_date: string
           status: string | null
           total_amount: number
@@ -34,6 +79,8 @@ export type Database = {
         }
         Insert: {
           booking_reference: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
           currency?: string | null
           end_date?: string | null
@@ -43,6 +90,8 @@ export type Database = {
           item_id: string
           item_type: string
           payment_status?: string | null
+          refund_amount?: number | null
+          refund_status?: string | null
           start_date: string
           status?: string | null
           total_amount: number
@@ -51,6 +100,8 @@ export type Database = {
         }
         Update: {
           booking_reference?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
           currency?: string | null
           end_date?: string | null
@@ -60,6 +111,8 @@ export type Database = {
           item_id?: string
           item_type?: string
           payment_status?: string | null
+          refund_amount?: number | null
+          refund_status?: string | null
           start_date?: string
           status?: string | null
           total_amount?: number
@@ -206,6 +259,42 @@ export type Database = {
         }
         Relationships: []
       }
+      loyalty_rewards: {
+        Row: {
+          created_at: string
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          points_required: number
+          reward_type: string
+          reward_value: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          points_required: number
+          reward_type: string
+          reward_value?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          points_required?: number
+          reward_type?: string
+          reward_value?: number | null
+        }
+        Relationships: []
+      }
       loyalty_transactions: {
         Row: {
           booking_id: string | null
@@ -246,33 +335,57 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: Json | null
           avatar_url: string | null
           created_at: string
+          date_of_birth: string | null
           email: string | null
+          emergency_contacts: Json | null
           full_name: string | null
           id: string
+          nationality: string | null
+          passport_expiry: string | null
+          passport_number: string | null
           phone: string | null
           preferences: Json | null
+          travel_documents: Json | null
+          travel_preferences: Json | null
           updated_at: string
         }
         Insert: {
+          address?: Json | null
           avatar_url?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email?: string | null
+          emergency_contacts?: Json | null
           full_name?: string | null
           id: string
+          nationality?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
           phone?: string | null
           preferences?: Json | null
+          travel_documents?: Json | null
+          travel_preferences?: Json | null
           updated_at?: string
         }
         Update: {
+          address?: Json | null
           avatar_url?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email?: string | null
+          emergency_contacts?: Json | null
           full_name?: string | null
           id?: string
+          nationality?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
           phone?: string | null
           preferences?: Json | null
+          travel_documents?: Json | null
+          travel_preferences?: Json | null
           updated_at?: string
         }
         Relationships: []
@@ -408,6 +521,89 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      travel_companions: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          email: string | null
+          full_name: string
+          id: string
+          passport_expiry: string | null
+          passport_number: string | null
+          phone: string | null
+          relationship: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          passport_expiry?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          passport_expiry?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_redeemed_rewards: {
+        Row: {
+          expires_at: string | null
+          id: string
+          points_spent: number
+          redeemed_at: string
+          reward_id: string
+          status: string | null
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          expires_at?: string | null
+          id?: string
+          points_spent: number
+          redeemed_at?: string
+          reward_id: string
+          status?: string | null
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          expires_at?: string | null
+          id?: string
+          points_spent?: number
+          redeemed_at?: string
+          reward_id?: string
+          status?: string | null
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_redeemed_rewards_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_rewards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
