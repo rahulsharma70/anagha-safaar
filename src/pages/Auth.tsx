@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,9 +27,12 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signIn(email, password);
-    } catch (error) {
-      // Error handled in useAuth
+      const { error } = await signIn(email, password);
+      if (error) {
+        toast.error(error.message || "Invalid email or password");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -37,13 +41,19 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
     setIsLoading(true);
     try {
-      await signUp(email, password);
-    } catch (error) {
-      // Error handled in useAuth
+      const { error } = await signUp(email, password, fullName);
+      if (error) {
+        toast.error(error.message || "Failed to create account");
+      } else {
+        toast.success("Account created successfully!");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
