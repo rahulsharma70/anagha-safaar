@@ -6,14 +6,16 @@ import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plane, MapPin, Calendar, Users, ArrowRight, Clock, Sparkles, Filter } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Search, Plane, MapPin, Calendar, Users, ArrowRight, Clock, Sparkles, Filter, Radio } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import CityAutocomplete from "@/components/CityAutocomplete";
 import { useRealtimeData } from "@/hooks/useRealtimeData";
+import FlightStatusBadge from "@/components/flights/FlightStatusBadge";
+import LiveFlightTracker from "@/components/flights/LiveFlightTracker";
 
 const Flights = () => {
   const navigate = useNavigate();
@@ -349,31 +351,40 @@ const Flights = () => {
 
                         {/* Flight Details */}
                         <div className="flex-1 p-6">
+                          {/* Status Badge Row */}
+                          <div className="flex items-center justify-between mb-4">
+                            <FlightStatusBadge 
+                              departureTime={flight.departure_time}
+                              arrivalTime={flight.arrival_time}
+                            />
+                            <motion.div 
+                              className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                              animate={{ opacity: [0.5, 1, 0.5] }}
+                              transition={{ duration: 3, repeat: Infinity }}
+                            >
+                              <Radio className="w-3 h-3 text-primary" />
+                              <span>Real-time updates</span>
+                            </motion.div>
+                          </div>
+                          
                           <div className="flex items-center justify-between">
                             {/* Departure */}
-                            <div className="text-center">
+                            <div className="text-center min-w-[100px]">
                               <p className="text-2xl font-bold">{formatTime(flight.departure_time)}</p>
                               <p className="text-sm text-muted-foreground">{formatDate(flight.departure_time)}</p>
                               <p className="font-medium mt-1">{flight.departure_city}</p>
                             </div>
 
-                            {/* Duration */}
-                            <div className="flex-1 mx-6 flex flex-col items-center">
-                              <div className="flex items-center w-full">
-                                <div className="h-[2px] flex-1 bg-border" />
-                                <div className="mx-2">
-                                  <Plane className="w-5 h-5 text-primary rotate-90" />
-                                </div>
-                                <div className="h-[2px] flex-1 bg-border" />
-                              </div>
-                              <span className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                Direct Flight
-                              </span>
-                            </div>
+                            {/* Live Flight Tracker */}
+                            <LiveFlightTracker
+                              departureTime={flight.departure_time}
+                              arrivalTime={flight.arrival_time}
+                              departureCity={flight.departure_city}
+                              arrivalCity={flight.arrival_city}
+                            />
 
                             {/* Arrival */}
-                            <div className="text-center">
+                            <div className="text-center min-w-[100px]">
                               <p className="text-2xl font-bold">{formatTime(flight.arrival_time)}</p>
                               <p className="text-sm text-muted-foreground">{formatDate(flight.arrival_time)}</p>
                               <p className="font-medium mt-1">{flight.arrival_city}</p>
