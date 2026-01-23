@@ -45,6 +45,9 @@ const Hotels = () => {
     if (!hotels) return [];
     
     return hotels.filter((hotel) => {
+      // Only show hotels with available rooms
+      const hasAvailability = (hotel.available_rooms ?? 0) > 0;
+      
       const matchesSearch = searchQuery === "" || 
         hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         hotel.location_city.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -58,7 +61,7 @@ const Hotels = () => {
       const matchesStars = starFilter === "all" || 
         hotel.star_rating === parseInt(starFilter);
       
-      return matchesSearch && matchesPrice && matchesStars;
+      return hasAvailability && matchesSearch && matchesPrice && matchesStars;
     });
   }, [hotels, searchQuery, priceFilter, starFilter]);
 
@@ -310,11 +313,11 @@ const Hotels = () => {
                       }
                       title={hotel.name}
                       location={`${hotel.location_city}, ${hotel.location_state}`}
-                      duration={`${hotel.star_rating || 4} Star Hotel`}
+                      duration={`${hotel.star_rating || 4} Star Hotel • ${hotel.available_rooms} rooms available`}
                       rating={4.5 + Math.random() * 0.5}
                       reviews={Math.floor(Math.random() * 500) + 100}
                       price={Number(hotel.price_per_night)}
-                      badge={hotel.is_featured ? "Featured" : undefined}
+                      badge={hotel.is_featured ? "Featured" : (hotel.available_rooms && hotel.available_rooms < 5 ? "Only few left!" : undefined)}
                     />
                   </Link>
                 </motion.div>
