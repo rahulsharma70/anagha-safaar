@@ -47,10 +47,18 @@ const Flights = () => {
   const filteredFlights = useMemo(() => {
     if (!flights) return [];
     
-    return flights.filter((flight) => {
-      // Only show flights with available seats (real-time availability)
-      const hasAvailableSeats = flight.available_seats && flight.available_seats > 0;
-      
+    // Filter flights with available seats
+    const availableFlights = flights.filter((flight) => {
+      return flight.available_seats && flight.available_seats > 0;
+    });
+
+    // If no search criteria, show all available flights
+    if (!origin && !destination && priceFilter === "all") {
+      return availableFlights;
+    }
+
+    // Apply filters
+    const filtered = availableFlights.filter((flight) => {
       const matchesOrigin = origin === "" || 
         flight.departure_city.toLowerCase().includes(origin.toLowerCase());
       
@@ -63,8 +71,11 @@ const Flights = () => {
         (priceFilter === "mid" && price && price > 5000 && price <= 15000) ||
         (priceFilter === "premium" && price && price > 15000);
       
-      return hasAvailableSeats && matchesOrigin && matchesDestination && matchesPrice;
+      return matchesOrigin && matchesDestination && matchesPrice;
     });
+
+    // If no matches found, show all available flights instead of empty results
+    return filtered.length > 0 ? filtered : availableFlights;
   }, [flights, origin, destination, priceFilter, flightClass]);
 
   const containerVariants = {
