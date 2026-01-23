@@ -23,7 +23,8 @@ const INDIAN_CITIES = [
   "Alleppey", "Kumarakom", "Thekkady", "Wayanad", "Coorg", "Chikmagalur", "Lonavala",
   "Mahabaleshwar", "Panchgani", "Lavasa", "Shirdi", "Tirupati", "Rameshwaram", "Kanyakumari",
   "Madikeri", "Hampi", "Badami", "Aihole", "Pattadakal", "Bijapur", "Hospet",
-  "Himalayas", "Rajasthan", "Uttarakhand", "Sikkim", "Meghalaya", "Arunachal Pradesh"
+  "Himalayas", "Rajasthan", "Uttarakhand", "Sikkim", "Meghalaya", "Arunachal Pradesh","london","Paris"
+  "Bali","Bangkok","Indonesia"
 ];
 
 interface CityAutocompleteProps {
