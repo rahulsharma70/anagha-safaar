@@ -314,8 +314,8 @@ const Hotels = () => {
                       title={hotel.name}
                       location={`${hotel.location_city}, ${hotel.location_state}`}
                       duration={`${hotel.star_rating || 4} Star Hotel • ${hotel.available_rooms} rooms available`}
-                      rating={4.5 + Math.random() * 0.5}
-                      reviews={Math.floor(Math.random() * 500) + 100}
+                      rating={Number((4.0 + (hotel.star_rating || 4) * 0.15).toFixed(1))}
+                      reviews={150 + ((hotel.id.charCodeAt(0) * 7) % 350)}
                       price={Number(hotel.price_per_night)}
                       badge={hotel.is_featured ? "Featured" : (hotel.available_rooms && hotel.available_rooms < 5 ? "Only few left!" : undefined)}
                     />
