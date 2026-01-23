@@ -48,6 +48,9 @@ const Flights = () => {
     if (!flights) return [];
     
     return flights.filter((flight) => {
+      // Only show flights with available seats (real-time availability)
+      const hasAvailableSeats = flight.available_seats && flight.available_seats > 0;
+      
       const matchesOrigin = origin === "" || 
         flight.departure_city.toLowerCase().includes(origin.toLowerCase());
       
@@ -60,7 +63,7 @@ const Flights = () => {
         (priceFilter === "mid" && price && price > 5000 && price <= 15000) ||
         (priceFilter === "premium" && price && price > 15000);
       
-      return matchesOrigin && matchesDestination && matchesPrice;
+      return hasAvailableSeats && matchesOrigin && matchesDestination && matchesPrice;
     });
   }, [flights, origin, destination, priceFilter, flightClass]);
 
@@ -367,7 +370,7 @@ const Flights = () => {
                           </div>
                         </div>
 
-                        {/* Price */}
+                        {/* Price & Availability */}
                         <div className="bg-primary/5 p-6 md:w-56 flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-border/30 group-hover:bg-primary/10 transition-colors">
                           <p className="text-sm text-muted-foreground mb-1">
                             {flightClass === "business" ? "Business" : "Economy"}
@@ -375,11 +378,23 @@ const Flights = () => {
                           <p className="text-3xl font-bold text-primary">
                             ₹{(flightClass === "business" ? flight.price_business : flight.price_economy)?.toLocaleString()}
                           </p>
-                          <p className="text-xs text-muted-foreground mb-3">per person</p>
+                          <p className="text-xs text-muted-foreground mb-1">per person</p>
+                          
+                          {/* Real-time seat availability */}
+                          <p className={`text-xs font-medium mb-2 ${
+                            flight.available_seats && flight.available_seats < 10 
+                              ? 'text-destructive' 
+                              : 'text-muted-foreground'
+                          }`}>
+                            {flight.available_seats && flight.available_seats < 10 
+                              ? `Only ${flight.available_seats} seats left!` 
+                              : `${flight.available_seats || 0} seats available`}
+                          </p>
+                          
                           {flight.is_featured && (
-                            <Badge className="bg-accent text-accent-foreground">Best Deal</Badge>
+                            <Badge className="bg-accent text-accent-foreground mb-2">Best Deal</Badge>
                           )}
-                          <Button className="mt-3 w-full rounded-xl" onClick={() => navigate(`/flights/${flight.id}`)}>
+                          <Button className="mt-2 w-full rounded-xl" onClick={() => navigate(`/flights/${flight.id}`)}>
                             Book Now
                           </Button>
                         </div>
