@@ -35,8 +35,10 @@ const Hotels = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const filteredHotels = useMemo(() => {
@@ -263,9 +265,8 @@ const Hotels = () => {
         {/* Hotels Grid */}
         <section className="container mx-auto px-4 pb-20">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-between mb-8"
           >
             <div>
@@ -291,13 +292,16 @@ const Hotels = () => {
           ) : filteredHotels.length > 0 ? (
             <motion.div 
               variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              initial="visible"
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {filteredHotels.map((hotel) => (
-                <motion.div key={hotel.id} variants={itemVariants}>
+                <motion.div 
+                  key={hotel.id} 
+                  initial={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
                   <Link to={`/hotels/${hotel.slug}`}>
                     <PackageCard
                       image={

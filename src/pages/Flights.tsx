@@ -38,8 +38,10 @@ const Flights = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data || [];
     },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const filteredFlights = useMemo(() => {
@@ -289,9 +291,8 @@ const Flights = () => {
         {/* Flights List */}
         <section className="container mx-auto px-4 pb-20">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-between mb-8"
           >
             <div>
