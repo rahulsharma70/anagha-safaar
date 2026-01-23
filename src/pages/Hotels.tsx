@@ -11,6 +11,7 @@ import { Search, MapPin, Star, Building2, Sparkles, Calendar, Users } from "luci
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import CityAutocomplete from "@/components/CityAutocomplete";
 
 const Hotels = () => {
   const [searchParams] = useSearchParams();
@@ -134,13 +135,11 @@ const Hotels = () => {
               <div className="bg-card/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-border/50">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                   {/* Destination */}
-                  <div className="md:col-span-2 relative">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      placeholder="Where do you want to stay?"
+                  <div className="md:col-span-2">
+                    <CityAutocomplete
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-12 h-14 text-lg rounded-xl border-border/50 bg-background/50"
+                      onChange={setSearchQuery}
+                      placeholder="Where do you want to stay?"
                     />
                   </div>
                   

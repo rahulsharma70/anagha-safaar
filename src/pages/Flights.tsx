@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import CityAutocomplete from "@/components/CityAutocomplete";
 
 const Flights = () => {
   const navigate = useNavigate();
@@ -162,24 +163,21 @@ const Flights = () => {
               <div className="bg-card/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-border/50">
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                   {/* From */}
-                  <div className="md:col-span-2 relative">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      placeholder="From (City)"
+                  <div className="md:col-span-2">
+                    <CityAutocomplete
                       value={origin}
-                      onChange={(e) => setOrigin(e.target.value)}
-                      className="pl-12 h-14 text-lg rounded-xl border-border/50 bg-background/50"
+                      onChange={setOrigin}
+                      placeholder="From (City)"
                     />
                   </div>
                   
                   {/* To */}
-                  <div className="md:col-span-2 relative">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary" />
-                    <Input
-                      placeholder="To (City)"
+                  <div className="md:col-span-2">
+                    <CityAutocomplete
                       value={destination}
-                      onChange={(e) => setDestination(e.target.value)}
-                      className="pl-12 h-14 text-lg rounded-xl border-border/50 bg-background/50"
+                      onChange={setDestination}
+                      placeholder="To (City)"
+                      iconColor="text-primary"
                     />
                   </div>
                   
