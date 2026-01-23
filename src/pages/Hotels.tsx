@@ -12,6 +12,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import CityAutocomplete from "@/components/CityAutocomplete";
+import { useRealtimeData } from "@/hooks/useRealtimeData";
 
 const Hotels = () => {
   const [searchParams] = useSearchParams();
@@ -21,6 +22,9 @@ const Hotels = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2");
+
+  // Enable realtime updates
+  useRealtimeData("hotels", ["hotels"]);
 
   const { data: hotels, isLoading } = useQuery({
     queryKey: ["hotels"],

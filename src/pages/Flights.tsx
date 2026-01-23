@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import CityAutocomplete from "@/components/CityAutocomplete";
+import { useRealtimeData } from "@/hooks/useRealtimeData";
 
 const Flights = () => {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ const Flights = () => {
   const [passengers, setPassengers] = useState("1");
   const [flightClass, setFlightClass] = useState("economy");
   const [priceFilter, setPriceFilter] = useState<string>("all");
+
+  // Enable realtime updates
+  useRealtimeData("flights", ["flights"]);
 
   const { data: flights, isLoading } = useQuery({
     queryKey: ["flights"],
