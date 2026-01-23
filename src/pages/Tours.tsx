@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CityAutocomplete from "@/components/CityAutocomplete";
+import { useRealtimeData } from "@/hooks/useRealtimeData";
 
 const Tours = () => {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,9 @@ const Tours = () => {
   const [durationFilter, setDurationFilter] = useState<string>("all");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [tourTypeFilter, setTourTypeFilter] = useState<string>("all");
+
+  // Enable realtime updates
+  useRealtimeData("tours", ["tours"]);
 
   const { data: tours, isLoading } = useQuery({
     queryKey: ["tours"],
