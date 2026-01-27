@@ -3,16 +3,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PackageCard from "@/components/PackageCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Star, Building2, Sparkles, Calendar, Users } from "lucide-react";
+import { Search, MapPin, Star, Building2, Sparkles, Calendar, Users, SlidersHorizontal } from "lucide-react";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import CityAutocomplete from "@/components/CityAutocomplete";
 import { useRealtimeData } from "@/hooks/useRealtimeData";
+import HotelCardEnhanced from "@/components/hotels/HotelCardEnhanced";
+import HotelSortBar from "@/components/hotels/HotelSortBar";
+import HotelDealsBanner from "@/components/hotels/HotelDealsBanner";
+import HotelTrustBadges from "@/components/hotels/HotelTrustBadges";
 
 const Hotels = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +25,7 @@ const Hotels = () => {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2");
+  const [sortBy, setSortBy] = useState("recommended");
 
   // Enable realtime updates
   useRealtimeData("hotels", ["hotels"]);
@@ -44,7 +48,7 @@ const Hotels = () => {
   const filteredHotels = useMemo(() => {
     if (!hotels) return [];
     
-    return hotels.filter((hotel) => {
+    let filtered = hotels.filter((hotel) => {
       // Only show hotels with available rooms
       const hasAvailability = (hotel.available_rooms ?? 0) > 0;
       
@@ -63,7 +67,25 @@ const Hotels = () => {
       
       return hasAvailability && matchesSearch && matchesPrice && matchesStars;
     });
-  }, [hotels, searchQuery, priceFilter, starFilter]);
+
+    // Apply sorting
+    switch (sortBy) {
+      case "price-low":
+        filtered.sort((a, b) => a.price_per_night - b.price_per_night);
+        break;
+      case "price-high":
+        filtered.sort((a, b) => b.price_per_night - a.price_per_night);
+        break;
+      case "rating":
+        filtered.sort((a, b) => (b.star_rating || 0) - (a.star_rating || 0));
+        break;
+      case "stars":
+        filtered.sort((a, b) => (b.star_rating || 0) - (a.star_rating || 0));
+        break;
+    }
+
+    return filtered;
+  }, [hotels, searchQuery, priceFilter, starFilter, sortBy]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -227,6 +249,14 @@ const Hotels = () => {
           </div>
         </section>
 
+        {/* Trust Badges */}
+        <HotelTrustBadges />
+
+        {/* Deals Banner */}
+        <div className="container mx-auto px-4 py-4">
+          <HotelDealsBanner />
+        </div>
+
         {/* Popular Destinations */}
         <section className="container mx-auto px-4 py-16">
           <motion.div
@@ -270,17 +300,21 @@ const Hotels = () => {
           <motion.div
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between mb-8"
+            className="flex items-center justify-between mb-4"
           >
             <div>
               <h2 className="text-3xl font-bold">
                 {searchQuery ? `Hotels in ${searchQuery}` : "All Hotels"}
               </h2>
-              <p className="text-muted-foreground mt-1">
-                {filteredHotels.length} properties found
-              </p>
             </div>
           </motion.div>
+
+          {/* Sort Bar */}
+          <HotelSortBar 
+            sortBy={sortBy} 
+            onSortChange={setSortBy} 
+            totalHotels={filteredHotels.length} 
+          />
 
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -300,27 +334,25 @@ const Hotels = () => {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {filteredHotels.map((hotel) => (
-                <motion.div 
-                  key={hotel.id} 
-                  initial={{ opacity: 1, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <Link to={`/hotels/${hotel.slug}`}>
-                    <PackageCard
-                      image={
-                        (hotel.images as string[])?.[0] ||
-                        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
-                      }
-                      title={hotel.name}
-                      location={`${hotel.location_city}, ${hotel.location_state}`}
-                      duration={`${hotel.star_rating || 4} Star Hotel • ${hotel.available_rooms} rooms available`}
-                      rating={Number((4.0 + (hotel.star_rating || 4) * 0.15).toFixed(1))}
-                      reviews={150 + ((hotel.id.charCodeAt(0) * 7) % 350)}
-                      price={Number(hotel.price_per_night)}
-                      badge={hotel.is_featured ? "Featured" : (hotel.available_rooms && hotel.available_rooms < 5 ? "Only few left!" : undefined)}
-                    />
-                  </Link>
-                </motion.div>
+                <HotelCardEnhanced
+                  key={hotel.id}
+                  id={hotel.id}
+                  slug={hotel.slug}
+                  name={hotel.name}
+                  location={`${hotel.location_city}, ${hotel.location_state}`}
+                  image={
+                    (hotel.images as string[])?.[0] ||
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"
+                  }
+                  price={Number(hotel.price_per_night)}
+                  originalPrice={hotel.is_featured ? Math.round(hotel.price_per_night * 1.2) : undefined}
+                  starRating={hotel.star_rating || 4}
+                  userRating={Number((4.0 + (hotel.star_rating || 4) * 0.15).toFixed(1))}
+                  reviewCount={150 + ((hotel.id.charCodeAt(0) * 7) % 350)}
+                  availableRooms={hotel.available_rooms || undefined}
+                  isFeatured={hotel.is_featured || false}
+                  discount={hotel.is_featured ? 20 : undefined}
+                />
               ))}
             </motion.div>
           ) : hotels && hotels.length > 0 ? (

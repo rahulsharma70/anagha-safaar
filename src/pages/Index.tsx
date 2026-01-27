@@ -15,6 +15,11 @@ import { Testimonials } from "@/components/home/Testimonials";
 import { TrustBadges } from "@/components/home/TrustBadges";
 import { Newsletter } from "@/components/home/Newsletter";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { PopularDestinations } from "@/components/home/PopularDestinations";
+import { AppDownloadBanner } from "@/components/home/AppDownloadBanner";
+import { FlashDeals } from "@/components/home/FlashDeals";
+import { RecentSearches } from "@/components/home/RecentSearches";
+import { PopularRoutes } from "@/components/home/PopularRoutes";
 
 const Index = () => {
   const featuredPackages = [{
@@ -274,6 +279,12 @@ const Index = () => {
           </motion.div>
         </section>
 
+        {/* Recent Searches */}
+        <RecentSearches />
+
+        {/* Flash Deals */}
+        <FlashDeals />
+
         {/* Features Section */}
         <section className="container mx-auto px-4 py-24">
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{
@@ -359,6 +370,12 @@ const Index = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* Popular Routes */}
+        <PopularRoutes />
+
+        {/* Popular Destinations */}
+        <PopularDestinations />
 
         {/* Destinations Preview */}
         <section className="container mx-auto px-4 py-24">
@@ -483,6 +500,9 @@ const Index = () => {
 
         {/* Why Choose Us */}
         <WhyChooseUs />
+
+        {/* App Download Banner */}
+        <AppDownloadBanner />
 
         {/* Testimonials */}
         <Testimonials />
