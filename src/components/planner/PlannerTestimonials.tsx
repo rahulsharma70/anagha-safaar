@@ -7,7 +7,8 @@ import { Star, Quote, MessageCircle } from "lucide-react";
 const TESTIMONIALS = [
   {
     name: "Rohit Saxena",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
     location: "Mumbai",
     trip: "Kerala, 7 days",
     rating: 5,
