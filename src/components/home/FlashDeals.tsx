@@ -14,7 +14,8 @@ const deals = [
     originalPrice: 8999,
     salePrice: 4999,
     discount: 45,
-    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmxpZ2h0fGVufDB8fDB8fHww",
     endsIn: 7200, // seconds
     href: "/flights",
   },
