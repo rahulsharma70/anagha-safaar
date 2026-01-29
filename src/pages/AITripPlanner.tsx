@@ -5,12 +5,16 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, MapPin, Calendar, Users, Wallet, Heart, Loader2, Plane, Send, Globe, Compass, Map } from "lucide-react";
+import { Sparkles, MapPin, Calendar, Users, Wallet, Heart, Loader2, Plane, Send, Globe, Compass, Map, Copy, Download, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { PopularDestinationsCarousel } from "@/components/planner/PopularDestinationsCarousel";
+import { SampleItineraries } from "@/components/planner/SampleItineraries";
+import { PlannerStats } from "@/components/planner/PlannerStats";
+import { HowItWorks } from "@/components/planner/HowItWorks";
+import { PlannerTestimonials } from "@/components/planner/PlannerTestimonials";
 
 const INTERESTS = [
   "Adventure",
@@ -56,6 +60,54 @@ const AITripPlanner = () => {
         ? prev.filter((i) => i !== interest)
         : [...prev, interest]
     );
+  };
+
+  const handleSelectDestination = (dest: string) => {
+    setDestination(dest);
+    toast.success(`${dest} selected! Customize your trip details below.`);
+    // Scroll to form
+    document.getElementById("trip-form")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleLoadSample = (trip: { destination: string; duration: number; travelers: number; budget: string; style: string }) => {
+    setDestination(trip.destination);
+    setDuration(trip.duration.toString());
+    setTravelers(trip.travelers.toString());
+    setBudget(trip.budget);
+    setTravelStyle(trip.style);
+    toast.success("Template loaded! Customize and generate your itinerary.");
+    document.getElementById("trip-form")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleCopyItinerary = () => {
+    navigator.clipboard.writeText(itinerary);
+    toast.success("Itinerary copied to clipboard!");
+  };
+
+  const handleDownloadItinerary = () => {
+    const blob = new Blob([itinerary], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${destination}-itinerary.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Itinerary downloaded!");
+  };
+
+  const handleShareItinerary = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${destination} Trip Itinerary`,
+          text: itinerary.substring(0, 200) + "...",
+        });
+      } catch {
+        toast.error("Sharing cancelled");
+      }
+    } else {
+      handleCopyItinerary();
+    }
   };
 
   const handleGenerateItinerary = async () => {
@@ -479,7 +531,20 @@ const AITripPlanner = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        {/* Stats Section */}
+        <PlannerStats />
+
+        {/* How It Works */}
+        <HowItWorks />
+
+        {/* Trending Destinations Carousel */}
+        <PopularDestinationsCarousel onSelectDestination={handleSelectDestination} />
+
+        {/* Sample Itineraries */}
+        <SampleItineraries onLoadSample={handleLoadSample} />
+
+        {/* Main Form & Results Section */}
+        <div id="trip-form" className="grid lg:grid-cols-2 gap-8 scroll-mt-8">
           {/* Input Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -632,13 +697,30 @@ const AITripPlanner = () => {
           {/* Itinerary Output */}
           <Card className="border-2 backdrop-blur-sm bg-card/80">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                Your Personalized Itinerary
-              </CardTitle>
-              <CardDescription>
-                AI-generated travel plan based on your preferences
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    Your Personalized Itinerary
+                  </CardTitle>
+                  <CardDescription>
+                    AI-generated travel plan based on your preferences
+                  </CardDescription>
+                </div>
+                {itinerary && (
+                  <div className="flex items-center gap-2">
+                    <Button size="icon" variant="ghost" onClick={handleCopyItinerary} title="Copy">
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={handleDownloadItinerary} title="Download">
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={handleShareItinerary} title="Share">
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               {isLoading && !itinerary && (
@@ -660,7 +742,7 @@ const AITripPlanner = () => {
               )}
               
               {itinerary && (
-                <div className="prose prose-sm dark:prose-invert max-w-none">
+                <div className="prose prose-sm dark:prose-invert max-w-none max-h-[600px] overflow-y-auto">
                   <div className="whitespace-pre-wrap text-foreground leading-relaxed">
                     {itinerary}
                   </div>
@@ -669,6 +751,11 @@ const AITripPlanner = () => {
             </CardContent>
           </Card>
           </motion.div>
+        </div>
+
+        {/* Testimonials */}
+        <div className="mt-12">
+          <PlannerTestimonials />
         </div>
       </main>
 
