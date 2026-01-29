@@ -16,7 +16,7 @@ const deals = [
     discount: 45,
     image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=300&fit=crop",
     endsIn: 7200, // seconds
-    href: "/flights"
+    href: "/flights",
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const deals = [
     discount: 36,
     image: "https://images.unsplash.com/photo-1568495248636-6432b97bd949?w=400&h=300&fit=crop",
     endsIn: 10800,
-    href: "/hotels"
+    href: "/hotels",
   },
   {
     id: 3,
@@ -38,9 +38,10 @@ const deals = [
     originalPrice: 15999,
     salePrice: 9999,
     discount: 38,
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop",
+    image:
+      "https://plus.unsplash.com/premium_photo-1679830513886-e09cd6dc3137?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmxpZ2h0fGVufDB8fDB8fHww",
     endsIn: 5400,
-    href: "/flights"
+    href: "/flights",
   },
   {
     id: 4,
@@ -52,8 +53,8 @@ const deals = [
     discount: 42,
     image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop",
     endsIn: 14400,
-    href: "/hotels"
-  }
+    href: "/hotels",
+  },
 ];
 
 const CountdownTimer = ({ seconds }: { seconds: number }) => {
@@ -72,17 +73,11 @@ const CountdownTimer = ({ seconds }: { seconds: number }) => {
 
   return (
     <div className="flex items-center gap-1 text-sm font-mono">
-      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">
-        {hours.toString().padStart(2, '0')}
-      </div>
+      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">{hours.toString().padStart(2, "0")}</div>
       <span className="text-destructive">:</span>
-      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">
-        {minutes.toString().padStart(2, '0')}
-      </div>
+      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">{minutes.toString().padStart(2, "0")}</div>
       <span className="text-destructive">:</span>
-      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">
-        {secs.toString().padStart(2, '0')}
-      </div>
+      <div className="bg-destructive/10 text-destructive px-2 py-1 rounded">{secs.toString().padStart(2, "0")}</div>
     </div>
   );
 };
@@ -106,7 +101,7 @@ export const FlashDeals = () => {
               Today's <span className="text-destructive">Hot Deals</span>
             </h2>
           </div>
-          
+
           <Link to="/flights" className="mt-4 md:mt-0">
             <Button variant="outline" className="rounded-full">
               View All Deals
@@ -136,18 +131,22 @@ export const FlashDeals = () => {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    
+
                     {/* Discount Badge */}
                     <Badge className="absolute top-3 left-3 bg-destructive text-destructive-foreground">
                       {deal.discount}% OFF
                     </Badge>
-                    
+
                     {/* Type Badge */}
                     <Badge variant="secondary" className="absolute top-3 right-3">
                       {deal.type === "flight" ? (
-                        <><Plane className="w-3 h-3 mr-1" /> Flight</>
+                        <>
+                          <Plane className="w-3 h-3 mr-1" /> Flight
+                        </>
                       ) : (
-                        <><Building2 className="w-3 h-3 mr-1" /> Hotel</>
+                        <>
+                          <Building2 className="w-3 h-3 mr-1" /> Hotel
+                        </>
                       )}
                     </Badge>
                   </div>
@@ -156,17 +155,15 @@ export const FlashDeals = () => {
                   <div className="p-4">
                     <h3 className="font-semibold text-lg mb-1">{deal.title}</h3>
                     <p className="text-sm text-muted-foreground mb-3">{deal.subtitle}</p>
-                    
+
                     {/* Price */}
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-2xl font-bold text-primary">
-                        ₹{deal.salePrice.toLocaleString()}
-                      </span>
+                      <span className="text-2xl font-bold text-primary">₹{deal.salePrice.toLocaleString()}</span>
                       <span className="text-sm text-muted-foreground line-through">
                         ₹{deal.originalPrice.toLocaleString()}
                       </span>
                     </div>
-                    
+
                     {/* Timer */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
