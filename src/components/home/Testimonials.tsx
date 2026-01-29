@@ -4,28 +4,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const testimonials = [
   {
-    name: "Priya Sharma",
+    name: "Sagar Gupta",
     location: "Mumbai",
-    avatar: "PS",
+    avatar: "SG",
     rating: 5,
     text: "The Kashmir trip was absolutely magical! Every detail was perfectly planned. The team went above and beyond to make our honeymoon unforgettable.",
-    trip: "Kashmir Valley Tour"
+    trip: "Kashmir Valley Tour",
   },
   {
-    name: "Rajesh Patel",
+    name: "Rohit Saxena",
     location: "Ahmedabad",
-    avatar: "RP",
+    avatar: "RS",
     rating: 5,
     text: "Best travel agency in India! The Rajasthan heritage tour exceeded all expectations. Professional guides and luxurious accommodations throughout.",
-    trip: "Rajasthan Heritage Circuit"
+    trip: "Rajasthan Heritage Circuit",
   },
   {
-    name: "Anita Krishnan",
+    name: "Khushi Chawla",
     location: "Chennai",
     avatar: "AK",
     rating: 5,
     text: "The Kerala backwaters cruise was a dream come true. Impeccable service, delicious food, and memories that will last a lifetime.",
-    trip: "Kerala Backwaters Cruise"
+    trip: "Kerala Backwaters Cruise",
   },
   {
     name: "Vikram Singh",
@@ -33,8 +33,8 @@ const testimonials = [
     avatar: "VS",
     rating: 5,
     text: "Third trip with Anagha Safar and they never disappoint! The Himalayan trek was well-organized with experienced guides. Highly recommended!",
-    trip: "Himalayan Spiritual Trek"
-  }
+    trip: "Himalayan Spiritual Trek",
+  },
 ];
 
 const containerVariants = {
@@ -42,9 +42,9 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15
-    }
-  }
+      staggerChildren: 0.15,
+    },
+  },
 };
 
 const itemVariants = {
@@ -52,8 +52,8 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 }
-  }
+    transition: { duration: 0.5 },
+  },
 };
 
 export const Testimonials = () => {
@@ -94,7 +94,7 @@ export const Testimonials = () => {
               className="relative bg-card rounded-2xl p-6 shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300"
             >
               <Quote className="absolute top-4 right-4 h-8 w-8 text-secondary/20" />
-              
+
               <div className="flex items-center gap-3 mb-4">
                 <Avatar className="h-12 w-12 border-2 border-secondary/20">
                   <AvatarFallback className="bg-secondary/10 text-secondary font-semibold">
@@ -113,9 +113,7 @@ export const Testimonials = () => {
                 ))}
               </div>
 
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                "{testimonial.text}"
-              </p>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">"{testimonial.text}"</p>
 
               <div className="pt-3 border-t border-border">
                 <p className="text-xs text-secondary font-medium">{testimonial.trip}</p>
