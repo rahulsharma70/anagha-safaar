@@ -6,15 +6,15 @@ import { Star, Quote, MessageCircle } from "lucide-react";
 
 const TESTIMONIALS = [
   {
-    name: "Priya Sharma",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+    name: "Rohit Saxena",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
     location: "Mumbai",
     trip: "Kerala, 7 days",
     rating: 5,
     text: "The AI planner created the perfect honeymoon itinerary! Every detail was thoughtfully planned. We discovered hidden gems we wouldn't have found on our own.",
   },
   {
-    name: "Rahul Verma",
+    name: "Sagar Gupta",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
     location: "Delhi",
     trip: "Ladakh, 10 days",
@@ -45,9 +45,7 @@ export const PlannerTestimonials = () => {
           Traveler Stories
         </Badge>
         <h2 className="text-2xl font-bold text-foreground">What Our Travelers Say</h2>
-        <p className="text-muted-foreground mt-2">
-          Real experiences from travelers who used our AI planner
-        </p>
+        <p className="text-muted-foreground mt-2">Real experiences from travelers who used our AI planner</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
@@ -65,7 +63,12 @@ export const PlannerTestimonials = () => {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-12 w-12 border-2 border-primary/20">
                     <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                    <AvatarFallback>{testimonial.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    <AvatarFallback>
+                      {testimonial.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="font-semibold text-foreground">{testimonial.name}</div>
