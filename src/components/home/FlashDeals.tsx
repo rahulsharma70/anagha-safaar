@@ -27,7 +27,8 @@ const deals = [
     originalPrice: 25000,
     salePrice: 15999,
     discount: 36,
-    image: "https://images.unsplash.com/photo-1568495248636-6432b97bd949?w=400&h=300&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1649075990681-7f5f594088ad?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFqJTIwbGFrZSUyMHBhbGFjZXxlbnwwfHwwfHx8MA%3D%3D",
     endsIn: 10800,
     href: "/hotels",
   },
