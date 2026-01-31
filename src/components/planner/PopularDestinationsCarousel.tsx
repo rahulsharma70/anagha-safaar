@@ -44,7 +44,7 @@ const DESTINATIONS = [
   },
   {
     name: "Himachal Pradesh",
-    image: "https://images.unsplash.com/photo-1585038541965-9e7d13c73b3e?w=400&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1597074866923-dc0589150358?w=400&h=300&fit=crop",
     rating: 4.6,
     reviews: 2780,
     tag: "Mountains",
