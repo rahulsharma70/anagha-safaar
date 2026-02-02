@@ -100,23 +100,38 @@ function GlobeWithMarkers({
 
   return (
     <group>
+      {/* Lights - moved outside mesh for proper illumination */}
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[5, 5, 5]} intensity={1.5} />
+      <pointLight position={[10, 10, 10]} intensity={1.2} />
+      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#0EA5A3" />
+      
       {/* Globe */}
       <mesh ref={globeRef}>
         <Sphere args={[RADIUS, 64, 64]}>
-          <meshStandardMaterial
-            color="#1e3a5f"
-            metalness={0.3}
-            roughness={0.7}
+          <meshPhongMaterial
+            color="#1a5276"
+            emissive="#0e3d5c"
+            emissiveIntensity={0.3}
+            specular="#ffffff"
+            shininess={30}
+          />
+        </Sphere>
+        {/* Continents overlay - wireframe for visual interest */}
+        <Sphere args={[RADIUS * 1.005, 32, 32]}>
+          <meshBasicMaterial
+            color="#2ecc71"
+            wireframe
             transparent
-            opacity={0.9}
+            opacity={0.15}
           />
         </Sphere>
         {/* Atmosphere glow */}
-        <Sphere args={[RADIUS * 1.02, 32, 32]}>
+        <Sphere args={[RADIUS * 1.03, 32, 32]}>
           <meshBasicMaterial
             color="#0EA5A3"
             transparent
-            opacity={0.1}
+            opacity={0.15}
             side={THREE.BackSide}
           />
         </Sphere>
@@ -132,11 +147,6 @@ function GlobeWithMarkers({
           isSelected={selectedDest?.name === dest.name}
         />
       ))}
-
-      {/* Lights */}
-      <ambientLight intensity={0.4} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#0EA5A3" />
     </group>
   );
 }
