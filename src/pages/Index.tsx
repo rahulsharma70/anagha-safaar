@@ -377,6 +377,12 @@ const Index = () => {
         {/* Popular Routes */}
         <PopularRoutes />
 
+        {/* Mood-Based Trip Finder */}
+        <MoodTripFinder />
+
+        {/* Interactive 3D Globe */}
+        <InteractiveGlobe />
+
         {/* Popular Destinations */}
         <PopularDestinations />
 
