@@ -20,6 +20,7 @@ import { AppDownloadBanner } from "@/components/home/AppDownloadBanner";
 import { FlashDeals } from "@/components/home/FlashDeals";
 import { RecentSearches } from "@/components/home/RecentSearches";
 import { PopularRoutes } from "@/components/home/PopularRoutes";
+import { MoodTripFinder, InteractiveGlobe, GamificationSystem, HiddenGems, MadhubaniPattern } from "@/components/originality";
 
 const Index = () => {
   const featuredPackages = [{
