@@ -510,6 +510,12 @@ const Index = () => {
         {/* Why Choose Us */}
         <WhyChooseUs />
 
+        {/* Hidden Gems */}
+        <HiddenGems />
+
+        {/* Gamification System */}
+        <GamificationSystem />
+
         {/* App Download Banner */}
         <AppDownloadBanner />
 
