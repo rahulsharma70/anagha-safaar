@@ -20,6 +20,7 @@ import { AppDownloadBanner } from "@/components/home/AppDownloadBanner";
 import { FlashDeals } from "@/components/home/FlashDeals";
 import { RecentSearches } from "@/components/home/RecentSearches";
 import { PopularRoutes } from "@/components/home/PopularRoutes";
+import { MoodTripFinder, InteractiveGlobe, GamificationSystem, HiddenGems, MadhubaniPattern } from "@/components/originality";
 
 const Index = () => {
   const featuredPackages = [{
@@ -134,6 +135,8 @@ const Index = () => {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+          {/* Cultural Pattern Overlay */}
+          <MadhubaniPattern className="z-[1]" />
           {/* Background Image with Parallax Effect */}
           <motion.div className="absolute inset-0 bg-cover bg-center scale-110" style={{
           backgroundImage: `url(${heroImage})`
@@ -374,6 +377,12 @@ const Index = () => {
         {/* Popular Routes */}
         <PopularRoutes />
 
+        {/* Mood-Based Trip Finder */}
+        <MoodTripFinder />
+
+        {/* Interactive 3D Globe */}
+        <InteractiveGlobe />
+
         {/* Popular Destinations */}
         <PopularDestinations />
 
@@ -500,6 +509,12 @@ const Index = () => {
 
         {/* Why Choose Us */}
         <WhyChooseUs />
+
+        {/* Hidden Gems */}
+        <HiddenGems />
+
+        {/* Gamification System */}
+        <GamificationSystem />
 
         {/* App Download Banner */}
         <AppDownloadBanner />
