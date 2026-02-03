@@ -32,8 +32,20 @@ const DESTINATIONS: Destination[] = [
   { name: "Amritsar", x: 40, y: 18, description: "Golden Temple", type: "Spiritual" },
 ];
 
-// India map SVG path
-const IndiaMapSVG = () => (
+// India map SVG path with cities inside
+const IndiaMapSVG = ({ 
+  destinations, 
+  hoveredDest, 
+  selectedDest,
+  onHover,
+  onSelect 
+}: {
+  destinations: Destination[];
+  hoveredDest: Destination | null;
+  selectedDest: Destination | null;
+  onHover: (dest: Destination | null) => void;
+  onSelect: (dest: Destination) => void;
+}) => (
   <svg
     viewBox="0 0 100 100"
     className="w-full h-full"
@@ -79,6 +91,65 @@ const IndiaMapSVG = () => (
       fill="none"
       opacity="0.5"
     />
+
+    {/* City markers inside SVG */}
+    {destinations.map((dest) => (
+      <g 
+        key={dest.name}
+        transform={`translate(${dest.x}, ${dest.y})`}
+        style={{ cursor: 'pointer' }}
+        onMouseEnter={() => onHover(dest)}
+        onMouseLeave={() => onHover(null)}
+        onClick={() => onSelect(dest)}
+      >
+        {/* Pulse animation circle */}
+        <circle
+          cx="0"
+          cy="0"
+          r="2"
+          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
+          opacity="0.4"
+        >
+          <animate
+            attributeName="r"
+            values="1.5;3;1.5"
+            dur="2s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="opacity"
+            values="0.6;0;0.6"
+            dur="2s"
+            repeatCount="indefinite"
+          />
+        </circle>
+        
+        {/* Marker dot */}
+        <circle
+          cx="0"
+          cy="0"
+          r="1.2"
+          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
+          stroke="hsl(var(--background))"
+          strokeWidth="0.3"
+          className="transition-colors duration-200"
+        />
+        
+        {/* City name label */}
+        <text
+          x="0"
+          y="3.5"
+          textAnchor="middle"
+          fontSize="2.5"
+          fontWeight={selectedDest?.name === dest.name || hoveredDest?.name === dest.name ? "600" : "500"}
+          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--foreground))"}
+          className="transition-colors duration-200"
+          style={{ pointerEvents: 'none' }}
+        >
+          {dest.name}
+        </text>
+      </g>
+    ))}
   </svg>
 );
 
@@ -120,68 +191,13 @@ export const InteractiveGlobe = () => {
             
             {/* Map container */}
             <div className="relative w-full h-full">
-              <IndiaMapSVG />
-              
-              {/* City markers */}
-              {DESTINATIONS.map((dest) => (
-                <motion.div
-                  key={dest.name}
-                  className="absolute cursor-pointer group"
-                  style={{ 
-                    left: `${dest.x}%`, 
-                    top: `${dest.y}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                  whileHover={{ scale: 1.3 }}
-                  onMouseEnter={() => setHoveredDest(dest)}
-                  onMouseLeave={() => setHoveredDest(null)}
-                  onClick={() => setSelectedDest(dest)}
-                >
-                  {/* Pulse effect */}
-                  <motion.div
-                    className={`absolute inset-0 rounded-full ${
-                      selectedDest?.name === dest.name 
-                        ? 'bg-secondary' 
-                        : 'bg-primary'
-                    }`}
-                    animate={{
-                      scale: [1, 1.8, 1],
-                      opacity: [0.6, 0, 0.6],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    style={{ width: 12, height: 12 }}
-                  />
-                  
-                  {/* Marker dot */}
-                  <div 
-                    className={`w-3 h-3 rounded-full border-2 border-background shadow-lg transition-colors ${
-                      selectedDest?.name === dest.name 
-                        ? 'bg-secondary' 
-                        : 'bg-primary group-hover:bg-secondary'
-                    }`}
-                  />
-                  
-                  {/* City label */}
-                  <motion.span
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ 
-                      opacity: hoveredDest?.name === dest.name || selectedDest?.name === dest.name ? 1 : 0.7,
-                      y: 0 
-                    }}
-                    className={`absolute left-1/2 -translate-x-1/2 top-4 text-xs font-medium whitespace-nowrap px-1.5 py-0.5 rounded ${
-                      selectedDest?.name === dest.name 
-                        ? 'bg-secondary text-secondary-foreground' 
-                        : 'bg-card/80 text-foreground'
-                    }`}
-                  >
-                    {dest.name}
-                  </motion.span>
-                </motion.div>
-              ))}
+              <IndiaMapSVG 
+                destinations={DESTINATIONS}
+                hoveredDest={hoveredDest}
+                selectedDest={selectedDest}
+                onHover={setHoveredDest}
+                onSelect={setSelectedDest}
+              />
             </div>
             
             {/* Hover tooltip */}
