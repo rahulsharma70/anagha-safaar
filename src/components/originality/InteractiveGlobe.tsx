@@ -48,108 +48,213 @@ const IndiaMapSVG = ({
 }) => (
   <svg
     viewBox="0 0 100 100"
-    className="w-full h-full"
+    className="w-full h-full drop-shadow-2xl"
     preserveAspectRatio="xMidYMid meet"
   >
     <defs>
-      <linearGradient id="indiaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity="0.3" />
-        <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
-        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity="0.3" />
+      {/* Premium gradient for India map */}
+      <linearGradient id="indiaMapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.15" />
+        <stop offset="30%" stopColor="hsl(var(--secondary))" stopOpacity="0.25" />
+        <stop offset="70%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
+        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity="0.15" />
       </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="1" result="coloredBlur" />
+      
+      {/* Border gradient */}
+      <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="hsl(var(--secondary))" />
+        <stop offset="50%" stopColor="hsl(var(--primary))" />
+        <stop offset="100%" stopColor="hsl(var(--secondary))" />
+      </linearGradient>
+      
+      {/* Outer glow filter */}
+      <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="2" result="blur" />
+        <feFlood floodColor="hsl(var(--secondary))" floodOpacity="0.4" />
+        <feComposite in2="blur" operator="in" />
+        <feMerge>
+          <feMergeNode />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      
+      {/* Inner shadow for depth */}
+      <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.5" result="blur" />
+        <feOffset dx="0.5" dy="0.5" />
+        <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.3 0" />
+        <feBlend in2="SourceGraphic" mode="overlay" />
+      </filter>
+      
+      {/* Marker glow */}
+      <filter id="markerGlow">
+        <feGaussianBlur stdDeviation="0.5" result="coloredBlur" />
         <feMerge>
           <feMergeNode in="coloredBlur" />
           <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
+      
+      {/* Radial gradient for map center highlight */}
+      <radialGradient id="centerHighlight" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity="0.2" />
+        <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+      </radialGradient>
     </defs>
     
-    {/* Simplified India outline */}
+    {/* Background decorative ring */}
+    <circle cx="50" cy="50" r="48" fill="none" stroke="hsl(var(--border))" strokeWidth="0.15" strokeDasharray="2,2" opacity="0.3" />
+    <circle cx="50" cy="50" r="45" fill="none" stroke="hsl(var(--border))" strokeWidth="0.1" strokeDasharray="1,3" opacity="0.2" />
+    
+    {/* More detailed India outline */}
     <path
-      d="M45 5 
-         L52 3 L58 8 L55 15 L48 12 L42 14 L38 12 L35 18 
-         L40 22 L45 20 L52 22 L58 25 L62 22 L68 25 L75 28 L78 35 
-         L75 42 L72 48 L68 52 L65 58 L60 62 L55 68 L52 75 
-         L48 82 L45 88 L40 92 L35 88 L32 82 L28 75 L25 68 
-         L28 62 L30 55 L28 48 L25 42 L28 35 L32 28 L35 22 
-         L40 18 L45 12 Z"
-      fill="url(#indiaGradient)"
-      stroke="hsl(var(--secondary))"
-      strokeWidth="0.5"
-      filter="url(#glow)"
+      d="M45 2 
+         L50 1 L55 3 L58 6 L56 10 L52 8 L48 10 L44 8 L40 10 L36 8 L33 12 
+         L36 16 L40 14 L44 16 L48 14 L52 16 L56 18 L60 16 L64 18 L68 22 L72 26 L76 32 
+         L78 38 L76 44 L74 50 L70 56 L66 62 L62 68 L56 74 L52 80 
+         L48 86 L44 90 L38 94 L34 90 L30 84 L26 76 L24 68 
+         L26 60 L28 52 L26 44 L24 36 L26 28 L30 22 L34 16 L38 12 L42 8 L45 4 Z"
+      fill="url(#indiaMapGradient)"
+      stroke="url(#borderGradient)"
+      strokeWidth="0.8"
+      filter="url(#outerGlow)"
       className="transition-all duration-500"
     />
     
-    {/* State boundaries (simplified) */}
+    {/* Inner highlight layer */}
     <path
-      d="M45 30 L55 32 M35 45 L55 48 M40 60 L50 62 M45 75 L42 80"
-      stroke="hsl(var(--border))"
-      strokeWidth="0.2"
-      strokeDasharray="1,1"
-      fill="none"
-      opacity="0.5"
+      d="M45 2 
+         L50 1 L55 3 L58 6 L56 10 L52 8 L48 10 L44 8 L40 10 L36 8 L33 12 
+         L36 16 L40 14 L44 16 L48 14 L52 16 L56 18 L60 16 L64 18 L68 22 L72 26 L76 32 
+         L78 38 L76 44 L74 50 L70 56 L66 62 L62 68 L56 74 L52 80 
+         L48 86 L44 90 L38 94 L34 90 L30 84 L26 76 L24 68 
+         L26 60 L28 52 L26 44 L24 36 L26 28 L30 22 L34 16 L38 12 L42 8 L45 4 Z"
+      fill="url(#centerHighlight)"
+      stroke="none"
     />
+    
+    {/* State/region boundaries (subtle) */}
+    <g opacity="0.25" stroke="hsl(var(--muted-foreground))" strokeWidth="0.15" fill="none">
+      <path d="M36 20 Q45 25 56 20" />
+      <path d="M30 35 Q50 40 70 35" />
+      <path d="M28 50 Q48 55 68 48" />
+      <path d="M30 65 Q45 70 60 65" />
+      <path d="M35 80 Q44 85 52 78" />
+      <path d="M50 25 L50 80" strokeDasharray="0.5,1.5" />
+    </g>
+    
+    {/* Decorative compass rose */}
+    <g transform="translate(85, 85)" opacity="0.4">
+      <circle r="5" fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
+      <text x="0" y="-6" textAnchor="middle" fontSize="2" fill="hsl(var(--muted-foreground))">N</text>
+      <line x1="0" y1="-4" x2="0" y2="-2" stroke="hsl(var(--secondary))" strokeWidth="0.3" />
+      <line x1="0" y1="2" x2="0" y2="4" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
+      <line x1="-4" y1="0" x2="-2" y2="0" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
+      <line x1="2" y1="0" x2="4" y2="0" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
+    </g>
 
     {/* City markers inside SVG */}
-    {destinations.map((dest) => (
-      <g 
-        key={dest.name}
-        transform={`translate(${dest.x}, ${dest.y})`}
-        style={{ cursor: 'pointer' }}
-        onMouseEnter={() => onHover(dest)}
-        onMouseLeave={() => onHover(null)}
-        onClick={() => onSelect(dest)}
-      >
-        {/* Pulse animation circle */}
-        <circle
-          cx="0"
-          cy="0"
-          r="2"
-          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
-          opacity="0.4"
+    {destinations.map((dest, index) => {
+      const isSelected = selectedDest?.name === dest.name;
+      const isHovered = hoveredDest?.name === dest.name;
+      
+      return (
+        <g 
+          key={dest.name}
+          transform={`translate(${dest.x}, ${dest.y})`}
+          style={{ cursor: 'pointer' }}
+          onMouseEnter={() => onHover(dest)}
+          onMouseLeave={() => onHover(null)}
+          onClick={() => onSelect(dest)}
+          filter="url(#markerGlow)"
         >
-          <animate
-            attributeName="r"
-            values="1.5;3;1.5"
-            dur="2s"
-            repeatCount="indefinite"
+          {/* Outer pulse ring */}
+          <circle
+            cx="0"
+            cy="0"
+            r="2"
+            fill="none"
+            stroke={isSelected ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
+            strokeWidth="0.3"
+            opacity="0.6"
+          >
+            <animate
+              attributeName="r"
+              values="1.5;3.5;1.5"
+              dur={`${1.8 + index * 0.1}s`}
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="opacity"
+              values="0.8;0;0.8"
+              dur={`${1.8 + index * 0.1}s`}
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          {/* Inner glow */}
+          <circle
+            cx="0"
+            cy="0"
+            r="1.8"
+            fill={isSelected || isHovered ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
+            opacity="0.2"
           />
-          <animate
-            attributeName="opacity"
-            values="0.6;0;0.6"
-            dur="2s"
-            repeatCount="indefinite"
+          
+          {/* Main marker dot */}
+          <circle
+            cx="0"
+            cy="0"
+            r={isSelected || isHovered ? "1.4" : "1"}
+            fill={isSelected || isHovered ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
+            stroke="hsl(var(--background))"
+            strokeWidth="0.4"
+            className="transition-all duration-300"
           />
-        </circle>
-        
-        {/* Marker dot */}
-        <circle
-          cx="0"
-          cy="0"
-          r="1.2"
-          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--primary))"}
-          stroke="hsl(var(--background))"
-          strokeWidth="0.3"
-          className="transition-colors duration-200"
-        />
-        
-        {/* City name label */}
-        <text
-          x="0"
-          y="3.5"
-          textAnchor="middle"
-          fontSize="2.5"
-          fontWeight={selectedDest?.name === dest.name || hoveredDest?.name === dest.name ? "600" : "500"}
-          fill={selectedDest?.name === dest.name ? "hsl(var(--secondary))" : "hsl(var(--foreground))"}
-          className="transition-colors duration-200"
-          style={{ pointerEvents: 'none' }}
-        >
-          {dest.name}
-        </text>
-      </g>
-    ))}
+          
+          {/* Inner highlight */}
+          <circle
+            cx="-0.3"
+            cy="-0.3"
+            r="0.3"
+            fill="white"
+            opacity="0.6"
+          />
+          
+          {/* City name label with background */}
+          <rect
+            x="-8"
+            y="2"
+            width="16"
+            height="3.5"
+            rx="0.8"
+            fill={isSelected || isHovered ? "hsl(var(--secondary))" : "hsl(var(--card))"}
+            fillOpacity={isSelected || isHovered ? "0.9" : "0.85"}
+            stroke={isSelected || isHovered ? "hsl(var(--secondary))" : "hsl(var(--border))"}
+            strokeWidth="0.15"
+            className="transition-all duration-200"
+          />
+          <text
+            x="0"
+            y="4.5"
+            textAnchor="middle"
+            fontSize="2.2"
+            fontWeight={isSelected || isHovered ? "700" : "600"}
+            fill={isSelected || isHovered ? "hsl(var(--secondary-foreground))" : "hsl(var(--foreground))"}
+            className="transition-colors duration-200"
+            style={{ pointerEvents: 'none', letterSpacing: '0.02em' }}
+          >
+            {dest.name}
+          </text>
+        </g>
+      );
+    })}
+    
+    {/* Title label */}
+    <text x="50" y="98" textAnchor="middle" fontSize="2.5" fontWeight="600" fill="hsl(var(--muted-foreground))" opacity="0.6" letterSpacing="0.15em">
+      INDIA
+    </text>
   </svg>
 );
 
