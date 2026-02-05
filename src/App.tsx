@@ -11,7 +11,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { SessionExpirationModal } from "@/components/auth/SessionExpirationModal";
 import { useEffect } from "react";
 import { AppContent } from "@/components/AppContent";
- import { LiveChatWidget } from "@/components/contact/LiveChatWidget";
+ import LiveChatWidget from "@/components/contact/LiveChatWidget";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EnhancedAuth from "./pages/EnhancedAuth";
