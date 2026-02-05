@@ -13,6 +13,25 @@ interface Destination {
   type: string;
 }
 
+// Flight routes connecting cities
+const FLIGHT_ROUTES = [
+  { from: "Delhi", to: "Mumbai" },
+  { from: "Delhi", to: "Jaipur" },
+  { from: "Delhi", to: "Kolkata" },
+  { from: "Delhi", to: "Ladakh" },
+  { from: "Mumbai", to: "Goa" },
+  { from: "Mumbai", to: "Bengaluru" },
+  { from: "Mumbai", to: "Hyderabad" },
+  { from: "Bengaluru", to: "Chennai" },
+  { from: "Chennai", to: "Kerala" },
+  { from: "Kolkata", to: "Darjeeling" },
+  { from: "Delhi", to: "Varanasi" },
+  { from: "Delhi", to: "Amritsar" },
+  { from: "Jaipur", to: "Udaipur" },
+  { from: "Delhi", to: "Agra" },
+  { from: "Hyderabad", to: "Bengaluru" },
+];
+
 // City positions mapped to India shape (percentage-based)
 const DESTINATIONS: Destination[] = [
   { name: "Delhi", x: 48, y: 28, description: "Capital Gateway", type: "City" },
@@ -101,6 +120,13 @@ const IndiaMapSVG = ({
         <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity="0.2" />
         <stop offset="100%" stopColor="transparent" stopOpacity="0" />
       </radialGradient>
+      
+      {/* Flight path gradient */}
+      <linearGradient id="flightPathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity="0.3" />
+        <stop offset="50%" stopColor="hsl(var(--secondary))" stopOpacity="1" />
+        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity="0.3" />
+      </linearGradient>
     </defs>
     
     {/* Background decorative ring */}
@@ -153,6 +179,13 @@ const IndiaMapSVG = ({
       <line x1="-4" y1="0" x2="-2" y2="0" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
       <line x1="2" y1="0" x2="4" y2="0" stroke="hsl(var(--muted-foreground))" strokeWidth="0.2" />
     </g>
+
+    {/* Flight path lines */}
+    <FlightPaths 
+      destinations={destinations}
+      selectedDest={selectedDest}
+      hoveredDest={hoveredDest}
+    />
 
     {/* City markers inside SVG */}
     {destinations.map((dest, index) => {
@@ -257,6 +290,178 @@ const IndiaMapSVG = ({
     </text>
   </svg>
 );
+
+// Animated flight paths component
+const FlightPaths = ({ 
+  destinations, 
+  selectedDest, 
+  hoveredDest 
+}: { 
+  destinations: Destination[];
+  selectedDest: Destination | null;
+  hoveredDest: Destination | null;
+}) => {
+  const getDestCoords = (name: string) => {
+    const dest = destinations.find(d => d.name === name);
+    return dest ? { x: dest.x, y: dest.y } : null;
+  };
+
+  // Calculate curved path between two points
+  const getCurvedPath = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+    const midX = (from.x + to.x) / 2;
+    const midY = (from.y + to.y) / 2;
+    
+    // Calculate perpendicular offset for curve
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    // Curve intensity based on distance
+    const curveOffset = Math.min(dist * 0.25, 8);
+    
+    // Control point perpendicular to the line
+    const controlX = midX - (dy / dist) * curveOffset;
+    const controlY = midY + (dx / dist) * curveOffset;
+    
+    return `M ${from.x} ${from.y} Q ${controlX} ${controlY} ${to.x} ${to.y}`;
+  };
+
+  const activeCity = selectedDest?.name || hoveredDest?.name;
+  
+  // Get routes connected to the active city
+  const activeRoutes = activeCity 
+    ? FLIGHT_ROUTES.filter(route => route.from === activeCity || route.to === activeCity)
+    : [];
+
+  // Show all routes faintly when nothing is selected
+  const showAllRoutes = !activeCity;
+
+  return (
+    <g className="flight-paths">
+      {/* Background routes (all routes, very faint) */}
+      {showAllRoutes && FLIGHT_ROUTES.map((route, index) => {
+        const fromCoords = getDestCoords(route.from);
+        const toCoords = getDestCoords(route.to);
+        
+        if (!fromCoords || !toCoords) return null;
+        
+        const pathD = getCurvedPath(fromCoords, toCoords);
+        
+        return (
+          <path
+            key={`bg-${index}`}
+            d={pathD}
+            fill="none"
+            stroke="hsl(var(--muted-foreground))"
+            strokeWidth="0.15"
+            strokeDasharray="0.5,1"
+            opacity="0.2"
+          />
+        );
+      })}
+
+      {/* Active routes with animation */}
+      {activeRoutes.map((route, index) => {
+        const fromCoords = getDestCoords(route.from);
+        const toCoords = getDestCoords(route.to);
+        
+        if (!fromCoords || !toCoords) return null;
+        
+        const pathD = getCurvedPath(fromCoords, toCoords);
+        const pathId = `flight-path-${index}`;
+        const isFromActive = route.from === activeCity;
+        
+        return (
+          <g key={pathId}>
+            {/* Path glow effect */}
+            <path
+              d={pathD}
+              fill="none"
+              stroke="hsl(var(--secondary))"
+              strokeWidth="1.5"
+              opacity="0.15"
+              strokeLinecap="round"
+            >
+              <animate
+                attributeName="opacity"
+                values="0.1;0.25;0.1"
+                dur="2s"
+                repeatCount="indefinite"
+              />
+            </path>
+            
+            {/* Main path line */}
+            <path
+              id={pathId}
+              d={pathD}
+              fill="none"
+              stroke="url(#flightPathGradient)"
+              strokeWidth="0.4"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
+            
+            {/* Animated dashed overlay */}
+            <path
+              d={pathD}
+              fill="none"
+              stroke="hsl(var(--secondary))"
+              strokeWidth="0.3"
+              strokeDasharray="1,2"
+              strokeLinecap="round"
+              opacity="0.9"
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                values={isFromActive ? "0;-12" : "-12;0"}
+                dur="1.5s"
+                repeatCount="indefinite"
+              />
+            </path>
+            
+            {/* Flying plane icon along path */}
+            <g>
+              <circle r="1" fill="hsl(var(--secondary))">
+                <animateMotion
+                  dur={`${2 + index * 0.3}s`}
+                  repeatCount="indefinite"
+                  rotate="auto"
+                >
+                  <mpath href={`#${pathId}`} />
+                </animateMotion>
+                <animate
+                  attributeName="opacity"
+                  values="0;1;1;1;0"
+                  dur={`${2 + index * 0.3}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
+              {/* Plane trail */}
+              <circle r="0.5" fill="hsl(var(--secondary))" opacity="0.5">
+                <animateMotion
+                  dur={`${2 + index * 0.3}s`}
+                  repeatCount="indefinite"
+                  rotate="auto"
+                  keyPoints="0;0.95"
+                  keyTimes="0;1"
+                  calcMode="linear"
+                >
+                  <mpath href={`#${pathId}`} />
+                </animateMotion>
+                <animate
+                  attributeName="opacity"
+                  values="0;0.5;0.5;0.5;0"
+                  dur={`${2 + index * 0.3}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </g>
+          </g>
+        );
+      })}
+    </g>
+  );
+};
 
 export const InteractiveGlobe = () => {
   const [hoveredDest, setHoveredDest] = useState<Destination | null>(null);
