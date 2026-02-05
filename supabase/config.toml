@@ -1,4 +1,7 @@
 project_id = "wbfxpvncphdkxmxipmth"
+ 
+ [functions.travel-assistant]
+ verify_jwt = false
 
 [functions.signup-with-validation]
 verify_jwt = false
