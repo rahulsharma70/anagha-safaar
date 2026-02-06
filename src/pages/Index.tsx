@@ -381,11 +381,23 @@ const Index = () => {
         {/* Popular Routes */}
         <PopularRoutes />
 
+        {/* NEW: Mood-Based Search */}
+        <MoodBasedSearch />
+
+        {/* NEW: AI Price Prediction */}
+        <PricePrediction />
+
+        {/* NEW: Travel Personality Quiz */}
+        <TravelPersonality />
+
         {/* Mood-Based Trip Finder */}
         <MoodTripFinder />
 
         {/* Interactive 3D Globe */}
         <InteractiveGlobe />
+
+        {/* NEW: Bucket List Tracker */}
+        <BucketList />
 
         {/* Popular Destinations */}
         <PopularDestinations />
