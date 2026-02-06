@@ -21,6 +21,10 @@ import { FlashDeals } from "@/components/home/FlashDeals";
 import { RecentSearches } from "@/components/home/RecentSearches";
 import { PopularRoutes } from "@/components/home/PopularRoutes";
 import { MoodTripFinder, InteractiveGlobe, GamificationSystem, HiddenGems, MadhubaniPattern } from "@/components/originality";
+import { MoodBasedSearch } from "@/components/home/MoodBasedSearch";
+import { PricePrediction } from "@/components/home/PricePrediction";
+import { TravelPersonality } from "@/components/home/TravelPersonality";
+import { BucketList } from "@/components/home/BucketList";
 
 const Index = () => {
   const featuredPackages = [{
