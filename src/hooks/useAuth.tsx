@@ -36,26 +36,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    // Call edge function for server-side password validation
-    const { data, error } = await supabase.functions.invoke('signup-with-validation', {
-      body: { email, password, fullName }
-    });
+    console.log('[Auth] Starting signup for:', email);
+    
+    try {
+      // Call edge function for server-side password validation
+      console.log('[Auth] Calling signup-with-validation edge function...');
+      const { data, error } = await supabase.functions.invoke('signup-with-validation', {
+        body: { email, password, fullName }
+      });
 
-    if (error) {
-      return { error: { message: error.message } };
+      console.log('[Auth] Edge function response:', { data, error });
+
+      if (error) {
+        console.error('[Auth] Edge function error:', error);
+        return { error: { message: error.message } };
+      }
+
+      if (data?.error) {
+        console.error('[Auth] Signup validation error:', data.error, data.details);
+        return { error: { message: data.error, details: data.details } };
+      }
+
+      console.log('[Auth] User created, attempting sign in...');
+      
+      // Sign in the user after successful signup
+      const { error: signInError } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
+
+      if (signInError) {
+        console.error('[Auth] Sign in after signup failed:', signInError);
+      } else {
+        console.log('[Auth] Sign in successful!');
+      }
+
+      return { error: signInError };
+    } catch (err) {
+      console.error('[Auth] Unexpected error during signup:', err);
+      return { error: { message: 'An unexpected error occurred during signup' } };
     }
-
-    if (data?.error) {
-      return { error: { message: data.error, details: data.details } };
-    }
-
-    // Sign in the user after successful signup
-    const { error: signInError } = await supabase.auth.signInWithPassword({ 
-      email, 
-      password 
-    });
-
-    return { error: signInError };
   };
 
   const signOut = async () => {
