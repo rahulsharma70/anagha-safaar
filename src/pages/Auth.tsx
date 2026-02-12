@@ -7,6 +7,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { Eye, EyeOff, Check, X, AlertCircle } from "lucide-react";
+
+const PasswordRequirement = ({ met, label }: { met: boolean; label: string }) => (
+  <div className="flex items-center gap-2 text-sm">
+    {met ? (
+      <Check className="h-3.5 w-3.5 text-primary" />
+    ) : (
+      <X className="h-3.5 w-3.5 text-muted-foreground" />
+    )}
+    <span className={met ? "text-primary" : "text-muted-foreground"}>{label}</span>
+  </div>
+);
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +26,9 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
@@ -23,16 +38,26 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
+  const checks = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+  };
+  const allMet = Object.values(checks).every(Boolean);
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
     setIsLoading(true);
     try {
       const { error } = await signIn(email, password);
       if (error) {
-        toast.error(error.message || "Invalid email or password");
+        setErrorMessage(error.message || "Invalid email or password");
       }
     } catch (error: any) {
-      toast.error(error?.message || "An unexpected error occurred");
+      setErrorMessage(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -40,20 +65,25 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+    if (!allMet) {
+      setErrorMessage("Password does not meet all requirements");
       return;
     }
     setIsLoading(true);
     try {
       const { error } = await signUp(email, password, fullName);
       if (error) {
-        toast.error(error.message || "Failed to create account");
+        setErrorMessage(error.message || "Failed to create account");
       } else {
-        toast.success("Account created successfully!");
+        toast.success("Account created successfully! You are now signed in.");
       }
     } catch (error: any) {
-      toast.error(error?.message || "An unexpected error occurred");
+      setErrorMessage(error?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +109,15 @@ const Auth = () => {
             <CardDescription>Sign in to your account or create a new one</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
+            {/* Error Alert */}
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded-md bg-destructive/10 border border-destructive/30 flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+                <p className="text-sm text-destructive">{errorMessage}</p>
+              </div>
+            )}
+
+            <Tabs defaultValue="signin" className="w-full" onValueChange={() => setErrorMessage("")}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -100,21 +138,31 @@ const Auth = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setShowPassword(!showPassword)}
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
-                  <Button
-                    type="submit"
-                    variant="hero"
-                    className="w-full"
-                    disabled={isLoading}
-                  >
+                  <div className="flex justify-end">
+                    <Link to="/forgot-password" className="text-xs text-accent hover:underline">
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <Button type="submit" variant="hero" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
@@ -146,25 +194,58 @@ const Auth = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        id="signup-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setShowPassword(!showPassword)}
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Password Requirements */}
+                  {password.length > 0 && (
+                    <div className="space-y-1 p-3 rounded-md bg-muted/50">
+                      <p className="text-xs font-medium text-muted-foreground mb-1.5">Password requirements:</p>
+                      <PasswordRequirement met={checks.length} label="At least 8 characters" />
+                      <PasswordRequirement met={checks.uppercase} label="One uppercase letter (A-Z)" />
+                      <PasswordRequirement met={checks.lowercase} label="One lowercase letter (a-z)" />
+                      <PasswordRequirement met={checks.number} label="One number (0-9)" />
+                      <PasswordRequirement met={checks.special} label="One special character (!@#$%^&*)" />
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input
-                      id="confirm-password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        id="confirm-password"
+                        type={showConfirm ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setShowConfirm(!showConfirm)}
+                        tabIndex={-1}
+                      >
+                        {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                   {password !== confirmPassword && confirmPassword && (
                     <p className="text-sm text-destructive">Passwords do not match</p>
@@ -173,7 +254,7 @@ const Auth = () => {
                     type="submit"
                     variant="hero"
                     className="w-full"
-                    disabled={isLoading || (password !== confirmPassword && !!confirmPassword)}
+                    disabled={isLoading || !allMet || (password !== confirmPassword && !!confirmPassword)}
                   >
                     {isLoading ? "Creating account..." : "Create Account"}
                   </Button>
@@ -183,13 +264,9 @@ const Auth = () => {
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
               By continuing, you agree to our{" "}
-              <a href="#" className="text-accent hover:underline">
-                Terms of Service
-              </a>{" "}
+              <Link to="/terms" className="text-accent hover:underline">Terms of Service</Link>{" "}
               and{" "}
-              <a href="#" className="text-accent hover:underline">
-                Privacy Policy
-              </a>
+              <Link to="/privacy" className="text-accent hover:underline">Privacy Policy</Link>
             </div>
           </CardContent>
         </Card>
