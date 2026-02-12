@@ -12,11 +12,11 @@ import { Eye, EyeOff, Check, X, AlertCircle } from "lucide-react";
 const PasswordRequirement = ({ met, label }: { met: boolean; label: string }) => (
   <div className="flex items-center gap-2 text-sm">
     {met ? (
-      <Check className="h-3.5 w-3.5 text-green-500" />
+      <Check className="h-3.5 w-3.5 text-primary" />
     ) : (
       <X className="h-3.5 w-3.5 text-muted-foreground" />
     )}
-    <span className={met ? "text-green-600" : "text-muted-foreground"}>{label}</span>
+    <span className={met ? "text-primary" : "text-muted-foreground"}>{label}</span>
   </div>
 );
 
