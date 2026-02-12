@@ -36,45 +36,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
-    console.log('[Auth] Starting signup for:', email);
-    
     try {
-      // Call edge function for server-side password validation
-      console.log('[Auth] Calling signup-with-validation edge function...');
       const { data, error } = await supabase.functions.invoke('signup-with-validation', {
         body: { email, password, fullName }
       });
 
-      console.log('[Auth] Edge function response:', { data, error });
-
+      // supabase.functions.invoke returns error for non-2xx responses
       if (error) {
-        console.error('[Auth] Edge function error:', error);
-        return { error: { message: error.message } };
+        // Try to parse the error body for details
+        let message = 'Failed to create account';
+        try {
+          const parsed = typeof error === 'string' ? JSON.parse(error) : error;
+          message = parsed?.message || parsed?.error || error.message || message;
+        } catch {
+          message = error.message || message;
+        }
+        return { error: { message } };
       }
 
+      // Check if the response body contains an error
       if (data?.error) {
-        console.error('[Auth] Signup validation error:', data.error, data.details);
-        return { error: { message: data.error, details: data.details } };
+        const details = data.details ? `: ${data.details.join(', ')}` : '';
+        return { error: { message: `${data.error}${details}` } };
       }
 
-      console.log('[Auth] User created, attempting sign in...');
-      
-      // Sign in the user after successful signup
+      // Signup successful, now sign in
       const { error: signInError } = await supabase.auth.signInWithPassword({ 
         email, 
         password 
       });
 
-      if (signInError) {
-        console.error('[Auth] Sign in after signup failed:', signInError);
-      } else {
-        console.log('[Auth] Sign in successful!');
-      }
-
       return { error: signInError };
-    } catch (err) {
-      console.error('[Auth] Unexpected error during signup:', err);
-      return { error: { message: 'An unexpected error occurred during signup' } };
+    } catch (err: any) {
+      return { error: { message: err?.message || 'An unexpected error occurred during signup' } };
     }
   };
 
