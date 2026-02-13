@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.admin-notification]
 verify_jwt = false
+
+[functions.newsletter-welcome]
+verify_jwt = false
