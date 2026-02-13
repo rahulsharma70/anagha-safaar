@@ -121,6 +121,144 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_submissions: {
+        Row: {
+          admin_notes: string | null
+          assigned_to: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          status: string | null
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          assigned_to?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          assigned_to?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      coupon_usage: {
+        Row: {
+          booking_id: string | null
+          coupon_id: string
+          discount_applied: number
+          id: string
+          used_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          coupon_id: string
+          discount_applied: number
+          id?: string
+          used_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          coupon_id?: string
+          discount_applied?: number
+          id?: string
+          used_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_usage_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_usage_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coupons: {
+        Row: {
+          applicable_to: string[] | null
+          code: string
+          created_at: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          id: string
+          is_active: boolean | null
+          max_discount_amount: number | null
+          min_order_amount: number | null
+          updated_at: string
+          usage_limit: number | null
+          used_count: number | null
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          applicable_to?: string[] | null
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value: number
+          id?: string
+          is_active?: boolean | null
+          max_discount_amount?: number | null
+          min_order_amount?: number | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number | null
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          applicable_to?: string[] | null
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          id?: string
+          is_active?: boolean | null
+          max_discount_amount?: number | null
+          min_order_amount?: number | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number | null
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       flights: {
         Row: {
           airline: string
@@ -333,6 +471,221 @@ export type Database = {
           },
         ]
       }
+      newsletter_subscriptions: {
+        Row: {
+          email: string
+          id: string
+          is_subscribed: boolean | null
+          name: string | null
+          subscribed_at: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          is_subscribed?: boolean | null
+          name?: string | null
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          is_subscribed?: boolean | null
+          name?: string | null
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string
+          metadata: Json | null
+          title: string
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          metadata?: Json | null
+          title: string
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          metadata?: Json | null
+          title?: string
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      offers: {
+        Row: {
+          applicable_to: string[] | null
+          banner_image: string | null
+          created_at: string
+          description: string | null
+          discount_type: string | null
+          discount_value: number | null
+          id: string
+          is_active: boolean | null
+          offer_type: string
+          priority: number | null
+          terms_conditions: string | null
+          title: string
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          applicable_to?: string[] | null
+          banner_image?: string | null
+          created_at?: string
+          description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          id?: string
+          is_active?: boolean | null
+          offer_type: string
+          priority?: number | null
+          terms_conditions?: string | null
+          title: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          applicable_to?: string[] | null
+          banner_image?: string | null
+          created_at?: string
+          description?: string | null
+          discount_type?: string | null
+          discount_value?: number | null
+          id?: string
+          is_active?: boolean | null
+          offer_type?: string
+          priority?: number | null
+          terms_conditions?: string | null
+          title?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      payment_transactions: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string
+          currency: string | null
+          failure_reason: string | null
+          gateway_order_id: string | null
+          gateway_transaction_id: string | null
+          id: string
+          metadata: Json | null
+          payment_gateway: string | null
+          payment_method: string | null
+          refund_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string
+          currency?: string | null
+          failure_reason?: string | null
+          gateway_order_id?: string | null
+          gateway_transaction_id?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_gateway?: string | null
+          payment_method?: string | null
+          refund_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string
+          currency?: string | null
+          failure_reason?: string | null
+          gateway_order_id?: string | null
+          gateway_transaction_id?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_gateway?: string | null
+          payment_method?: string | null
+          refund_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_transactions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_alerts: {
+        Row: {
+          created_at: string
+          current_price: number
+          id: string
+          is_active: boolean | null
+          item_id: string
+          item_type: string
+          notified_at: string | null
+          target_price: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_price: number
+          id?: string
+          is_active?: boolean | null
+          item_id: string
+          item_type: string
+          notified_at?: string | null
+          target_price: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_price?: number
+          id?: string
+          is_active?: boolean | null
+          item_id?: string
+          item_type?: string
+          notified_at?: string | null
+          target_price?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: Json | null
@@ -458,6 +811,157 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      saved_payment_methods: {
+        Row: {
+          card_brand: string | null
+          created_at: string
+          display_name: string
+          gateway_token: string | null
+          id: string
+          is_default: boolean | null
+          last_four: string | null
+          method_type: string
+          user_id: string
+        }
+        Insert: {
+          card_brand?: string | null
+          created_at?: string
+          display_name: string
+          gateway_token?: string | null
+          id?: string
+          is_default?: boolean | null
+          last_four?: string | null
+          method_type: string
+          user_id: string
+        }
+        Update: {
+          card_brand?: string | null
+          created_at?: string
+          display_name?: string
+          gateway_token?: string | null
+          id?: string
+          is_default?: boolean | null
+          last_four?: string | null
+          method_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      search_history: {
+        Row: {
+          created_at: string
+          id: string
+          search_params: Json
+          search_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          search_params: Json
+          search_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          search_params?: Json
+          search_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          booking_id: string | null
+          category: string | null
+          created_at: string
+          description: string
+          id: string
+          priority: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          status: string | null
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          booking_id?: string | null
+          category?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          priority?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: string | null
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          booking_id?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          priority?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: string | null
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_messages: {
+        Row: {
+          created_at: string
+          id: string
+          is_admin: boolean | null
+          message: string
+          sender_id: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean | null
+          message: string
+          sender_id: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean | null
+          message?: string
+          sender_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tours: {
         Row: {
