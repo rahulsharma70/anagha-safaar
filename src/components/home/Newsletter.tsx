@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Sparkles, Check } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -15,12 +16,40 @@ export const Newsletter = () => {
     if (!email) return;
 
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubscribed(true);
-    setIsLoading(false);
-    toast.success("Successfully subscribed! Welcome to our travel family.");
-    setEmail("");
+    try {
+      // Save to newsletter_subscriptions table
+      const { error: dbError } = await supabase
+        .from("newsletter_subscriptions")
+        .insert({ email });
+
+      if (dbError) {
+        if (dbError.code === "23505") {
+          toast.info("You're already subscribed! Check your inbox for our latest deals.");
+          setIsSubscribed(true);
+          return;
+        }
+        throw dbError;
+      }
+
+      // Send welcome email via edge function
+      const { error: fnError } = await supabase.functions.invoke("newsletter-welcome", {
+        body: { email },
+      });
+
+      if (fnError) {
+        console.error("Welcome email error:", fnError);
+        // Still mark as subscribed even if email fails
+      }
+
+      setIsSubscribed(true);
+      toast.success("Successfully subscribed! Check your email for a welcome message. 🎉");
+      setEmail("");
+    } catch (err: any) {
+      console.error("Newsletter subscription error:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
