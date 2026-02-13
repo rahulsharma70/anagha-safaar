@@ -4,9 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const testimonials = [
   {
-    name: "Rohit Saxena",
+    name: "Sagar Gupta",
     location: "Mumbai",
-    avatar: "RS",
+    avatar: "SG",
     rating: 5,
     text: "The Kashmir trip was absolutely magical! Every detail was perfectly planned. The team went above and beyond to make our honeymoon unforgettable.",
     trip: "Kashmir Valley Tour",
