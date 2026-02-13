@@ -31,6 +31,7 @@ import { LoyaltyPoints } from '@/components/loyalty/LoyaltyPoints';
 import { ReferralSystem } from '@/components/referral/ReferralSystem';
 import { ProfileManagement } from '@/components/profile/ProfileManagement';
 import { BookingManagementCard } from '@/components/booking/BookingManagementCard';
+import TripManagement from '@/components/dashboard/TripManagement';
 import { LoyaltyRewards } from '@/components/loyalty/LoyaltyRewards';
 import { UserReviews } from '@/components/reviews/UserReviews';
 import { motion } from 'framer-motion';
@@ -363,7 +364,7 @@ const UserDashboard = () => {
           <TabsList className="bg-muted/50 backdrop-blur-sm border border-border/50 p-1 h-auto flex-wrap">
             {[
               { value: 'overview', icon: MapPin, label: 'Overview' },
-              { value: 'bookings', icon: Calendar, label: 'Bookings' },
+              { value: 'bookings', icon: Calendar, label: 'My Trips' },
               { value: 'rewards', icon: Gift, label: 'Rewards' },
               { value: 'reviews', icon: Star, label: 'Reviews' },
               { value: 'referrals', icon: Users, label: 'Referrals' },
@@ -430,49 +431,9 @@ const UserDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Bookings Tab */}
-          <TabsContent value="bookings" className="space-y-4">
-            <Card className="border border-border/50 bg-card/80 backdrop-blur-sm shadow-lg overflow-hidden">
-              <CardHeader className="border-b border-border/30 bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-blue-500" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">All Bookings</CardTitle>
-                    <p className="text-sm text-muted-foreground">{bookings.length} total bookings</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                {bookings.length === 0 ? (
-                  <div className="text-center py-16">
-                    <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mx-auto mb-4">
-                      <MapPin className="h-10 w-10 text-primary/50" />
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2">No bookings yet</h3>
-                    <p className="text-muted-foreground mb-6">Start planning your next adventure!</p>
-                    <Link to="/">
-                      <Button className="gap-2 bg-gradient-to-r from-primary to-primary/80 shadow-lg shadow-primary/25">
-                        <Sparkles className="h-4 w-4" />
-                        Explore Destinations
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-border/50">
-                    {bookings.map((booking) => (
-                      <div key={booking.id} className="p-4 hover:bg-muted/30 transition-colors">
-                        <BookingManagementCard 
-                          booking={booking} 
-                          onUpdate={fetchUserData}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          {/* Trip Management Tab */}
+          <TabsContent value="bookings">
+            <TripManagement />
           </TabsContent>
 
           {/* Rewards Tab */}
