@@ -40,11 +40,37 @@ export const PaymentStep = () => {
       
       if (error) {
         console.error('Failed to send admin notification:', error);
-      } else {
-        console.log('Admin notification sent successfully');
       }
     } catch (err) {
       console.error('Error sending admin notification:', err);
+    }
+  };
+
+  const sendBookingConfirmationEmail = async (bookingReference: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('booking-confirmation', {
+        body: {
+          customerEmail: user?.email,
+          customerName: user?.user_metadata?.full_name || 'Traveller',
+          bookingReference,
+          itemName: bookingData?.itemName || 'N/A',
+          itemType: bookingData?.type || 'tour',
+          totalAmount: getTotalPrice(),
+          startDate: bookingData?.tripSelection?.startDate?.toLocaleDateString('en-IN') || 'N/A',
+          endDate: bookingData?.tripSelection?.endDate?.toLocaleDateString('en-IN'),
+          guestsCount: bookingData?.tripSelection?.guestsCount || 1,
+          paymentMethod: paymentMethod === 'card' ? 'Credit/Debit Card' : paymentMethod === 'googlepay' ? 'Google Pay' : paymentMethod === 'upi' ? 'UPI' : paymentMethod === 'netbanking' ? 'Net Banking' : 'Wallet',
+          addOns: bookingData?.addOns || []
+        }
+      });
+
+      if (error) {
+        console.error('Failed to send booking confirmation email:', error);
+      } else {
+        console.log('Booking confirmation email sent successfully');
+      }
+    } catch (err) {
+      console.error('Error sending booking confirmation email:', err);
     }
   };
 
@@ -69,8 +95,11 @@ export const PaymentStep = () => {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Send admin notification
-      await sendAdminNotification(bookingReference);
+      // Send admin notification and booking confirmation email
+      await Promise.all([
+        sendAdminNotification(bookingReference),
+        sendBookingConfirmationEmail(bookingReference)
+      ]);
       
       toast.success('Payment processed successfully!');
       
@@ -142,7 +171,7 @@ export const PaymentStep = () => {
               <div className="flex items-center space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent">
                 <RadioGroupItem value="googlepay" id="googlepay" />
                 <Label htmlFor="googlepay" className="flex items-center gap-3 cursor-pointer flex-1">
-                  <Wallet className="h-5 w-5 text-blue-600" />
+                  <Wallet className="h-5 w-5 text-primary" />
                   <div>
                     <p className="font-medium">Google Pay</p>
                     <p className="text-sm text-muted-foreground">Fast & secure payments</p>
