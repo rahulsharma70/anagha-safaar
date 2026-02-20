@@ -107,8 +107,6 @@ const HotelDetail = () => {
     );
   }
 
-  const images = (hotel.images as string[]) || [];
-  const amenities = (hotel.amenities as string[]) || [];
 
   const images = (hotel.images as string[]) || [];
   const amenities = (hotel.amenities as string[]) || [];
