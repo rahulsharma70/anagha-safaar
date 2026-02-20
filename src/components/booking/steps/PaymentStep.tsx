@@ -135,8 +135,8 @@ export const PaymentStep = () => {
         </p>
       </div>
 
-      <Alert className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
-        <AlertDescription className="text-yellow-800 dark:text-yellow-200">
+      <Alert className="border-warning">
+        <AlertDescription>
           <strong>Demo Mode:</strong> No real payment will be processed. To accept real payments, ask to "set up Stripe" or "set up Razorpay" integration.
         </AlertDescription>
       </Alert>
