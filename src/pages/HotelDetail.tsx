@@ -331,6 +331,7 @@ const HotelDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 
