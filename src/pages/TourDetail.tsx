@@ -446,6 +446,7 @@ const TourDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 
