@@ -135,9 +135,9 @@ export const PaymentStep = () => {
         </p>
       </div>
 
-      <Alert>
+      <Alert className="border-warning">
         <AlertDescription>
-          Payment gateway integration ready. In production, this will connect to Razorpay and Google Pay for secure payments.
+          <strong>Demo Mode:</strong> No real payment will be processed. To accept real payments, ask to "set up Stripe" or "set up Razorpay" integration.
         </AlertDescription>
       </Alert>
 
