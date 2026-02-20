@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -106,7 +107,33 @@ const FlightDetail = () => {
   const arrivalTime = new Date(flight.arrival_time);
   const duration = Math.round((arrivalTime.getTime() - departureTime.getTime()) / (1000 * 60 * 60));
 
+  const seoDescription = `${flight.airline} flight ${flight.flight_number} from ${flight.departure_city} to ${flight.arrival_city}. Economy from ₹${Number(flight.price_economy).toLocaleString()}. Book now on Anagha Safar.`;
+
+  const flightStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Flight",
+    name: `${flight.airline} ${flight.flight_number}`,
+    description: seoDescription,
+    provider: { "@type": "Airline", name: flight.airline, iataCode: flight.flight_number.slice(0, 2) },
+    departureAirport: { "@type": "Airport", name: flight.departure_city },
+    arrivalAirport: { "@type": "Airport", name: flight.arrival_city },
+    departureTime: flight.departure_time,
+    arrivalTime: flight.arrival_time,
+    offers: {
+      "@type": "Offer",
+      price: flight.price_economy,
+      priceCurrency: "INR",
+    },
+  };
+
   return (
+    <>
+      <SEOHead
+        title={`${flight.airline} ${flight.flight_number} - ${flight.departure_city} to ${flight.arrival_city}`}
+        description={seoDescription}
+        url={`/flights/${flight.id}`}
+        structuredData={flightStructuredData}
+      />
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
@@ -267,6 +294,7 @@ const FlightDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 

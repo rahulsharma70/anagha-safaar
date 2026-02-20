@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -106,10 +107,38 @@ const HotelDetail = () => {
     );
   }
 
+
   const images = (hotel.images as string[]) || [];
   const amenities = (hotel.amenities as string[]) || [];
+  const seoDescription = hotel.description
+    ? hotel.description.slice(0, 155)
+    : `Book ${hotel.name} in ${hotel.location_city}, ${hotel.location_state}. ${hotel.star_rating}-star hotel from ₹${Number(hotel.price_per_night).toLocaleString()}/night.`;
+
+  const hotelStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Hotel",
+    name: hotel.name,
+    description: seoDescription,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: hotel.location_city,
+      addressRegion: hotel.location_state,
+      addressCountry: hotel.location_country || "India",
+    },
+    starRating: { "@type": "Rating", ratingValue: hotel.star_rating },
+    priceRange: `₹${Number(hotel.price_per_night).toLocaleString()} per night`,
+    image: images[0] || undefined,
+  };
 
   return (
+    <>
+      <SEOHead
+        title={`${hotel.name} - ${hotel.location_city} Hotel`}
+        description={seoDescription}
+        image={images[0]}
+        url={`/hotels/${hotel.slug}`}
+        structuredData={hotelStructuredData}
+      />
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
@@ -300,6 +329,7 @@ const HotelDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 

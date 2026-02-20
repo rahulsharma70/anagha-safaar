@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -172,7 +173,36 @@ const TourDetail = () => {
     challenging: "bg-destructive/10 text-destructive",
   };
 
+  const seoDescription = tour.description
+    ? tour.description.slice(0, 155)
+    : `${tour.name} - ${tour.duration_days}-day ${tour.tour_type || "tour"} in ${tour.location_city}, ${tour.location_state}. From ₹${Number(tour.price_per_person).toLocaleString()} per person.`;
+
+  const tourStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: tour.name,
+    description: seoDescription,
+    touristType: tour.tour_type,
+    itinerary: { "@type": "ItemList", numberOfItems: tour.duration_days },
+    provider: { "@type": "Organization", name: "Anagha Safar" },
+    offers: {
+      "@type": "Offer",
+      price: tour.price_per_person,
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+    },
+    image: images[0] || undefined,
+  };
+
   return (
+    <>
+      <SEOHead
+        title={`${tour.name} - ${tour.duration_days} Day Tour`}
+        description={seoDescription}
+        image={images[0]}
+        url={`/tours/${tour.slug}`}
+        structuredData={tourStructuredData}
+      />
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
@@ -416,6 +446,7 @@ const TourDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 
