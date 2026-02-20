@@ -294,6 +294,7 @@ const FlightDetail = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 
