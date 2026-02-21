@@ -25,24 +25,23 @@ const Navbar = () => {
             <Link to="/" className="text-foreground hover:text-accent transition-smooth">
               Home
             </Link>
-            <Link to="/hotels" className="text-foreground hover:text-accent transition-smooth">
-              Hotels
+            <Link to="/packages" className="text-foreground hover:text-accent transition-smooth">
+              Packages
             </Link>
-            <Link to="/tours" className="text-foreground hover:text-accent transition-smooth">
-              Tours
+            <Link to="/deals" className="text-foreground hover:text-accent transition-smooth">
+              Deals
             </Link>
             <Link to="/flights" className="text-foreground hover:text-accent transition-smooth">
               Flights
             </Link>
-            <Link to="/itinerary" className="text-foreground hover:text-accent transition-smooth flex items-center gap-1">
-              <Sparkles className="h-4 w-4" />
-              AI Planner
+            <Link to="/hotels" className="text-foreground hover:text-accent transition-smooth">
+              Hotels
+            </Link>
+            <Link to="/experiences" className="text-foreground hover:text-accent transition-smooth">
+              Experiences
             </Link>
             <Link to="/about" className="text-foreground hover:text-accent transition-smooth">
-              About
-            </Link>
-            <Link to="/contact" className="text-foreground hover:text-accent transition-smooth">
-              Contact
+              About Us
             </Link>
           </div>
 
