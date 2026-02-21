@@ -16,6 +16,7 @@ const SEOHead = ({
   image,
   url,
   type = "website",
+  keywords,
   structuredData,
 }: SEOHeadProps) => {
   const fullTitle = `${title} | Anagha Safar`;
