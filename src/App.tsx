@@ -95,6 +95,9 @@ const App = () => {
                     <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/deals" element={<Deals />} />
+                <Route path="/experiences" element={<Experiences />} />
                 <Route path="/auth" element={<EnhancedAuth />} />
                 <Route path="/auth/forgot-password" element={<ForgotPassword />} />
                 <Route path="/auth/reset-password" element={<ResetPassword />} />
