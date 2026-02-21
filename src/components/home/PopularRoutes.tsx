@@ -54,7 +54,7 @@ export const PopularRoutes = () => {
                         <span className="font-semibold">{route.to}</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-green-500">
+                    <div className="flex items-center gap-1 text-xs text-secondary">
                       <TrendingUp className="w-3 h-3" />
                       {route.trend}
                     </div>
