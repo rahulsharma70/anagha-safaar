@@ -135,7 +135,19 @@ const Index = () => {
     }
   };
   const seoKeywords = [
+    // Core travel terms
     "travel booking", "India travel", "luxury tours", "flight booking", "hotel booking",
+    "tour packages", "holiday packages", "vacation packages", "cheap flights", "best hotels",
+    "online travel booking", "travel deals", "last minute deals", "weekend getaway", "honeymoon packages",
+    "family vacation", "group tours", "solo travel", "backpacking India", "adventure travel",
+    "budget travel", "luxury travel", "premium travel", "travel agency", "travel planner",
+    "trip planner", "AI trip planner", "custom itinerary", "travel insurance", "visa assistance",
+    "domestic flights", "international flights", "one way flights", "round trip flights",
+    "multi city flights", "business class flights", "first class flights",
+    "hotel deals", "resort booking", "homestay booking", "villa rental", "boutique hotels",
+    "5 star hotels", "budget hotels", "beach resorts", "mountain resorts", "heritage hotels",
+    "palace hotels", "eco resorts", "treehouse stay", "houseboat booking",
+    // Indian metro cities
     "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad",
     "Jaipur", "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal", "Visakhapatnam",
     "Patna", "Vadodara", "Ghaziabad", "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut",
@@ -148,14 +160,37 @@ const Index = () => {
     "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi",
     "Ulhasnagar", "Jammu", "Sangli", "Mangalore", "Erode", "Belgaum", "Ambattur", "Tirunelveli",
     "Malegaon", "Gaya", "Jalgaon", "Udaipur", "Maheshtala", "Davanagere", "Kozhikode", "Kurnool",
+    "Thiruvananthapuram", "Bhubaneswar", "Imphal", "Shillong", "Aizawl", "Itanagar", "Gangtok",
+    "Agartala", "Kohima", "Panaji", "Daman", "Silvassa", "Kavaratti", "Port Blair",
+    // Popular tourist destinations
     "Goa", "Shimla", "Manali", "Rishikesh", "Darjeeling", "Ooty", "Mussoorie", "Munnar",
     "Leh", "Ladakh", "Andaman", "Pondicherry", "Hampi", "Khajuraho", "Bodh Gaya",
     "Pushkar", "Jaisalmer", "Ranthambore", "Jim Corbett", "Kaziranga", "Kerala", "Gokarna",
     "Alleppey", "Kumarakom", "Thekkady", "Wayanad", "Coorg", "Chikmagalur", "Lonavala",
     "Mahabaleshwar", "Panchgani", "Lavasa", "Shirdi", "Tirupati", "Rameshwaram", "Kanyakumari",
     "Madikeri", "Badami", "Aihole", "Pattadakal", "Bijapur", "Hospet",
+    "Nainital", "Kasauli", "Lansdowne", "Dalhousie", "McLeod Ganj", "Dharamshala", "Spiti Valley",
+    "Tawang", "Ziro Valley", "Majuli Island", "Cherrapunji", "Dawki", "Mawlynnong",
+    "Sundarbans", "Chilika Lake", "Konark", "Puri", "Mahabalipuram", "Kodaikanal",
+    "Yercaud", "Valparai", "Varkala", "Kovalam", "Bekal", "Athirappilly",
+    "Mount Abu", "Chittorgarh", "Bundi", "Jodhpur", "Mandawa", "Shekhawati",
+    "Orchha", "Mandu", "Pachmarhi", "Amarkantak", "Khajuraho",
+    // Indian states & regions
     "Himalayas", "Rajasthan", "Uttarakhand", "Sikkim", "Meghalaya", "Arunachal Pradesh",
-    "London", "Paris", "Bali", "Bangkok", "Indonesia"
+    "Kashmir", "Himachal Pradesh", "Tamil Nadu", "Karnataka", "Maharashtra", "Gujarat",
+    "Madhya Pradesh", "Odisha", "Assam", "Nagaland", "Mizoram", "Tripura", "Manipur",
+    "West Bengal", "Bihar", "Jharkhand", "Chhattisgarh", "Telangana", "Andhra Pradesh",
+    "Punjab", "Haryana", "Uttar Pradesh",
+    // International destinations
+    "London", "Paris", "Bali", "Bangkok", "Indonesia", "Singapore", "Dubai", "Abu Dhabi",
+    "Maldives", "Sri Lanka", "Nepal", "Bhutan", "Thailand", "Vietnam", "Malaysia",
+    "Tokyo", "Hong Kong", "Sydney", "New York", "Switzerland", "Italy", "Greece",
+    "Turkey", "Egypt", "Mauritius", "Seychelles", "New Zealand", "Canada", "Iceland",
+    // Travel types
+    "pilgrimage tours", "wildlife safari", "beach holiday", "hill station trip",
+    "cultural tour", "heritage walk", "food tour", "trekking", "camping", "river rafting",
+    "scuba diving", "snorkeling", "paragliding", "bungee jumping", "skiing",
+    "Anagha Safar", "Anagha Safar travel", "best travel website India"
   ];
 
   return <div className="min-h-screen flex flex-col overflow-x-hidden">
