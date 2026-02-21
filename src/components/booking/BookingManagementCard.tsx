@@ -87,7 +87,7 @@ export const BookingManagementCard = ({ booking, onUpdate }: BookingManagementCa
       case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
       case 'failed': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
       case 'refunded': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
     }
   };
 
