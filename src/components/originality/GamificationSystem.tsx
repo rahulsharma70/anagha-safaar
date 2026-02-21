@@ -123,17 +123,17 @@ const STREAKS = {
 };
 
 const rarityColors = {
-  common: "border-slate-300 bg-slate-50",
-  rare: "border-blue-400 bg-blue-50",
-  epic: "border-purple-400 bg-purple-50",
-  legendary: "border-amber-400 bg-gradient-to-br from-amber-50 to-yellow-50",
+  common: "border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50",
+  rare: "border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30",
+  epic: "border-purple-400 dark:border-purple-500 bg-purple-50 dark:bg-purple-900/30",
+  legendary: "border-amber-400 dark:border-amber-500 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30",
 };
 
 const rarityLabels = {
-  common: { text: "Common", color: "text-slate-600" },
-  rare: { text: "Rare", color: "text-blue-600" },
-  epic: { text: "Epic", color: "text-purple-600" },
-  legendary: { text: "Legendary", color: "text-amber-600" },
+  common: { text: "Common", color: "text-slate-600 dark:text-slate-400" },
+  rare: { text: "Rare", color: "text-blue-600 dark:text-blue-400" },
+  epic: { text: "Epic", color: "text-purple-600 dark:text-purple-400" },
+  legendary: { text: "Legendary", color: "text-amber-600 dark:text-amber-400" },
 };
 
 export const GamificationSystem = () => {

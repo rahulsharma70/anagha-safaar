@@ -23,12 +23,12 @@ export const PopularRoutes = () => {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-500 px-4 py-2 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full mb-4">
             <Plane className="h-4 w-4" />
             <span className="text-sm font-medium">Most Searched</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Popular <span className="text-blue-500">Flight Routes</span>
+            Popular <span className="text-secondary">Flight Routes</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Find the best deals on most popular domestic routes
@@ -54,7 +54,7 @@ export const PopularRoutes = () => {
                         <span className="font-semibold">{route.to}</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-green-500">
+                    <div className="flex items-center gap-1 text-xs text-secondary">
                       <TrendingUp className="w-3 h-3" />
                       {route.trend}
                     </div>
