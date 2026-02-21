@@ -134,7 +134,37 @@ const Index = () => {
       ease: [0.4, 0, 0.2, 1] as const
     }
   };
+  const seoKeywords = [
+    "travel booking", "India travel", "luxury tours", "flight booking", "hotel booking",
+    "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad",
+    "Jaipur", "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal", "Visakhapatnam",
+    "Patna", "Vadodara", "Ghaziabad", "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut",
+    "Rajkot", "Varanasi", "Srinagar", "Aurangabad", "Dhanbad", "Amritsar", "Allahabad",
+    "Ranchi", "Howrah", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Jodhpur",
+    "Madurai", "Raipur", "Kota", "Guwahati", "Chandigarh", "Solapur", "Hubli", "Mysore",
+    "Tiruchirappalli", "Bareilly", "Aligarh", "Moradabad", "Gorakhpur", "Bikaner", "Amravati",
+    "Noida", "Jamshedpur", "Bhilai", "Warangal", "Cuttack", "Firozabad", "Kochi", "Nellore",
+    "Bhavnagar", "Dehradun", "Durgapur", "Asansol", "Rourkela", "Nanded", "Kolhapur",
+    "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", "Loni", "Siliguri", "Jhansi",
+    "Ulhasnagar", "Jammu", "Sangli", "Mangalore", "Erode", "Belgaum", "Ambattur", "Tirunelveli",
+    "Malegaon", "Gaya", "Jalgaon", "Udaipur", "Maheshtala", "Davanagere", "Kozhikode", "Kurnool",
+    "Goa", "Shimla", "Manali", "Rishikesh", "Darjeeling", "Ooty", "Mussoorie", "Munnar",
+    "Leh", "Ladakh", "Andaman", "Pondicherry", "Hampi", "Khajuraho", "Bodh Gaya",
+    "Pushkar", "Jaisalmer", "Ranthambore", "Jim Corbett", "Kaziranga", "Kerala", "Gokarna",
+    "Alleppey", "Kumarakom", "Thekkady", "Wayanad", "Coorg", "Chikmagalur", "Lonavala",
+    "Mahabaleshwar", "Panchgani", "Lavasa", "Shirdi", "Tirupati", "Rameshwaram", "Kanyakumari",
+    "Madikeri", "Badami", "Aihole", "Pattadakal", "Bijapur", "Hospet",
+    "Himalayas", "Rajasthan", "Uttarakhand", "Sikkim", "Meghalaya", "Arunachal Pradesh",
+    "London", "Paris", "Bali", "Bangkok", "Indonesia"
+  ];
+
   return <div className="min-h-screen flex flex-col overflow-x-hidden">
+      <SEOHead
+        title="Book Flights, Hotels & Tours Across India"
+        description="Anagha Safar - India's premium travel booking platform. Book flights, luxury hotels, and curated tour packages across 200+ destinations."
+        url="/"
+        keywords={seoKeywords}
+      />
       <Navbar />
 
       <main className="flex-1">
