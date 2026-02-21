@@ -49,6 +49,11 @@ const SEOHead = ({
     setMeta('[name="description"]', description.slice(0, 160));
     setMeta('[name="robots"]', "index, follow");
 
+    // Keywords
+    if (keywords && keywords.length > 0) {
+      setMeta('[name="keywords"]', keywords.join(", "));
+    }
+
     // Open Graph
     setMeta('[property="og:title"]', fullTitle);
     setMeta('[property="og:description"]', description.slice(0, 160));
