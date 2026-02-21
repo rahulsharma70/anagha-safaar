@@ -13,6 +13,9 @@ import { useEffect } from "react";
 import { AppContent } from "@/components/AppContent";
  import LiveChatWidget from "@/components/contact/LiveChatWidget";
 import Index from "./pages/Index";
+import Packages from "./pages/Packages";
+import Deals from "./pages/Deals";
+import Experiences from "./pages/Experiences";
 import Auth from "./pages/Auth";
 import EnhancedAuth from "./pages/EnhancedAuth";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -92,6 +95,9 @@ const App = () => {
                     <BookingProvider>
                 <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/deals" element={<Deals />} />
+                <Route path="/experiences" element={<Experiences />} />
                 <Route path="/auth" element={<EnhancedAuth />} />
                 <Route path="/auth/forgot-password" element={<ForgotPassword />} />
                 <Route path="/auth/reset-password" element={<ResetPassword />} />
