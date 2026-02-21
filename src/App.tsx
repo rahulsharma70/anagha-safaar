@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AuthSecurityProvider } from "@/hooks/useAuthSecurity";
 import { BookingProvider } from "@/contexts/BookingContext";
@@ -88,6 +89,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <ScrollToTop />
               <AuthProvider>
                 <AuthSecurityProvider>
                   <SessionExpirationModal />
