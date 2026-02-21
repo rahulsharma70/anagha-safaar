@@ -7,13 +7,13 @@ const TermsOfService = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 pt-20">
-        <section className="gradient-ocean py-20">
+        <section className="gradient-hero py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-secondary-foreground">Terms of Service</h1>
-            <p className="text-lg text-secondary-foreground/90 max-w-2xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Terms of Service</h1>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto">
               Please read these terms carefully before using our services
             </p>
-            <p className="text-sm text-secondary-foreground/80 mt-4">Last updated: January 2025</p>
+            <p className="text-sm text-white/80 mt-4">Last updated: January 2025</p>
           </div>
         </section>
 
