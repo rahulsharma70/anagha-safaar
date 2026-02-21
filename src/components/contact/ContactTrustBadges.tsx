@@ -6,25 +6,25 @@ const badges = [
     icon: Clock,
     title: "Quick Response",
     description: "Within 2 hours",
-    color: "text-green-500"
+    color: "text-secondary"
   },
   {
     icon: HeadphonesIcon,
     title: "24/7 Support",
     description: "Always available",
-    color: "text-blue-500"
+    color: "text-primary"
   },
   {
     icon: Shield,
     title: "Secure & Private",
     description: "Your data is safe",
-    color: "text-purple-500"
+    color: "text-accent"
   },
   {
     icon: MessageCircle,
     title: "Expert Team",
     description: "Travel specialists",
-    color: "text-orange-500"
+    color: "text-secondary"
   }
 ];
 
