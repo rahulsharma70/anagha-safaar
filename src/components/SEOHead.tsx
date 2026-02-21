@@ -95,7 +95,7 @@ const SEOHead = ({
       const sd = document.getElementById("seo-structured-data");
       if (sd) sd.remove();
     };
-  }, [fullTitle, description, ogImage, canonicalUrl, type, structuredData]);
+  }, [fullTitle, description, ogImage, canonicalUrl, type, keywords, structuredData]);
 
   return null;
 };

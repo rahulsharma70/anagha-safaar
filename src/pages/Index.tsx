@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import SearchBar from "@/components/SearchBar";
 import PackageCard from "@/components/PackageCard";
 import { Button } from "@/components/ui/button";
