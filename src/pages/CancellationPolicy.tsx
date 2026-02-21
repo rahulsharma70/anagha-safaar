@@ -7,10 +7,10 @@ const CancellationPolicy = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 pt-20">
-        <section className="gradient-ocean py-20">
+        <section className="gradient-hero py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-secondary-foreground">Cancellation Policy</h1>
-            <p className="text-lg text-secondary-foreground/90 max-w-2xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Cancellation Policy</h1>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto">
               Understand our cancellation terms and refund procedures
             </p>
           </div>

@@ -93,10 +93,10 @@ const HelpCenter = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 pt-20">
-        <section className="gradient-ocean py-20">
+        <section className="gradient-hero py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-secondary-foreground">Help Center</h1>
-            <p className="text-lg text-secondary-foreground/90 mb-8 max-w-2xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Help Center</h1>
+            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
               Find answers to frequently asked questions and get the support you need
             </p>
             <div className="max-w-xl mx-auto relative">
