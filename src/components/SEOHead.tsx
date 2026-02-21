@@ -6,6 +6,7 @@ interface SEOHeadProps {
   image?: string;
   url?: string;
   type?: "website" | "article";
+  keywords?: string[];
   structuredData?: object;
 }
 
@@ -15,6 +16,7 @@ const SEOHead = ({
   image,
   url,
   type = "website",
+  keywords,
   structuredData,
 }: SEOHeadProps) => {
   const fullTitle = `${title} | Anagha Safar`;
@@ -46,6 +48,11 @@ const SEOHead = ({
     // Standard meta
     setMeta('[name="description"]', description.slice(0, 160));
     setMeta('[name="robots"]', "index, follow");
+
+    // Keywords
+    if (keywords && keywords.length > 0) {
+      setMeta('[name="keywords"]', keywords.join(", "));
+    }
 
     // Open Graph
     setMeta('[property="og:title"]', fullTitle);
@@ -88,7 +95,7 @@ const SEOHead = ({
       const sd = document.getElementById("seo-structured-data");
       if (sd) sd.remove();
     };
-  }, [fullTitle, description, ogImage, canonicalUrl, type, structuredData]);
+  }, [fullTitle, description, ogImage, canonicalUrl, type, keywords, structuredData]);
 
   return null;
 };
