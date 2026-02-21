@@ -86,24 +86,23 @@ const Navbar = () => {
             <Link to="/" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Home
             </Link>
-            <Link to="/hotels" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
-              Hotels
+            <Link to="/packages" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
+              Packages
             </Link>
-            <Link to="/tours" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
-              Tours
+            <Link to="/deals" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
+              Deals
             </Link>
             <Link to="/flights" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
               Flights
             </Link>
-            <Link to="/itinerary" className="block py-2 text-foreground hover:text-accent transition-smooth flex items-center gap-1" onClick={() => setIsOpen(false)}>
-              <Sparkles className="h-4 w-4" />
-              AI Planner
+            <Link to="/hotels" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
+              Hotels
+            </Link>
+            <Link to="/experiences" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
+              Experiences
             </Link>
             <Link to="/about" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
-              About
-            </Link>
-            <Link to="/contact" className="block py-2 text-foreground hover:text-accent transition-smooth" onClick={() => setIsOpen(false)}>
-              Contact
+              About Us
             </Link>
             {user ? <>
                 <Link to="/dashboard">
