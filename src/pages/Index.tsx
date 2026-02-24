@@ -145,10 +145,16 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <SEOHead
-        title="Book Flights, Hotels & Tours Across India"
-        description="Anagha Safar - India's premium travel booking platform. Book flights, luxury hotels, and curated tour packages across 200+ destinations."
+        title="Best Travel Agency in India | Domestic & International Tour Packages"
+        description="Book affordable domestic and international tour packages with Anagha Safar. Explore honeymoon packages, family vacations, luxury tours, and customized travel planning across India and worldwide."
         url="/"
-        keywords={seoKeywords}
+        keywords={[
+          "travel booking", "India travel", "luxury tours", "flight booking", "hotel booking",
+          "holiday packages", "honeymoon packages", "family vacation", "travel agency India",
+          "international tour packages", "domestic tour packages", "AI trip planner", "custom itinerary",
+          ...seoKeywords
+        ]}
+        image="/lovable-uploads/ANAGHA_SAFAR_LOGO.png"
       />
       <Navbar />
 
