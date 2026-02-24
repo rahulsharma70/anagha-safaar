@@ -192,10 +192,10 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Crafting Journeys
+              Best Domestic &amp; International
               <br />
               <span className="bg-gradient-to-r from-accent via-amber-400 to-orange-400 bg-clip-text text-transparent">
-                That Touch the Soul
+                Tour Packages from India
               </span>
             </motion.h1>
 
@@ -362,6 +362,53 @@ const Index = () => {
                   <p className="text-sm text-muted-foreground">{item.description}</p>
                 </motion.div>
               ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* SEO Content Sections */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-4xl space-y-14">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Domestic Tour Packages</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Explore the best domestic tour packages across India with Anagha Safar. From the snow-capped Himalayas of Himachal Pradesh and Uttarakhand to the serene backwaters of Kerala, our curated holiday packages cover Rajasthan heritage tours, Goa beach vacations, Northeast India adventures, and spiritual journeys to Varanasi and Rishikesh. Whether you're planning a weekend getaway or an extended family vacation, we offer affordable travel options to 200+ destinations across every Indian state.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">International Holiday Packages</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Discover international tour packages from India to the world's most sought-after destinations. Book all-inclusive holiday packages to Bali, Thailand, Dubai, Singapore, Maldives, Europe, and beyond. Anagha Safar handles flights, hotels, visas, and local experiences so you can travel stress-free. Our international packages include guided group tours, luxury private itineraries, and budget-friendly options for every type of traveler.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Honeymoon Special Packages</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Begin your new journey with romantic honeymoon packages designed for couples. Choose from exotic beach getaways in the Maldives and Bali, scenic hill station retreats in Shimla and Manali, or cultural escapes across Europe and Southeast Asia. Every honeymoon package includes luxury accommodation, candlelight dinners, private transfers, and personalized experiences to make your celebration truly unforgettable.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Family Vacation Deals</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Plan the perfect family vacation with Anagha Safar's family-friendly tour packages. Our deals include kid-friendly activities, comfortable family rooms, and flexible itineraries across destinations like Kerala, Rajasthan, Goa, Dubai, and Singapore. With group discounts, secure booking, and 24/7 support, we make family travel easy, affordable, and memorable for every age group.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Custom AI Trip Planner</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Use Anagha Safar's AI-powered trip planner to build a fully customized travel itinerary in minutes. Simply enter your destination, budget, travel dates, and interests — our intelligent planner generates a personalized day-by-day schedule with hotel recommendations, sightseeing spots, local dining, and transport options. It's the smarter way to plan domestic and international trips tailored exactly to your preferences.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Why Choose <span className="text-accent">Anagha Safar</span></h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Anagha Safar is India's trusted travel agency offering the best price guarantee, 100% secure bookings, and expert-curated experiences. With 15+ years of experience, 50,000+ happy travelers, and a 4.9-star average rating, we deliver premium domestic and international tour packages with 24/7 customer support. From flight and hotel booking to visa assistance and travel insurance, Anagha Safar is your complete travel partner.
+              </p>
             </motion.div>
           </div>
         </section>
