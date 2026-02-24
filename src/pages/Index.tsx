@@ -192,10 +192,10 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Crafting Journeys
+              Best Domestic &amp; International
               <br />
               <span className="bg-gradient-to-r from-accent via-amber-400 to-orange-400 bg-clip-text text-transparent">
-                That Touch the Soul
+                Tour Packages from India
               </span>
             </motion.h1>
 
