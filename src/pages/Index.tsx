@@ -146,6 +146,13 @@ const Index = () => {
     "best travel website", "travel booking site", "online tour booking", "book tour online",
     "travel booking India", "travel website India", "best tour packages", "cheap tour packages",
     "best travel deals India", "travel planner India", "book holiday online", "travel booking online India",
+    "best tour and travel agency in india", "best travel agency in india", "top travel agency india",
+    "best tour company in india", "best travel company in india", "travel agency near me",
+    "top 10 travel agency in india", "trusted travel agency india", "best travel agent in india",
+    "tour and travel company", "tour and travel agency", "travel and tourism company india",
+    "best tour operator in india", "india tour operator", "travel agency for domestic tours",
+    "travel agency for international tours", "best holiday planner india", "affordable travel agency india",
+    "anagha safar tours", "anagha travel agency", "anagha safar booking",
   ];
 
   return (
