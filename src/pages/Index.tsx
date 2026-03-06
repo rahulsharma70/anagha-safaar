@@ -140,6 +140,12 @@ const Index = () => {
     "cultural tour", "heritage walk", "food tour", "trekking", "camping", "river rafting",
     "scuba diving", "snorkeling", "paragliding", "bungee jumping", "skiing",
     "Anagha Safar", "Anagha Safar travel", "best travel website India",
+    "safar", "safar travel", "safar booking", "safar website", "safar tours", "safar holidays",
+    "travel safar", "my safar", "safar trip", "safar package", "safar India",
+    "book trip online", "plan my trip", "travel booking website", "travel booking app",
+    "best travel website", "travel booking site", "online tour booking", "book tour online",
+    "travel booking India", "travel website India", "best tour packages", "cheap tour packages",
+    "best travel deals India", "travel planner India", "book holiday online", "travel booking online India",
   ];
 
   return (
