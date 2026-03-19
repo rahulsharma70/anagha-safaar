@@ -279,6 +279,8 @@ const Index = () => {
     "Golden Triangle tour India",
     "Panchgani",
     "Lavasa",
+    "Bhind",
+    "Mehgaon",
     "Shirdi",
     "Tirupati",
     "Rameshwaram",
